@@ -18,20 +18,14 @@ export default class Guide extends React.Component{
     }
     //验证手机号码
     handPhoneChange(e){
-        const value = e.target.value;
-        console.log(value)
-        const str = ProvingMobile(value,11)
         this.setState({
-            phone:str
+            phone:ProvingMobile(e.target.value,11)
         })
     }
      //验证验证码
     handCodeChange(e){
-        const value = e.target.value;
-        const str = ProvingMobile(value,6)
-        console.log(str)
         this.setState({
-            codevalue:str
+            codevalue:ProvingMobile(e.target.value,6)
         })
     }
     //登录
