@@ -100,6 +100,7 @@ class HomeContent extends React.Component{
         // document.addEventListener('scroll',()=>{
         //     this.handBoydScroll()
         // })
+      
     }
     componentWillUnmount(){
         clearTimeout(this.tiems);

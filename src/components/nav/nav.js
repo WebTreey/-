@@ -1,7 +1,7 @@
 import React from 'react';
 import './nav.scss'
 import { withRouter } from 'react-router-dom';
-
+import {GetQueryString} from '../../utils/API'
 class Nav extends React.Component{
     constructor(props){
         super(props);
@@ -10,33 +10,20 @@ class Nav extends React.Component{
                 {id:1,label:'首页'},
                 {id:2,label:'贷款'},
                 {id:3,label:'我的'}
-            ],
-            TabIndex:0
-        }
-    }
-    handSetTab(e){
-        const index = parseInt(e.target.dataset.index,10);
-        this.setState({
-            TabIndex:index
-        })
-        if(index===0){
-            this.props.history.push('/home')
-        }else if(index===1){
-            this.props.history.push('/home/move')
-        }else if(index===2){
-            this.props.history.push('/home/infoindex')
+            ]
         }
     }
     render(){
         const nav = this.state.Tab;
+        const Tabindex = parseInt(GetQueryString('nav')) || 0 ;
         return(
             <div className="nav">
                 <ul className="flex-around">
                     {nav.map((item,index)=>{
-                        const spancolor = this.state.TabIndex === index ? 'spancolor' :''
-                        const classname = this.state.TabIndex === index ? '-active' :''
+                        const spancolor = Tabindex === index ? 'spancolor' :''
+                        const classname = Tabindex === index ? '-active' :''
                         return(
-                            <li key={index} className="flex-column" data-index={index} onClick={this.handSetTab.bind(this)}>
+                            <li key={index} className="flex-column" data-index={index} onClick={this.props.handSetTab}>
                                 <em className={`icon icon-${index+1}${classname}`} data-index={index}></em>
                                 <span className={spancolor} data-index={index}>{item.label}</span>
                             </li>

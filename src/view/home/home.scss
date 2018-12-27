@@ -65,6 +65,9 @@ $alignCenter:center;
             background: linear-gradient(to right, #f54d54 , #ff621d); /* 标准的语法 */
             width: 4.75rem; height: .67rem; line-height: .67rem; color: #fff; margin: .3rem auto; font-size: .3rem; border-radius: .4rem; text-align: center;
             box-shadow: 3px 3px 10px  #ffd3d5;
+            a{
+                color: #fff; display: block;
+            }
          }
     }
     .home-list{
@@ -108,6 +111,9 @@ $alignCenter:center;
                 }
                 .home-item-btn{
                     background: #fe6120; color: #fff; height:.55rem; line-height: .55rem; width: 1.47rem; text-align: center; border-radius: .3rem;
+                    a{
+                        color: #fff; display: block;
+                    }
                 }
             }
             
@@ -131,7 +137,7 @@ $alignCenter:center;
     padding-bottom:1rem 
 }
 .move-header{
-    height: .87rem; font-size: .34rem; background: #fff;
+    height: .87rem; font-size: .34rem; background: #fff; border-bottom: 1px solid $borderColor;
     ul{
         height: inherit;
         li{
@@ -146,9 +152,21 @@ $alignCenter:center;
     }
 }
 .move-lamp{
-    background: #fff8f6; font-size: .24rem; color: $color; padding: 0 .2rem; height: .58rem; margin: .05rem 0 0 0;
+    background: #fff8f6; font-size: .24rem; color: $color; padding: 0 .2rem; height: .58rem; margin: .05rem 0 0 0; position: relative;
     img{
         width: .23rem; margin: 0 .1rem 0 0 
+    }
+}
+.move-open{
+    background: rgba(#000,.75); height: 100%; width: 100%; position: absolute; margin: .87rem 0 0 0; z-index: 9;
+    .open-box{
+        background: #fff;
+        li{
+            height: .9rem; line-height: .9rem;border-bottom: 1px solid $borderColor; text-align: left; padding: 0 .6rem ; font-size: .28rem; color: #333
+        }
+        .openactive{
+            color: $color; background: url('../../images/dui.jpg') no-repeat 6.5rem center; background-size: .47rem .17rem
+        }
     }
 }
 

@@ -27,13 +27,56 @@ export const setCommparams = {
     imei: ukey()
 }
 //首页接口
-export const getHomeInof = (data) =>{
+export const getHomeInof = (data) => {
     return Axios({
-            method:'post',
-            url: HOST + '/v3/homeinfo',
-            headers:{
-                "Content-Type":"application/json"
-            },
-            params:data
-        })
+        method: 'post',
+        url: HOST + '/v3/homeinfo',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params: Object.assign({}, setCommparams, data)
+    })
+}
+//获取验证码接口
+export const getSendSms = (data) => {
+    return Axios({
+        method: 'post',
+        url: HOST + '/front/sendSms',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params: Object.assign({}, setCommparams, data)
+    })
+}
+//验证码登陆
+export const getCodelogin = (data) => {
+    return Axios({
+        method:'post',
+        url:HOST + '/nloan/codelogin',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params:Object.assign({}, setCommparams, data)
+    })
+}
+//获取产品模块类型ID
+export const getModuleInfo = (data)=>{
+    return Axios({
+        method:'post',
+        url:HOST + '/v3/moduleInfo',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params:Object.assign({}, setCommparams, data)
+    })
+}
+export const getRecmdInfo =(data)=> {
+    return Axios({
+        method:'post',
+        url:HOST + '/v3/recmdInfo',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params:Object.assign({}, setCommparams, data)
+    })
 }

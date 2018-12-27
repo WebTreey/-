@@ -36,6 +36,7 @@ export const HideConter = (value) => {
     } else if (len === 11) {
         return str.substring(0, 4) + '****' + str.substring(7);
     }
+    return str;
 }
 
 //获取url参数
