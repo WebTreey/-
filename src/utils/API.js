@@ -27,6 +27,7 @@ export const ProvingEmail = (value = "") => {
 
 //隐藏中间字符
 export const HideConter = (value) => {
+   
     const str = value + '';
     const len = str.length;
     if (len === 2) {
@@ -35,6 +36,8 @@ export const HideConter = (value) => {
         return str.substring(0, 1) + '*' + str.charAt(len - 1);
     } else if (len === 11) {
         return str.substring(0, 4) + '****' + str.substring(7);
+    }else if (len === 18) {
+        return str.substring(0, 4) + '****' + str.substring(14);
     }
     return str;
 }

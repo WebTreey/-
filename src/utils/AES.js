@@ -22,6 +22,10 @@ export function Encrypt(word) {
   return encrypted.toString();
 }
 
+export function MD5encode(word) {
+  return CryptoJS.MD5(word).toString();
+}
+
 function byteToString(arr) {
     if (typeof arr === 'string') {
       return arr;

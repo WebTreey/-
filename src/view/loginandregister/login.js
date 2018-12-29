@@ -1,8 +1,11 @@
 import React from 'react';
 import './login.scss'
-import {ProvingMobile} from '../../utils/API'
+import {ProvingMobile,myStorage} from '../../utils/API'
+import {getSendSms,getCodelogin,getPwdlogin} from '../../utils/config'
 import {PromptBox} from '../../components/prompt/prompt'
 import { withRouter } from 'react-router';
+import {Encrypt,MD5encode} from '../../utils/AES'
+//验证码登录
 class LoginFun1 extends React.Component{
     constructor(props){
         super(props);
@@ -15,82 +18,97 @@ class LoginFun1 extends React.Component{
         }
         this.code = 60;
     }
+    //提示框隐藏显示
+    setPromptHide(text){
+        this.text = text;
+        this.setState({
+            prompt:true
+        })
+        clearTimeout(this.times)
+        this.times = setTimeout(()=>{
+            this.setState({
+                prompt:false
+            })
+        },2000)
+    }
      //验证手机号码
      handPhoneChange(e){
-        const value = e.target.value;
-        console.log(value)
-        const str = ProvingMobile(value,11)
         this.setState({
-            phone:str
+            phone:ProvingMobile(e.target.value,11)
         })
     }
      //验证验证码
     handCodeChange(e){
-        const value = e.target.value;
-        const str = ProvingMobile(value,6)
-        console.log(str)
         this.setState({
-            codevalue:str
+            codevalue: ProvingMobile(e.target.value,6)
         })
     }
-     //获取验证码
-     handCodeClick(){
+     //获取验证码接口
+    setSendSms(data){
+        getSendSms(data).then(res=>{
+            console.log(res.data)
+            if(res.data.code==='ok'){
+                this.setPromptHide('验证码已发送');
+                clearInterval(this.inTimes);
+                this.inTimes = setInterval(()=>{
+                    if(this.code>0){
+                        this.setState({
+                            codetext: this.code--,
+                            isSetinterval:true
+                        })
+                    }else{
+                        this.setState({
+                            codetext:'获取验证码',
+                            isSetinterval:false
+                        })
+                        this.code = 60;
+                        clearInterval(this.inTimes);
+                    }
+                },1000)
+            }else{
+                this.setPromptHide('手机号码不正确');
+            }
+        })
+    }
+    //获取验证码登陆接口
+    setCodelogin(data){
+        getCodelogin(data).then(res=>{
+            console.log(res.data,this.props.history);
+            if(res.data.code==='ok' || res.data.code==='no'){
+                myStorage.set('token',res.data.token);
+                myStorage.set('phone',this.state.phone);
+                this.props.history.go(-1);
+            }else if(res.data.code==='fail'){
+                this.setPromptHide('登录失败');
+            }else if(res.data.code==='no_register'){
+                this.setPromptHide('账号未注册');
+            }else{
+                this.setPromptHide('密码错误');
+            }
+        })
+    }
+    //获取验证码
+    handCodeClick(){
         if(this.state.phone!==''){
-            clearInterval(this.inTimes);
-            this.inTimes = setInterval(()=>{
-                if(this.code>0){
-                    this.setState({
-                        codetext: this.code--,
-                        isSetinterval:true
-                    })
-                }else{
-                    this.setState({
-                        codetext:'获取验证码',
-                        isSetinterval:false
-                    })
-                    this.code = 60;
-                    clearInterval(this.inTimes);
-                }
-            },1000)
+            this.setSendSms({phone:Encrypt(this.state.phone)});
         }else{
-            this.text = '请输入正确的手机号码！';
-            this.setState({
-                prompt:true
-            })
-            this.times = setTimeout(()=>{
-                this.setState({
-                    prompt:false
-                })
-                clearTimeout(this.times);
-            },2000)
+            this.setPromptHide('请输入您的电话号码')
         }
-        
     }
     //登录
     handLoginClick(){
         if(this.state.phone===''){
-            this.text = '请输入正确的手机号码！';
-            this.setState({
-                prompt:true
-            })
-            this.times = setTimeout(()=>{
-                this.setState({
-                    prompt:false
-                })
-                clearTimeout(this.times);
-            },2000)
+            this.setPromptHide('请输入正确的手机号码！')
         }else if(this.state.codevalue===''){
-            this.text = '验证码错误，请重新输入！';
-            this.setState({
-                prompt:true
-            })
-            this.times = setTimeout(()=>{
-                this.setState({
-                    prompt:false
-                })
-                clearTimeout(this.times);
-            },2000)
+            this.setPromptHide('验证码错误，请重新输入！')
+        }else{
+            this.setCodelogin({phone:Encrypt(this.state.phone),veryCode:this.state.codevalue})
+            
         }
+    }
+    componentWillUnmount(){
+        clearTimeout(this.times);
+        this.times = null ;
     }
     render(){
         const handCodeClick =  !this.state.isSetinterval ? this.handCodeClick.bind(this) : null;
@@ -111,35 +129,44 @@ class LoginFun1 extends React.Component{
         )
     }
 }
-
+//密码登录
 class LoginFun2 extends React.Component{
     constructor(props){
         super(props);
         this.state = {
             phone:'',
-            codevalue:'',
+            password:'',
             inputtype:'password',
             imgurl:require('../../images/bishang.png')
         }
         this.code = 60;
     }
+    //提示框隐藏显示
+    setPromptHide(text){
+        this.text = text;
+        this.setState({
+            prompt:true
+        })
+        clearTimeout(this.times)
+        this.times = setTimeout(()=>{
+            this.setState({
+                prompt:false
+            })
+        },2000)
+    }
+    //输入手机号码验证
     handPhoneChange(e){
-        const value = e.target.value;
-        console.log(value)
-        const str = ProvingMobile(value,11)
         this.setState({
-            phone:str
+            phone:ProvingMobile(e.target.value,11)
         })
     }
-     //验证验证码
-    handCodeChange(e){
-        const value = e.target.value;
-        const str = ProvingMobile(value,6)
-        console.log(str)
+    //输入密码
+    handPassChange(e){
         this.setState({
-            codevalue:str
+            password:e.target.value
         })
     }
+    //显示密码
     handImgClick(){
         if(this.state.inputtype==='password'){
             this.setState({
@@ -156,29 +183,35 @@ class LoginFun2 extends React.Component{
     }
     //登录
     handLoginClick(){
+        console.log({phone:Encrypt(this.state.phone),password:MD5encode(this.state.password)})
         if(this.state.phone===''){
-            this.text = '请输入正确的手机号码！';
-            this.setState({
-                prompt:true
-            })
-            this.times = setTimeout(()=>{
-                this.setState({
-                    prompt:false
-                })
-                clearTimeout(this.times);
-            },2000)
+           this.setPromptHide('请输入正确的手机号码！')
         }else if(this.state.codevalue===''){
-            this.text = '验证码错误，请重新输入！';
-            this.setState({
-                prompt:true
-            })
-            this.times = setTimeout(()=>{
-                this.setState({
-                    prompt:false
-                })
-                clearTimeout(this.times);
-            },2000)
+            this.setPromptHide('验证码错误，请重新输入！')
+        }else{
+            this.setPwdlogin({phone:Encrypt(this.state.phone),password:MD5encode(this.state.password)})
         }
+    }
+    //密码登录接口
+    setPwdlogin(data){
+        getPwdlogin(data).then(res=>{
+            console.log(res.data)
+            if(res.data.code==='ok' || res.data.code==='no'){
+                myStorage.set('token',res.data.token);
+                myStorage.set('phone',this.state.phone);
+                this.props.history.go(-1);
+            }else if(res.data.code==='fail'){
+                this.setPromptHide('登录失败');
+            }else if(res.data.code==='no_register'){
+                this.setPromptHide('账号未注册');
+            }else{
+                this.setPromptHide('密码错误');
+            }
+        })
+    }
+    componentWillUnmount(){
+        clearTimeout(this.times);
+        this.times = null;
     }
     render(){
         return(
@@ -189,7 +222,7 @@ class LoginFun2 extends React.Component{
                     <input type="text" placeholder="请输入您的手机号" value={this.state.phone} onChange={this.handPhoneChange.bind(this)}></input>
                     </label>
                     <label className="flex-between">
-                    <input type={this.state.inputtype} placeholder="请输入您的登录密码" value={this.state.codevalue}></input>
+                    <input type={this.state.inputtype} placeholder="请输入您的登录密码" value={this.state.codevalue} onChange={this.handPassChange.bind(this)}></input>
                     <img src={this.state.imgurl} onClick={this.handImgClick.bind(this)}></img>
                     </label>
                 </form>
@@ -198,7 +231,7 @@ class LoginFun2 extends React.Component{
         )
     }
 }
- class Login extends React.Component{
+class Login extends React.Component{
     constructor(props){
         super(props);
         this.state = {
@@ -233,10 +266,11 @@ class LoginFun2 extends React.Component{
         }
         
     }
+  
     render(){
         const tab = this.state.Tab;
         const activeIndex = this.state.activeIndex;
-        const Loinfun = activeIndex===0 ?  <LoginFun1></LoginFun1> :  <LoginFun2></LoginFun2>
+        const Loinfun = activeIndex===0 ?  <LoginFun1 checked={this.state.checked} history={this.props.history}></LoginFun1> :  <LoginFun2 history={this.props.history} checked={this.state.checked}></LoginFun2>
         return(
             <div className="login">
                 <div className="login-header flex-content">

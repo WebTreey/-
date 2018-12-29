@@ -1,9 +1,9 @@
 import React from 'react';
 import './guide.scss';
-import {ProvingMobile} from '../../utils/API'
-import {PromptBox} from '../../components/prompt/prompt'
-import {getSendSms,getCodelogin} from '../../utils/config'
-import {Encrypt} from '../../utils/AES'
+import {ProvingMobile,myStorage} from '../../utils/API';
+import {PromptBox} from '../../components/prompt/prompt';
+import {getSendSms,getCodelogin} from '../../utils/config';
+import {Encrypt} from '../../utils/AES';
 
 export default class Guide extends React.Component{
     constructor(props){
@@ -18,6 +18,24 @@ export default class Guide extends React.Component{
             checkedclass:'guide-checkbox'
         }
         this.code = 60;
+    }
+    //通过百度api获取地址
+    getBaiDuAPI(){
+        var BMap = window.BMap;
+        var map = new BMap.Map("allmap");
+        var geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function(r){
+            var mk = new BMap.Marker(r.point);
+            map.addOverlay(mk);
+            map.panTo(r.point);
+            var point = new BMap.Point(r.point.lng,r.point.lat);
+            map.centerAndZoom(point,12);
+            var gc = new BMap.Geocoder();  //初始化，Geocoder类
+            gc.getLocation(point, function (rs) {   //getLocation函数用来解析地址信息，分别返回省市区街等
+                var addComp = rs.addressComponents;
+                myStorage.set('city',addComp.city)
+        });
+        })
     }
     //提示框隐藏显示
     setPromptHide(text){
@@ -114,12 +132,18 @@ export default class Guide extends React.Component{
     setCodelogin(data){
         getCodelogin(data).then(res=>{
             console.log(res.data);
+            myStorage.set('token',res.data.token)
+            myStorage.set('phone',this.state.phone);
         })
+    }
+    componentDidMount(){
+        this.getBaiDuAPI()
     }
     render(){
         const handCodeClick =  !this.state.isSetinterval ? this.handCodeClick.bind(this) : null;
         return(
             <div className="guide">
+                <div id="allmap" style={{display:'none'}}></div>
                 {this.state.prompt ? <PromptBox text={this.text}></PromptBox> :''}
                 <div className="guide-banner">
                     <img src={require('../../images/guide.jpg')}></img>

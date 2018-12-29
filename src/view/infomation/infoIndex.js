@@ -1,13 +1,36 @@
 import React from 'react';
-import './info.scss'
-import {withRouter} from 'react-router'
+import './info.scss';
+import {withRouter} from 'react-router';
+import {myStorage} from '../../utils/API'
+import {getIsAuth,getSms,getExistCheckReport} from '../../utils/config';
+import {Encrypt} from '../../utils/AES';
+import {PromptBox} from '../../components/prompt/prompt'
 class InfoIndex extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            city:'重新获取定位'
+            city:'重新获取定位',
+            data:{},
+            prompt:false,
+            infoData:[],
+            showBtn:true,
+            rzText:''
         }
     }
+    //提示框隐藏显示
+    setPromptHide(text){
+        this.text = text;
+        this.setState({
+            prompt:true
+        })
+        clearTimeout(this.times)
+        this.times = setTimeout(()=>{
+            this.setState({
+                prompt:false
+            })
+        },2000)
+    }
+    //通过百度api获取地址
     getBaiDuAPI(){
         const that = this
         var BMap = window.BMap;
@@ -28,36 +51,94 @@ class InfoIndex extends React.Component{
         });
     })
     }
+    //个人资料
+    setIsAuth(data){
+        getIsAuth(data).then(res=>{
+            console.log(res.data)
+            if(res.data.code==='yes'){
+                this.setState({
+                    rzText:'已认证',
+                    data:res.data
+                })
+            }else if(res.data.code==='no'){
+                this.setState({
+                    rzText:'去认证',
+                    data:res.data
+                })
+            }
+        })
+    }
+    //拉取消息列表
+    setSms(data){
+        getSms(data).then(res=>{
+            if(res.data.data){
+                this.setState({
+                    infoData:res.data.data
+                })
+            }else if(res.data.code ==='login_outtime'){
+                this.setState({
+                    showBtn:false
+                })
+            }
+            console.log(res.data)
+        })
+    }
+    //查询信用报告
+    setExistCheckReport(data){
+        getExistCheckReport(data).then(res=>{
+            console.log(res.data)
+        })
+    }
     handBaidu(){
         this.getBaiDuAPI();
     }
     handLinkMyinfo(){
-        this.props.history.push('/home/myinfo')
+        if(this.state.data.code==='yes' || this.state.data.code==='no'){
+            this.props.history.push('/home/myinfo')
+        }else{
+            this.props.history.push('/home/login')
+        }
     }
     handLinkCarrProving(){
         this.props.history.push('/CarrProving')
     }
+    handLoginBtn(){
+        this.props.history.push('/home/login')
+    }
+    //跳转到消息列表
+    handLinkInfoList(){
+        this.props.history.push('/infolist')
+    }
     componentDidMount(){
         this.getBaiDuAPI();
+        this.setIsAuth({phone:Encrypt('13312345678'),token:myStorage.get('token')});
+        this.setSms({token:myStorage.get('token')})
+        this.setExistCheckReport({phone:Encrypt('13312345678')});
     }
-    
+    componentWillUnmount(){
+        clearTimeout(this.times)
+        this.times = null ;
+    }
     render(){
+        const len = this.state.infoData.length
         return(
             <div className="info">
+                {this.state.prompt ? <PromptBox text={this.text}></PromptBox> :''}
                 <div id="allmap" style={{display:'none'}}></div>
                 <div className="info-header">
                     <div className="info-position flex-content">
                     <img alt="闪电贷" src={require('../../images/dingwei.png')}></img>
                     <span onClick={this.handBaidu.bind(this)}>{this.state.city}</span>
                     </div>
-                    <div className="info-xx">
+                    <div className="info-xx" onClick={this.handLinkInfoList.bind(this)}>
                         <img alt="闪电贷" src={require('../../images/xiaoxi.png')}></img>
-                        <span>12</span>
+                        {len!==0 ? <span>{len}</span> : ''}
                     </div>
                     <div className="info-grxx flex-column">
                         <img alt="闪电贷" src={require('../../images/my-photo.jpg')}></img>
-                        <span className="flex-content"><em>15989652154</em><img src={require("../../images/right-icon.jpg")}></img></span>
-                        <button className="info-grxx-btn">去认证</button>
+                        {this.state.showBtn ? <div><span className="flex-content"><em>{myStorage.get('phone')}</em><img src={require("../../images/right-icon.jpg")}></img></span>
+                        <button className="info-grxx-btn">{this.state.rzText}</button></div> : <button onClick={this.handLoginBtn.bind(this)} className="info-grxx-btn" style={{margin:'.2rem 0 0 0'}}>登录</button>}
+                        
                     </div>
                 </div>
                 <div className="info-main">

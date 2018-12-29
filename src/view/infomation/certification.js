@@ -2,63 +2,75 @@ import React from 'react';
 import './info.scss'
 import {ProvingID} from '../../utils/API'
 import {PromptBox} from '../../components/prompt/prompt'
+import {getDoshenqing,getIsAuth ,getCardAuth} from '../../utils/config'
 import { withRouter } from 'react-router';
+import {Encrypt} from '../../utils/AES'
 class Certification extends React.Component{
     constructor(props){
         super(props);
         this.state = {
             name:'',
             id:'',
+            data:[]
         }
        
     }
-    handChangeName(e){
-        const value = e.target.value;
+    //提示框隐藏显示
+    setPromptHide(text){
+        this.text = text;
         this.setState({
-            name:value
+            prompt:true
+        })
+        clearTimeout(this.times)
+        this.times = setTimeout(()=>{
+            this.setState({
+                prompt:false
+            })
+        },2000)
+    }
+    //提交个人资料
+    setDoshenqing(data){
+        getDoshenqing(data).then(res=>{
+            if(res.data.code==='ok'){
+                this.setPromptHide('保存成功');
+            }else if(res.data.code==='nameError'){
+                this.setPromptHide('姓名格式不对');
+            }else if(res.data.code==='hasError'){
+                this.setPromptHide('已申请');
+            }else if(res.data.code==='error'){
+                this.setPromptHide('保存失败');
+            }
+            console.log(res.data)
+        })
+    }
+    //认证身份证信息
+    setCardAuth(data){
+        getCardAuth(data).then(res=>{
+            console.log(res.data)
+            if(res.data.code==='ok'){
+                this.setDoshenqing({name:Encrypt(this.state.name),card:Encrypt(this.state.id),isNeedVerfyCode:'noNeed'})
+            }
+
+        })
+    }
+    handChangeName(e){
+        this.setState({
+            name:e.target.value
         })
     }
     handProvingID(e){
-        const value = e.target.value;
-        const str = ProvingID(value);
         this.setState({
-            id:str
+            id:ProvingID(e.target.value)
         })
     }
     handLoginClick(){
-        if(this.state.pass1===''){
-            this.text = '密码不能为空';
-            this.setState({
-                prompt:true
-            })
-            this.times = setTimeout(()=>{
-                this.setState({
-                    prompt:false
-                })
-                clearTimeout(this.times);
-            },2000)
-        }else if(this.state.codevalue===''){
-            this.text = '验证码错误，请重新输入！';
-            this.setState({
-                prompt:true
-            })
-            this.times = setTimeout(()=>{
-                this.setState({
-                    prompt:false
-                })
-                clearTimeout(this.times);
-            },2000)
-        }else if(this.state.pass2===''){
-            this.text = '密码不一致';
-            this.setState({
-                prompt:true
-            })
-            this.times = setTimeout(()=>{
-                this.setState({
-                    prompt:false
-                })
-                clearTimeout(this.times);
-            },2000)
+        if(this.state.name===''){
+            this.setPromptHide('姓名不能为空')
+        }else if(this.state.id===''){
+            this.setPromptHide('身份证号码不能为空')
+        }else{
+            console.log(Encrypt(this.state.id))
+            this.setCardAuth({name:Encrypt(this.state.name),card:Encrypt(this.state.id),isNeedVerfyCode:'noNeed'})
         }
     }
     render(){

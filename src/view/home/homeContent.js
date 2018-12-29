@@ -76,9 +76,10 @@ class HomeContent extends React.Component{
     //     }
        
     // }
+    
     //跳转详情页面
     handLinkMoves(){
-        this.props.history.push('/home/Move')
+        this.props.history.push('/home/Move?nav=1')
     }
     //换一换
     handChange(){
@@ -97,10 +98,6 @@ class HomeContent extends React.Component{
     }
     componentDidMount(){
         this.setHomeinfo()
-        // document.addEventListener('scroll',()=>{
-        //     this.handBoydScroll()
-        // })
-      
     }
     componentWillUnmount(){
         clearTimeout(this.tiems);
@@ -199,7 +196,7 @@ class HomeContent extends React.Component{
                                                                 <p>{item.minLendRate}</p>
                                                                 <p>{item.lendRate}</p>
                                                             </div>
-                                                            <div className="home-item-btn">立即申请</div>
+                                                            <div className="home-item-btn"><a href={item.h5Link}>立即申请</a></div>
                                                     </div>
                                                     </div>
                                                 </li>

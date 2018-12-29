@@ -113,7 +113,7 @@
     text-align: center; margin: .4rem 0 0 0; color: #999999; font-size: .24rem; padding: 0 .3rem
 }
 .info-yys-instruction{
-    padding: .3rem;
+    padding: .3rem; text-align: left;
     h3{
         font-size: .28rem; color: #333
     }
@@ -124,7 +124,7 @@
         margin: .3rem 0 0 0;
     }
     li{
-        list-style-type: disc; margin: .2rem 0 0 .3rem; color: #666;
+        list-style-type: disc; margin: .2rem 0 0 .3rem; color: #666; 
     }
 }
 .info-yys-header{
@@ -145,6 +145,60 @@
         background-position:  -.1rem -2.7rem;
     }
 }
+.info-list{
+    margin: .2rem 0 0 0; text-align: left; background: #fff;
+    li{
+        padding: .2rem .3rem; border-bottom: 1px solid #f1f1f1;
+        h3{
+             padding: 0 0 .3rem 0;
+             span{
+                 flex: 1;   font-size: .3rem;
+             }
+             i{
+                 font-size: .28rem; color: #999999
+             }
+        }
+        .info-subtitle{
+            text-overflow: ellipsis; white-space: nowrap; overflow: hidden; font-size: .26rem; color: #666;
+        }
+    }
+  
+}
+.info-content{
+    padding: .3rem; text-align: left;
+    h3{
+        font-size: .3rem;
+    }
+    span{
+        padding: .3rem 0 0 0; font-size: .26rem; color: #999; display: block;
+    }
+    p{
+        padding: .5rem 0 0 0 ; color: #666;   font-size: .26rem;
+    }
+}
+.info-prompt{
+    background: rgba(0,0,0, .5); width: 100%; height: 100%; z-index: 9; position: fixed; left: 0 ; right:0 ; margin: -.2rem 0 0 0;
+    .info-box{
+        width: 6.15rem; height:2.8rem;background: #fff; border-radius: .4rem; overflow: hidden;
+        p{
+            font-size: .32rem; padding: .65rem 0; border-bottom: 0.01rem solid #dfdfdf;
+        }
+        div{
+            height: 1.15rem;
+            span,i{
+                font-size: .36rem; text-align: center; flex: 1; height:inherit; line-height: 1.15rem;
+            }
+            span{
+                color: #999999; border-right: 0.01rem solid #dfdfdf;
+            }
+            i{
+                color: #4c85e8;
+            }
+        }
+        
+    }
+}
+
 
 .am-list-item{
     padding-left:0 !important;

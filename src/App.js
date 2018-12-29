@@ -4,7 +4,9 @@ import './App.scss';
 import Home from './view/home/home';
 import Guide from './view/guide/guide';
 import CarrProving from './view/infomation/carrProving';
-import ErrIndex from './view/guide/Errindex'
+import ErrIndex from './view/guide/Errindex';
+import InfoList from './view/infomation/infoList'
+import infoContent from './view/infomation/infoContent'
 class App extends Component {
   render() {
     return (
@@ -15,6 +17,8 @@ class App extends Component {
             <Route path="/Home" component={Home}></Route>
             <Route path="/CarrProving" component={CarrProving}></Route>
             <Route path="/ErrIndex/:id" component={ErrIndex}></Route>
+            <Route path="/InfoList" component={InfoList}></Route>
+            <Route path="/infoContent/:index" component={infoContent}></Route>
           </div>
         </Router>
       </div>

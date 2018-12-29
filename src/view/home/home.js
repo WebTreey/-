@@ -1,15 +1,15 @@
 import React from 'react';
 import {Route} from 'react-router-dom';
 import './home.scss';
-import {GetQueryString} from '../../utils/API'
-import Nav from '../../components/nav/nav'
-import HomeContent from './homeContent'
+import {GetQueryString} from '../../utils/API';
+import Nav from '../../components/nav/nav';
+import HomeContent from './homeContent';
 import Login from '../loginandregister/login';
 import Move from '../home/move';
-import InfoIndex from '../infomation/infoIndex'
-import Myinfo from '../infomation/Myinfo'
-import SetPassword from '../infomation/setPassword'
-import Certification from '../infomation/certification'
+import InfoIndex from '../infomation/infoIndex';
+import Myinfo from '../infomation/Myinfo';
+import SetPassword from '../infomation/setPassword';
+import Certification from '../infomation/certification';
 
 export default class Home extends React.Component{
     constructor(props){
@@ -20,11 +20,11 @@ export default class Home extends React.Component{
         const index = parseInt(e.target.dataset.index,10);
         if(index===Tabindex) return false;
         if(index===0){
-            this.props.history.push('/home')
+            this.props.history.push('/home');
         }else if(index===1){
-            this.props.history.push('/home/move?nav=1')
+            this.props.history.push('/home/move?nav=1');
         }else if(index===2){
-            this.props.history.push('/home/infoindex?nav=2')
+            this.props.history.push('/home/infoindex?nav=2');
         }
     }
     render(){
