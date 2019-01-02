@@ -111,9 +111,8 @@ class Myinfo extends React.Component{
         })
     }
     componentDidMount(){
-        this.setIsAuth({phone:Encrypt('13312345678'),token:myStorage.get('token')});
+        this.setIsAuth({phone:Encrypt(myStorage.get('phone')),token:myStorage.get('token')});
     }
-    
     render(){
         const data = this.state.AuthData;
         const minDate = new Date('1930/01/01');

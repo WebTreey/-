@@ -13,7 +13,6 @@ class Certification extends React.Component{
             id:'',
             data:[]
         }
-       
     }
     //提示框隐藏显示
     setPromptHide(text){
@@ -50,7 +49,6 @@ class Certification extends React.Component{
             if(res.data.code==='ok'){
                 this.setDoshenqing({name:Encrypt(this.state.name),card:Encrypt(this.state.id),isNeedVerfyCode:'noNeed'})
             }
-
         })
     }
     handChangeName(e){
@@ -65,18 +63,17 @@ class Certification extends React.Component{
     }
     handLoginClick(){
         if(this.state.name===''){
-            this.setPromptHide('姓名不能为空')
+            this.setPromptHide('姓名不能为空');
         }else if(this.state.id===''){
-            this.setPromptHide('身份证号码不能为空')
+            this.setPromptHide('身份证号码不能为空');
         }else{
-            console.log(Encrypt(this.state.id))
             this.setCardAuth({name:Encrypt(this.state.name),card:Encrypt(this.state.id),isNeedVerfyCode:'noNeed'})
         }
     }
     render(){
         return(
             <div className="info-me">
-             {this.state.prompt ? <PromptBox text={this.text}></PromptBox> : ''}
+            {this.state.prompt ? <PromptBox text={this.text}></PromptBox> : ''}
                 <div className="info-input">
                     <form className="flex-column-left">
                         <label className="flex-between">

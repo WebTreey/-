@@ -162,3 +162,14 @@ export const getCardAuth =(data) =>{
         params:Object.assign({}, setCommparams,data)
     })
 }
+//修改密码
+export const getSetPassword =(data) =>{
+    return Axios({
+        method:'post',
+        url:HOST + '/loan/setPassword',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params:Object.assign({}, setCommparams,data)
+    })
+}

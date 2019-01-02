@@ -105,6 +105,9 @@ class InfoIndex extends React.Component{
     handLoginBtn(){
         this.props.history.push('/home/login')
     }
+    handSetPassword(){
+        this.props.history.push('/home/setPassword');
+    }
     //跳转到消息列表
     handLinkInfoList(){
         this.props.history.push('/infolist')
@@ -159,7 +162,7 @@ class InfoIndex extends React.Component{
                                 <h3>运营商检测</h3>
                                 <span className="flex-content"><em>去查询</em><img alt="闪电贷" src={require('../../images/right-icon.jpg')}></img></span>
                             </li>
-                            <li className="flex-conter">
+                            <li className="flex-conter" onClick={this.handSetPassword.bind(this)}>
                                 <i className="icon icon-4"></i>
                                 <h3>设置密码</h3>
                                 <span className="flex-content"><em>去设置</em><img alt="闪电贷" src={require('../../images/right-icon.jpg')}></img></span>

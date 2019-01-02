@@ -93,7 +93,7 @@
 }
 .info-me-ul{
     li{
-        padding: 0 .4rem; background: #fff;
+        padding: 0 .4rem; background: #fff; text-align: left;
     }
 }
 .info-btn{
@@ -108,6 +108,11 @@
      input{
          flex: 1; text-align: right
      }
+}
+.info-setpass{
+    input{
+        flex: 1; text-align: left;
+    }
 }
 .info-code-fs{
     text-align: center; margin: .4rem 0 0 0; color: #999999; font-size: .24rem; padding: 0 .3rem

@@ -35,7 +35,7 @@ export const HideConter = (value) => {
     } else if (len === 3) {
         return str.substring(0, 1) + '*' + str.charAt(len - 1);
     } else if (len === 11) {
-        return str.substring(0, 4) + '****' + str.substring(7);
+        return str.substring(0, 3) + '****' + str.substring(7);
     }else if (len === 18) {
         return str.substring(0, 4) + '****' + str.substring(14);
     }

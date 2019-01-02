@@ -10,7 +10,6 @@ import InfoIndex from '../infomation/infoIndex';
 import Myinfo from '../infomation/Myinfo';
 import SetPassword from '../infomation/setPassword';
 import Certification from '../infomation/certification';
-
 export default class Home extends React.Component{
     constructor(props){
         super(props);
