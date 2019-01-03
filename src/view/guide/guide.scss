@@ -19,6 +19,35 @@
         }
     }
 }
+.yl-bg{
+    height: 10.5rem;  position: relative;
+    .yl-left{
+       width: 7rem;
+        form{
+            height: inherit; 
+            label{
+                flex: 1;padding: 0 .3rem;  font-size: .28rem; height: 1.04rem; border-radius: .6rem; background: #fff; margin: .1rem 0;
+                span{
+                    color: #f54d54;
+                }
+            }
+            input{
+                font-size: .28rem;
+            }
+        }
+    }
+
+}
+
+.yl-btn{
+    background: -webkit-linear-gradient( #ffde76 , #ffc41e); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient( #ffde76 , #ffc41e); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient( #ffde76 , #ffc41e); /* Firefox 3.6 - 15 */
+    background: linear-gradient( #ffde76 , #ffc41e); /* 标准的语法 */
+    height: 1rem; line-height: 1rem; width: 7rem; margin: .5rem auto .3rem auto; border-radius: .6rem; text-align: center; 
+    color: #d42802; font-size: .36rem; font-weight: bold;
+}
+
 .guide-btn{
     background: -webkit-linear-gradient(left, #f54d54 , #ff621d); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(right, #f54d54 , #ff621d); /* Opera 11.1 - 12.0 */

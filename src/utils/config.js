@@ -27,7 +27,7 @@ export const setCommparams = {
     channel: 'baidutongji0001',
     isGroup: 1,
     phone: Encrypt(myStorage.get('phone')) || '',
-    city: myStorage.get('city'),
+    city: myStorage.get('city') || '',
     imei: ukey()
 }
 //首页接口
@@ -172,4 +172,41 @@ export const getSetPassword =(data) =>{
         },
         params:Object.assign({}, setCommparams,data)
     })
+}
+//获取个人信息
+export const getUserInfo = (data)=>{
+    return Axios({
+        method:'post',
+        url:HOST + '/v3/userInfo',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params:Object.assign({}, setCommparams,data)
+    })
+}
+//注册并下载（信息流渠道专用）
+export const getXxlChannel = (data)=>{
+    return Axios({
+        method:'post',
+        url:HOST + '/v3/xxlChannel',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params:Object.assign({}, setCommparams,data)
+    })
+}
+// APK下载接口
+export const getDownloadApk = (data)=>{
+    return `${HOST}/front/downloadApk?dn=${data.dn}&t=1`;
+    // url = HOST + '/front/downloadApk?dn'+ data.dn + ;
+    // return url;
+    // return Axios({
+    //     method:'post',
+    //     url:HOST + '/front/downloadApk',
+    //     headers: {
+    //         "Content-Type": "application/json"
+    //     },
+    //     params:Object.assign({}, setCommparams,data)
+    // })
+   
 }

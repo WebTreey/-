@@ -7,6 +7,7 @@ import CarrProving from './view/infomation/carrProving';
 import ErrIndex from './view/guide/Errindex';
 import InfoList from './view/infomation/infoList'
 import infoContent from './view/infomation/infoContent'
+import Index from './view/guide/index';
 class App extends Component {
   render() {
     return (
@@ -19,6 +20,7 @@ class App extends Component {
             <Route path="/ErrIndex/:id" component={ErrIndex}></Route>
             <Route path="/InfoList" component={InfoList}></Route>
             <Route path="/infoContent/:index" component={infoContent}></Route>
+            <Route path="/index" component={Index}></Route>
           </div>
         </Router>
       </div>

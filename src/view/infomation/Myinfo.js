@@ -3,7 +3,7 @@ import './info.scss'
 import {withRouter} from 'react-router';
 import { Picker, List , DatePicker } from 'antd-mobile';
 import {myStorage ,HideConter} from '../../utils/API';
-import {getIsAuth,getSubUsrInfo} from '../../utils/config';
+import {getIsAuth,getSubUsrInfo,getUserInfo} from '../../utils/config';
 import {Encrypt,Decrypt} from '../../utils/AES'
 const seasons = [
     {
@@ -60,9 +60,9 @@ class Myinfo extends React.Component{
     setIsAuth(data){
         getIsAuth(data).then(res=>{
             if(res.data.data){
-                    this.setState({
-                        AuthData:res.data.data
-                    })
+                this.setState({
+                    AuthData:res.data.data
+                })
             }
             console.log(res.data);
         })
@@ -71,6 +71,12 @@ class Myinfo extends React.Component{
     setSubUsrInfo(data){
         getSubUsrInfo(data).then(res=>{
             console.log(res.data)
+        })
+    }
+    //获取用户基本信息
+    setUserInfo(data){
+        getUserInfo(data).then(res=>{
+            console.log(res.data);
         })
     }
     handLinkCertification(){
@@ -112,6 +118,7 @@ class Myinfo extends React.Component{
     }
     componentDidMount(){
         this.setIsAuth({phone:Encrypt(myStorage.get('phone')),token:myStorage.get('token')});
+        this.setUserInfo({})
     }
     render(){
         const data = this.state.AuthData;

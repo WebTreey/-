@@ -74,10 +74,22 @@ export default class Move extends React.Component{
         this.size = 1;
         this.text = '数据加载中...'
     }
+     //提示框隐藏显示
+     setPromptHide(text){
+        this.text = text;
+        this.setState({
+            prompt:true
+        })
+        clearTimeout(this.times)
+        this.times = setTimeout(()=>{
+            this.setState({
+                prompt:false
+            })
+        },2000)
+    }
     //调用产品ID接口
     setModuleInfo(data){
         getModuleInfo(data).then(res=>{
-            console.log(res.data);
             this.setState({
                 moduleData:res.data.result
             })
@@ -90,41 +102,51 @@ export default class Move extends React.Component{
         const clientHeight = document.documentElement.clientHeight;
         const page = Math.ceil(this.state.total/this.state.pageSize);
         if((scrollTop+clientHeight)>=scrollHeight){
-            this.setState({
-                loding: true
-            })
-            clearTimeout(this.times)
-            this.times = setTimeout(()=>{
-                if(this.size>=page) {
-                    this.text = '已经没有更多数据了'
-                    this.setState({
-                        isimg:false
-                    })
-                    return false;
-                }else{
-                    this.setState({
-                        isimg:true
-                    })
-                    this.text = '数据加载中...'
-                }
+            if(this.size>=page) {
+                this.text = '已经没有更多数据了'
+                this.setState({
+                    isimg:false
+                })
+            }else{
+                this.text = '数据加载中...';
+                this.setState({
+                    isimg:true
+                })
                 const data = {
-                    isPagin:1,
-                    pageNo: this.size++,
-                    pageSize:this.state.pageSize,
-                    minLimit:this.state.minLimit,
-                    maxLimit:this.state.maxLimit,
-                    orderBy:this.state.orderBy,
-                    module:this.state.modulee
-                }
-                this.setRecmdInfo(data);
-            },300)
-           
-            console.log(scrollTop,scrollHeight,clientHeight)
+                isPagin:1,
+                pageNo: ++this.size,
+                pageSize:this.state.pageSize,
+                minLimit:this.state.minLimit,
+                maxLimit:this.state.maxLimit,
+                orderBy:this.state.orderBy,
+                module:this.state.modulee
+            }
+                clearTimeout(this.times)
+                this.times = setTimeout(()=>{
+                    this.setRecmdInfo(data);
+                },300)
+                
+            }
         }
        
     }
     //选择排序方式
     handListClick(e){
+        const scrollHeight = document.documentElement.scrollHeight;
+        const scrollTop = document.documentElement.scrollTop 
+        const clientHeight = document.documentElement.clientHeight;
+        if((scrollTop+clientHeight)>=scrollHeight){
+            this.text = '数据加载中...'
+            this.setState({
+                isimg:true
+            })
+        }else{
+            this.text = ''
+            this.setState({
+                isimg:false
+            })
+        }
+        this.size = 1;
         const that = e.target.dataset;
         const index = parseInt(that.index,10);
         const item = that.item + '' || '' ;
@@ -140,6 +162,15 @@ export default class Move extends React.Component{
         }else{
             modulee = that.id || '';
         }
+        this.setState({
+            Tabindex:index,
+            MoveOpen:false,
+            minLimit:minLimit,
+            maxLimit:maxLimit,
+            orderBy:orderBy,
+            module:modulee,
+            recmdData:[]
+        })
         const data = {
             isPagin:1,
             pageNo:1,
@@ -149,16 +180,7 @@ export default class Move extends React.Component{
             orderBy:orderBy,
             module:modulee
         }
-        console.log(maxLimit,modulee)
         this.setRecmdInfo(data)
-        this.setState({
-            Tabindex:index,
-            MoveOpen:false,
-            minLimit:minLimit,
-            maxLimit:maxLimit,
-            orderBy:orderBy,
-            module:modulee
-        })
     }
     //顶部Tab点击事件
     handTabClick(e){
@@ -199,7 +221,7 @@ export default class Move extends React.Component{
                 loding:false ,
                 total:res.data.result.total
             })
-            console.log(res.data)
+            
         })
     }
     componentDidMount(){
@@ -223,6 +245,7 @@ export default class Move extends React.Component{
         this.times = null
     }
     render(){
+       
         const Tab = this.state.Tab;
         const indexs = this.state.activeIndex;
         const recmdData = this.state.recmdData;
@@ -276,7 +299,6 @@ export default class Move extends React.Component{
                             </ul>
                         </div>
                         <Loding text={this.text} isimg = {this.state.isimg}></Loding>
-                        {/* {this.state.loding ?  <Loding text={this.text} IsImg={this.state.have}></Loding>: ''} */}
                     </div>
             </div>
         )

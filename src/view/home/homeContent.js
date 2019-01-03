@@ -36,7 +36,6 @@ class HomeContent extends React.Component{
         })
         const param = Object.assign({},{isGroup:1},setCommparams)
         getHomeInof(param).then((res)=>{
-            console.log(res.data)
             this.setState({
                 bannerList:res.data.result.homeBannerList,
                 creditDetectionList:res.data.result.creditDetectionList,
