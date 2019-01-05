@@ -36,10 +36,7 @@ class Myinfo extends React.Component{
         this.state = {
             sValue:[],
             date: '',
-            AuthData:{
-                name:'立即去实名认证',
-                card:'立即去实名认证'
-            },
+            AuthData:{},
             PromptEnd:false
         }
     }
@@ -59,12 +56,7 @@ class Myinfo extends React.Component{
     //个人资料
     setIsAuth(data){
         getIsAuth(data).then(res=>{
-            if(res.data.data){
-                this.setState({
-                    AuthData:res.data.data
-                })
-            }
-            console.log(res.data);
+            console.log(res.data)
         })
     }
     //保存用户信息或者查询用户信息
@@ -77,6 +69,13 @@ class Myinfo extends React.Component{
     setUserInfo(data){
         getUserInfo(data).then(res=>{
             console.log(res.data);
+           if(res.data.result){
+                this.setState({
+                    sValue:[res.data.result.sex],
+                    date:new Date(res.data.result.birthday),
+                    AuthData:res.data.result
+                })
+           }
         })
     }
     handLinkCertification(){
@@ -86,18 +85,18 @@ class Myinfo extends React.Component{
         this.setState({
             sValue:value
         })
-        this.setSubUsrInfo({type:2,sex:value[0],birthday:''})
+        this.setSubUsrInfo({type:2,sex:value[0],birthday:this.state.date})
     }
     handDate(value){
         console.log(value)
-        const v = value;
-        let date = new Date(v);
+        let date = new Date(value);
         let y = date.getFullYear();
         let m = date.getMonth()+1;
+        let d = date.getDate();
         this.setState({
             date: value
         })
-        this.setSubUsrInfo({type:2,sex:'',birthday:`${y}-${m}`})
+        this.setSubUsrInfo({type:2,sex:this.state.sValue.length ? this.state.sValue[0] : '',birthday:`${y}-${m}-${d}`})
     }
     handEnd(){
         this.setState({
@@ -109,22 +108,25 @@ class Myinfo extends React.Component{
             PromptEnd:false
         })
         myStorage.remove('token');
-
+        myStorage.remove('phone');
+        this.props.history.push('/home/InfoIndex')
     }
     handEndNo(){
         this.setState({
             PromptEnd:false
         })
     }
+   
     componentDidMount(){
         this.setIsAuth({phone:Encrypt(myStorage.get('phone')),token:myStorage.get('token')});
         this.setUserInfo({})
     }
     render(){
         const data = this.state.AuthData;
+        console.log(data);
         const minDate = new Date('1930/01/01');
         const maxDate = new Date();
-        const IshandLinkCertification = !data ? this.handLinkCertification.bind(this) : null;
+        const IshandLinkCertification = (!data.idCardNo || !data.name)  ? this.handLinkCertification.bind(this) : null;
         return(
             <div className="info-me">
             {this.state.PromptEnd ? <Prompt handEndYes={this.handEndYes.bind(this)} handEndNo={this.handEndNo.bind(this)}></Prompt> : ''}
@@ -132,16 +134,16 @@ class Myinfo extends React.Component{
                     <ul className="info-me-ul">
                         <li className="flex-conter" onClick={IshandLinkCertification}>
                             <label>姓名</label>
-                            <input type="text" placeholder={HideConter(Decrypt(data.name))} readOnly></input>
+                            <input type="text" placeholder={data.name ? HideConter(data.name) : '立即实名认证'} readOnly></input>
                             <span><img src={require('../../images/right-icon.jpg')}></img></span>
                         </li>
                         <li className="flex-conter">
-                            {/* <label>性别</label> */}
                             <div className="Picker">
                                 <Picker
                                 data={seasons}
                                 cols={1}
                                 title="性别"
+                                disabled = {Object.keys(data).length === 0 ? false : true}
                                 value={this.state.sValue}
                                 onChange={this.handSex.bind(this)}
                                 onOk={this.handSex.bind(this)}
@@ -149,23 +151,28 @@ class Myinfo extends React.Component{
                                 <List.Item arrow="horizontal">性别</List.Item>
                                 </Picker>
                             </div>
-                            {/* <input type="text" placeholder="请选择" readOnly></input> */}
-                            {/* <span><img src={require('../../images/right-icon.jpg')}></img></span> */}
                         </li>
                         <li className="flex-conter" onClick={IshandLinkCertification}>
                             <label>身份证号</label>
-                            <input type="text" placeholder={HideConter(Decrypt(data.card))} readOnly></input>
+                            <input type="text" placeholder={data.idCardNo ? HideConter(data.idCardNo) : '立即实名认证'} readOnly></input>
                             <span><img src={require('../../images/right-icon.jpg')} ></img></span>
                         </li>
                         <li className="flex-conter">
                             <label>手机号码</label>
-                            <input type="text" placeholder="158****1251" readOnly></input>
+                            <input type="text" placeholder={HideConter(myStorage.get('phone'))} readOnly></input>
                             <span><img src={require('../../images/right-icon.jpg')}></img></span>
                         </li>
                         <li className="flex-conter">
                             <div className="Picker">
                             <DatePicker
-                            mode="date"
+                            mode="month"
+                            format={(value)=>{
+                                const d = new Date(value);
+                                const date = `${d.getFullYear()}-${d.getMonth()+1<10?"0"+(d.getMonth()+1) :d.getMonth()+1}`;
+                                console.log(date);
+                                return date;
+                            }}
+                            disabled = {Object.keys(data).length === 0 ? false : true}
                             minDate= {minDate}
                             maxDate = {maxDate}
                             title="选择出生日期"
@@ -175,9 +182,6 @@ class Myinfo extends React.Component{
                             <List.Item arrow="horizontal">出生年月</List.Item>
                             </DatePicker>
                             </div>
-                            {/* <label>出生年月</label>
-                            <input type="text" placeholder="请选择" readOnly></input>
-                            <span><img src={require('../../images/right-icon.jpg')}></img></span> */}
                         </li>
                     </ul>
                 </div>

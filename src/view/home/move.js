@@ -216,11 +216,14 @@ export default class Move extends React.Component{
     //调用产品接口
     setRecmdInfo(data){
         getRecmdInfo(data).then(res=>{
-            this.setState({
-                recmdData:this.state.recmdData.concat(res.data.result.proRecommendList),
-                loding:false ,
-                total:res.data.result.total
-            })
+            console.log(res.data)
+            if(res.data.result){
+                this.setState({
+                    recmdData:this.state.recmdData.concat(res.data.result.proRecommendList),
+                    loding:false ,
+                    total:res.data.result.total
+                })
+            }
             
         })
     }
@@ -234,6 +237,7 @@ export default class Move extends React.Component{
             orderBy:this.state.orderBy,
             module:this.state.modulee
         }
+        this.handBoydScroll();
         this.setModuleInfo()
         this.setRecmdInfo(data);
         document.onscroll = ()=>{

@@ -203,6 +203,30 @@
         
     }
 }
+.test-result{
+   
+    .result-box{
+        background: #fff;  text-align: left; margin: .2rem 0 0 0; overflow: hidden;
+        h3{
+            height: .8rem; line-height: .8rem; border-bottom: 1px solid #dfdfdf;padding:  0 .4rem; color: #455b6f;
+        }
+        ul{
+            padding:  .2rem .4rem;
+            li{
+                padding: .2rem 0; font-size: .28rem;
+                span{
+                    color: #a1a1a1; display: inline-block; width: 2rem;
+                }
+            }
+        }
+       .huaf-data{
+           height: 300px;
+       }
+       .result-tb{
+           padding: .25rem;background: #fbfbfb; border:1px solid #dedede; width: 6.5rem; margin: .2rem auto; border-radius: .1rem;
+       }
+    }
+}
 
 
 .am-list-item{

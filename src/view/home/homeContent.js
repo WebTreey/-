@@ -36,6 +36,7 @@ class HomeContent extends React.Component{
         })
         const param = Object.assign({},{isGroup:1},setCommparams)
         getHomeInof(param).then((res)=>{
+            console.log(res.data)
             this.setState({
                 bannerList:res.data.result.homeBannerList,
                 creditDetectionList:res.data.result.creditDetectionList,
@@ -106,18 +107,29 @@ class HomeContent extends React.Component{
         if(this.state.isdata){
             this.text = this.state.have ? '正在加载更多数据' : '没有数据了';
             const bannerList = this.state.bannerList;
-            const creditDetectionList = this.state.creditDetectionList;
+            const creditDetectionList = this.state.creditDetectionList || [];
             let proModuleList = this.state.proModuleList;
             let proList = [];
+            for(var i=0;i<proModuleList.length;i++){
+                if(proModuleList[i].proList.length===0){
+                    proModuleList.splice(i,1);
+                    i--
+                }
+            }
+            // proModuleList.map((item,index)=>{
+            //     debugger
+            //     indexs ++ 
+            //     if(item.proList.length===0){
+            //         proModuleList.splice(indexs,1);
+            //         indexs--
+            //     }else{
+                   
+            //     }
+            // })
             if(proModuleList[0]){
-                proList = this.state.proModuleList[0].proList
+                proList = this.state.proModuleList[0].proList || []
                 this.proListlength = proList.length;
             }
-            proModuleList.map((item,index)=>{
-                if(item.proList.length===0){
-                    proModuleList.splice(index,1);
-                }
-            })
             //banner数据
             let items =  bannerList.map((item,index)=>{
                 let obj = {};
@@ -145,40 +157,49 @@ class HomeContent extends React.Component{
                                 </ul>
                             </div>
                             <div className="home-recommend">
-                                <div className="home-recommend-header flex-between">
-                                    <div className="home-recommend-icon"><img alt="闪电贷" src={proModuleList[0].proList[this.state.hyh].proIcon}></img></div>
-                                    <div className="home-recommend-title flex-defualt">
-                                        <h3>{proModuleList[0].proList[this.state.hyh].backName}</h3>
-                                        <span>无需下载APP</span>
+                                {proModuleList.length===0 ? <p className="nodata">暂无数据</p>:
+                                    <div>
+                                        <div className="home-recommend-header flex-between">
+                                        <div className="home-recommend-icon"><img alt="闪电贷" src={proModuleList[0].proList[this.state.hyh].proIcon}></img></div>
+                                        <div className="home-recommend-title flex-defualt">
+                                            <h3>{proModuleList[0].proList[this.state.hyh].backName}</h3>
+                                            <span>无需下载APP</span>
+                                        </div>
+                                        <div className="home-recommend-replace flex-content">
+                                            <img alt="闪电贷" alt="闪电贷" src={require('../../images/reload.png')}></img>
+                                            <span onClick={this.handChange.bind(this)}>换一换</span>
+                                        </div>
+                                        </div>
+                                        <div className="home-recommend-content">
+                                        <div className="home-recommend-money">
+                                            <em>{MoneyFormat(proModuleList[0].proList[this.state.hyh].maxLimit)}</em>
+                                            <p>最高可贷额度(元)</p>
+                                        </div>
+                                        <div className="home-recommend-adv">
+                                            <ul className="flex-around">
+                                                <li>{proModuleList[0].proList[this.state.hyh].termText}</li>
+                                                <li>{proModuleList[0].proList[this.state.hyh].rateText}</li>
+                                                <li>{proModuleList[0].proList[this.state.hyh].lendRate}</li>
+                                            </ul>
+                                        </div>
+                                        </div>
+                                        <div className="home-recommend-btn"><a href={proModuleList[0].proList[this.state.hyh].h5Link}>立即申请</a></div>
                                     </div>
-                                    <div className="home-recommend-replace flex-content">
-                                        <img alt="闪电贷" alt="闪电贷" src={require('../../images/reload.png')}></img>
-                                        <span onClick={this.handChange.bind(this)}>换一换</span>
-                                    </div>
-                                </div>
-                                <div className="home-recommend-content">
-                                    <div className="home-recommend-money">
-                                        <em>{MoneyFormat(proModuleList[0].proList[this.state.hyh].maxLimit)}</em>
-                                        <p>最高可贷额度(元)</p>
-                                    </div>
-                                    <div className="home-recommend-adv">
-                                        <ul className="flex-around">
-                                            <li>{proModuleList[0].proList[this.state.hyh].termText}</li>
-                                            <li>{proModuleList[0].proList[this.state.hyh].rateText}</li>
-                                            <li>{proModuleList[0].proList[this.state.hyh].lendRate}</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div className="home-recommend-btn"><a href={proModuleList[0].proList[this.state.hyh].h5Link}>立即申请</a></div>
+                                }
+                                
+                               
                             </div>
                             <div className="home-list">
-                                <div className="home-list-header flex-between">
+                                {proModuleList.length===0 ? <p className="nodata">暂无数据</p>: 
+                                <div>
+                                     <div className="home-list-header flex-between">
                                     <h3>{proModuleList[1].name}</h3>
                                     <span onClick={this.handLinkMoves.bind(this)}>更多 ></span>
                                 </div>
                                 <div>
                                     <ul>
                                         {proModuleList[1].proList.map((item,index)=>{
+                                            var item = Object.keys(item).length ? item : {}
                                             return(
                                                 <li key={index}>
                                                     <div className="home-item">
@@ -203,6 +224,8 @@ class HomeContent extends React.Component{
                                         })}
                                     </ul>
                                 </div>
+                                </div>
+                            }
                             </div>
                             {this.state.loding ?  <Loding text={this.text} IsImg={this.state.have}></Loding>: ''}
                             <div className="home-footer">

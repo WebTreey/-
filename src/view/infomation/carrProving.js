@@ -1,7 +1,9 @@
 import React from 'react';
 import './info.scss'
 import {ProvingID} from '../../utils/API'
-import {PromptBox} from '../../components/prompt/prompt'
+import {PromptBox} from '../../components/prompt/prompt';
+import {getGoOprCheck} from '../../utils/config';
+import {Encrypt} from '../../utils/AES'
 // import { withRouter } from 'react-router';
 class CarrProving extends React.Component{
     constructor(props){
@@ -14,12 +16,33 @@ class CarrProving extends React.Component{
         }
        
     }
-    handChangeName(e){
-        const value = e.target.value;
-        this.setState({
-            name:value
+    setGoOprCheck(data){
+        getGoOprCheck(data).then(res=>{
+           if(res.data.code===1){
+               window.location.href = res.data.result;
+           }
         })
     }
+    //提示框隐藏显示
+    setPromptHide(text){
+        this.text = text;
+        this.setState({
+            prompt:true
+        })
+        clearTimeout(this.times)
+        this.times = setTimeout(()=>{
+            this.setState({
+                prompt:false
+            })
+        },2000)
+    }
+    //监听姓名输入
+    handChangeName(e){
+        this.setState({
+            name:e.target.value
+        })
+    }
+    //监听身份证号码输入
     handProvingID(e){
         const value = e.target.value;
         const str = ProvingID(value);
@@ -27,42 +50,23 @@ class CarrProving extends React.Component{
             id:str
         })
     }
+    //检测按钮
     handLoginClick(){
-        if(this.state.pass1===''){
-            this.text = '密码不能为空';
-            this.setState({
-                prompt:true
-            })
-            this.times = setTimeout(()=>{
-                this.setState({
-                    prompt:false
-                })
-                clearTimeout(this.times);
-            },2000)
-        }else if(this.state.codevalue===''){
-            this.text = '验证码错误，请重新输入！';
-            this.setState({
-                prompt:true
-            })
-            this.times = setTimeout(()=>{
-                this.setState({
-                    prompt:false
-                })
-                clearTimeout(this.times);
-            },2000)
-        }else if(this.state.pass2===''){
-            this.text = '密码不一致';
-            this.setState({
-                prompt:true
-            })
-            this.times = setTimeout(()=>{
-                this.setState({
-                    prompt:false
-                })
-                clearTimeout(this.times);
-            },2000)
+        if(this.state.name===''){
+            this.setPromptHide('姓名不能为空');
+        }else if(this.state.id===''){
+            this.setPromptHide('身份证号码不能为空');
+        }else{
+            const data = {
+                name:Encrypt(this.state.name),
+                idCard:Encrypt(this.state.id),
+                backUrl:`${document.domain}/#/home/infoindex?nav=2`
+            }
+            this.setGoOprCheck(data);
         }
+       
     }
+    //是否同意检测协议
     handCheckbox(){
         if(this.state.checked){
             this.setState({

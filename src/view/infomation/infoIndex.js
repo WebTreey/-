@@ -83,10 +83,19 @@ class InfoIndex extends React.Component{
             console.log(res.data)
         })
     }
-    //查询信用报告
+    
+    //查询是否存在检测结果
     setExistCheckReport(data){
         getExistCheckReport(data).then(res=>{
             console.log(res.data)
+            if(res.data.code==='ok'){
+                // operatorCheck
+                if(res.data.data.operatorCheck===1){
+                    this.props.history.push('/TestResult')
+                }else{
+                    this.props.history.push('/home/myinfo?nav=2')
+                }
+            }
         })
     }
     handBaidu(){
@@ -94,7 +103,7 @@ class InfoIndex extends React.Component{
     }
     handLinkMyinfo(){
         if(this.state.data.code==='yes' || this.state.data.code==='no'){
-            this.props.history.push('/home/myinfo')
+            this.setExistCheckReport({phone:Encrypt(myStorage.get('phone'))});
         }else{
             this.props.history.push('/home/login')
         }
@@ -114,9 +123,8 @@ class InfoIndex extends React.Component{
     }
     componentDidMount(){
         this.getBaiDuAPI();
-        this.setIsAuth({phone:Encrypt('13312345678'),token:myStorage.get('token')});
-        this.setSms({token:myStorage.get('token')})
-        this.setExistCheckReport({phone:Encrypt('13312345678')});
+        this.setIsAuth({phone:Encrypt(myStorage.get('phone')),token:myStorage.get('token')});
+        this.setSms({token:myStorage.get('token')});
     }
     componentWillUnmount(){
         clearTimeout(this.times)

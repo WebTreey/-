@@ -32,6 +32,7 @@ class Certification extends React.Component{
         getDoshenqing(data).then(res=>{
             if(res.data.code==='ok'){
                 this.setPromptHide('保存成功');
+                this.props.history.go(-1);
             }else if(res.data.code==='nameError'){
                 this.setPromptHide('姓名格式不对');
             }else if(res.data.code==='hasError'){
@@ -44,10 +45,17 @@ class Certification extends React.Component{
     }
     //认证身份证信息
     setCardAuth(data){
+        console.log(data)
         getCardAuth(data).then(res=>{
             console.log(res.data)
-            if(res.data.code==='ok'){
-                this.setDoshenqing({name:Encrypt(this.state.name),card:Encrypt(this.state.id),isNeedVerfyCode:'noNeed'})
+            if(res.data.code===1){
+                if(res.data.result.authFlag==='1'){
+                    this.setDoshenqing(data)
+                }else{
+                    this.setPromptHide('认证失败');
+                }
+            }else{
+                this.setPromptHide('认证失败');
             }
         })
     }
@@ -67,8 +75,13 @@ class Certification extends React.Component{
         }else if(this.state.id===''){
             this.setPromptHide('身份证号码不能为空');
         }else{
-            this.setCardAuth({name:Encrypt(this.state.name),card:Encrypt(this.state.id),isNeedVerfyCode:'noNeed'})
+            console.log(this.state.name,this.state.id)
+            this.setCardAuth({name:Encrypt(this.state.name),idCardNo:Encrypt(this.state.id),card:Encrypt(this.state.id),isNeedVerfyCode:'noNeed'})
         }
+    }
+    componentWillUnmount(){
+        clearTimeout(this.times);
+        this.times = null ;
     }
     render(){
         return(
