@@ -223,7 +223,7 @@ class LoginFun2 extends React.Component{
                     </label>
                     <label className="flex-between">
                     <input type={this.state.inputtype} placeholder="请输入您的登录密码" value={this.state.codevalue} onChange={this.handPassChange.bind(this)}></input>
-                    <img src={this.state.imgurl} onClick={this.handImgClick.bind(this)}></img>
+                    <img alt="" src={this.state.imgurl} onClick={this.handImgClick.bind(this)}></img>
                     </label>
                 </form>
                 <div className="guide-btn" onClick={this.handLoginClick.bind(this)}>立即登录</div>
@@ -288,7 +288,7 @@ class Login extends React.Component{
                 </div>
                 <div className="login-protocol flex-content">
                     <input type="checkbox" className={this.state.checkedclass} defaultChecked={this.state.checked} onClick={this.handCheckbox.bind(this)}></input>
-                    <span>我已阅读并同意 <a>《 用户注册协议 》</a></span>
+                    <span>我已阅读并同意 <a href="http://www.baidu.com">《 用户注册协议 》</a></span>
                 </div>
             </div>
         )

@@ -2,9 +2,9 @@ import React from 'react';
 import './info.scss'
 import {withRouter} from 'react-router';
 import { Picker, List , DatePicker } from 'antd-mobile';
-import {myStorage ,HideConter} from '../../utils/API';
+import {myStorage ,HideConter,BaiDuHm} from '../../utils/API';
 import {getIsAuth,getSubUsrInfo,getUserInfo} from '../../utils/config';
-import {Encrypt,Decrypt} from '../../utils/AES'
+import {Encrypt} from '../../utils/AES'
 const seasons = [
     {
         label: '男',
@@ -39,6 +39,7 @@ class Myinfo extends React.Component{
             AuthData:{},
             PromptEnd:false
         }
+        BaiDuHm()
     }
     //提示框隐藏显示
     setPromptHide(text){
@@ -135,7 +136,7 @@ class Myinfo extends React.Component{
                         <li className="flex-conter" onClick={IshandLinkCertification}>
                             <label>姓名</label>
                             <input type="text" placeholder={data.name ? HideConter(data.name) : '立即实名认证'} readOnly></input>
-                            <span><img src={require('../../images/right-icon.jpg')}></img></span>
+                            <span><img alt="" src={require('../../images/right-icon.jpg')}></img></span>
                         </li>
                         <li className="flex-conter">
                             <div className="Picker">
@@ -155,12 +156,12 @@ class Myinfo extends React.Component{
                         <li className="flex-conter" onClick={IshandLinkCertification}>
                             <label>身份证号</label>
                             <input type="text" placeholder={data.idCardNo ? HideConter(data.idCardNo) : '立即实名认证'} readOnly></input>
-                            <span><img src={require('../../images/right-icon.jpg')} ></img></span>
+                            <span><img alt="" src={require('../../images/right-icon.jpg')} ></img></span>
                         </li>
                         <li className="flex-conter">
                             <label>手机号码</label>
                             <input type="text" placeholder={HideConter(myStorage.get('phone'))} readOnly></input>
-                            <span><img src={require('../../images/right-icon.jpg')}></img></span>
+                            <span><img alt="" src={require('../../images/right-icon.jpg')}></img></span>
                         </li>
                         <li className="flex-conter">
                             <div className="Picker">

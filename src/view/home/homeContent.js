@@ -1,6 +1,6 @@
 import React from 'react';
-import {MoneyFormat } from '../../utils/API'
-import {setCommparams,getHomeInof} from '../../utils/config'
+import {MoneyFormat , ISFirstWeb,BaiDuHm} from '../../utils/API'
+import {getHomeInof,getCommonClickLog,getSaveOpenLog} from '../../utils/config'
 import { withRouter } from 'react-router';
 import ReactSwiper from 'reactjs-swiper'
 import './home.scss';
@@ -28,24 +28,58 @@ class HomeContent extends React.Component{
             hyh:0
         }
         this.i = 0;
+        BaiDuHm()
       }
     //获取数据
     setHomeinfo(){
         this.setState({
             isdata:false
         })
-        const param = Object.assign({},{isGroup:1},setCommparams)
+        const param = Object.assign({},{isGroup:1,filterApi:1})
         getHomeInof(param).then((res)=>{
-            console.log(res.data)
-            this.setState({
-                bannerList:res.data.result.homeBannerList,
-                creditDetectionList:res.data.result.creditDetectionList,
-                proModuleList:res.data.result.proModuleList,
-                isdata:true
-            })
+            
+            console.log(res.data);
+            const proModuleList = res.data.result.proModuleList || [];
+            // 筛选
+            for(var i=0;i<proModuleList.length;i++){
+                if(proModuleList[i].proList.length===0){
+                    proModuleList.splice(i,1);
+                    i--
+                }
+                // else{
+                    
+                //     for(var k=0;k<proModuleList[i].proList.length;k++){
+                //         if(proModuleList[i].proList[k].proType===1){
+                //             proModuleList[i].proList.splice(k,1);
+                //             k--;
+                //         }
+                //     }
+                // }
+            }
+            if(res.data.result){
+                this.setState({
+                    bannerList:res.data.result.homeBannerList,
+                    creditDetectionList:res.data.result.creditDetectionList,
+                    proModuleList:res.data.result.proModuleList,
+                    isdata:true
+                })
+            }
         });
         
     }
+    //点击日志
+    setCommonClickLog(data){
+        getCommonClickLog(data).then(res=>{
+            console.log(res.data)
+        })
+    }
+    //打开日志
+    setSaveOpenLog(){
+        getSaveOpenLog().then(res=>{
+            console.log(res.data)
+        })
+    }
+    
     //滚动加载数据
     // handBoydScroll(){
     //     const scrollHeight = document.documentElement.scrollHeight;
@@ -74,48 +108,49 @@ class HomeContent extends React.Component{
     //         }
     //         console.log(scrollTop,scrollHeight,clientHeight)
     //     }
-       
     // }
-    
+    //点击统计
+    handCount(data){
+        this.setCommonClickLog(data)
+    }
     //跳转详情页面
     handLinkMoves(){
         this.props.history.push('/home/Move?nav=1')
     }
     //换一换
     handChange(){
-        if(this.i<this.proListlength-1){
-            this.setState({
-                hyh: ++this.i
-            })
-        }else{
-            this.i = 0;
-            this.setState({
-                hyh: this.i
-            })
+        const data = this.state.proModuleList;
+        if(data.length){
+            this.proListlength = data[0].proList.length;
+            if(this.i<this.proListlength-1){
+                this.setState({
+                    hyh: ++this.i
+                })
+            }else{
+                this.i = 0;
+                this.setState({
+                    hyh: this.i
+                })
+            }
         }
-        
-        
     }
     componentDidMount(){
-        this.setHomeinfo()
+        if(ISFirstWeb()){
+            this.setSaveOpenLog();
+        }
+        this.setHomeinfo();
     }
     componentWillUnmount(){
         clearTimeout(this.tiems);
     }
     render(){
-      
         if(this.state.isdata){
             this.text = this.state.have ? '正在加载更多数据' : '没有数据了';
             const bannerList = this.state.bannerList;
             const creditDetectionList = this.state.creditDetectionList || [];
             let proModuleList = this.state.proModuleList;
-            let proList = [];
-            for(var i=0;i<proModuleList.length;i++){
-                if(proModuleList[i].proList.length===0){
-                    proModuleList.splice(i,1);
-                    i--
-                }
-            }
+            // let proList = [];
+            
             // proModuleList.map((item,index)=>{
             //     debugger
             //     indexs ++ 
@@ -126,10 +161,10 @@ class HomeContent extends React.Component{
                    
             //     }
             // })
-            if(proModuleList[0]){
-                proList = this.state.proModuleList[0].proList || []
-                this.proListlength = proList.length;
-            }
+            // if(proModuleList[0]){
+            //     proList = this.state.proModuleList[0].proList || [];
+            //     this.proListlength = proList.length;
+            // }
             //banner数据
             let items =  bannerList.map((item,index)=>{
                 let obj = {};
@@ -152,8 +187,21 @@ class HomeContent extends React.Component{
                         <div className="main">
                             <div className="home-header ">
                                 <ul className="flex-between">
-                                    <li><a href={creditDetectionList[0].h5Link}><img alt="闪电贷" src={creditDetectionList[0].img}></img></a></li>
-                                    <li><a href={creditDetectionList[1].h5Link}><img alt="闪电贷" src={creditDetectionList[1].img}></img></a></li>
+                                    <li onClick={
+                                        this.handCount.bind(this,{
+                                            clickType:5217,
+                                            reserve1:creditDetectionList[0].moduleName,
+                                            reserve2:creditDetectionList[0].creditModuleType
+                                        })
+                                        }><a href={creditDetectionList[0].h5Link}><img alt="闪电贷" src={creditDetectionList[0].img}></img></a></li>
+                                    <li onClick={
+                                        this.handCount.bind(this,{
+                                            clickType:5217,
+                                            reserve1:creditDetectionList[1].moduleName,
+                                            reserve2:creditDetectionList[1].creditModuleType
+                                        })
+                                        }><a href={creditDetectionList[1].h5Link}><img alt="闪电贷" src={creditDetectionList[1].img}></img></a></li>
+                                        
                                 </ul>
                             </div>
                             <div className="home-recommend">
@@ -166,7 +214,7 @@ class HomeContent extends React.Component{
                                             <span>无需下载APP</span>
                                         </div>
                                         <div className="home-recommend-replace flex-content">
-                                            <img alt="闪电贷" alt="闪电贷" src={require('../../images/reload.png')}></img>
+                                            <img alt="闪电贷" src={require('../../images/reload.png')}></img>
                                             <span onClick={this.handChange.bind(this)}>换一换</span>
                                         </div>
                                         </div>
@@ -183,14 +231,21 @@ class HomeContent extends React.Component{
                                             </ul>
                                         </div>
                                         </div>
-                                        <div className="home-recommend-btn"><a href={proModuleList[0].proList[this.state.hyh].h5Link}>立即申请</a></div>
+                                        <div className="home-recommend-btn" onClick={
+                                        this.handCount.bind(this,{
+                                            clickType:5211,
+                                            reserve1:proModuleList[0].proList.backName,
+                                            reserve2:proModuleList[0].proList.apiProCode,
+                                            reserve3:proModuleList[0].name
+                                        })
+                                        }><a href={proModuleList[0].proList[this.state.hyh].h5Link}>立即申请</a></div>
                                     </div>
                                 }
                                 
                                
                             </div>
                             <div className="home-list">
-                                {proModuleList.length===0 ? <p className="nodata">暂无数据</p>: 
+                                {proModuleList.length<1 ? <p className="nodata">暂无数据</p>: 
                                 <div>
                                      <div className="home-list-header flex-between">
                                     <h3>{proModuleList[1].name}</h3>
@@ -199,7 +254,7 @@ class HomeContent extends React.Component{
                                 <div>
                                     <ul>
                                         {proModuleList[1].proList.map((item,index)=>{
-                                            var item = Object.keys(item).length ? item : {}
+                                           
                                             return(
                                                 <li key={index}>
                                                     <div className="home-item">
@@ -216,7 +271,14 @@ class HomeContent extends React.Component{
                                                                 <p>{item.minLendRate}</p>
                                                                 <p>{item.lendRate}</p>
                                                             </div>
-                                                            <div className="home-item-btn"><a href={item.h5Link}>立即申请</a></div>
+                                                            <div className="home-item-btn" onClick={
+                                                            this.handCount.bind(this,{
+                                                                clickType:5211,
+                                                                reserve1:proModuleList[1].proList.backName,
+                                                                reserve2:proModuleList[1].proList.apiProCode,
+                                                                reserve3:proModuleList[1].name
+                                                            })
+                                        }><a href={item.h5Link}>立即申请</a></div>
                                                     </div>
                                                     </div>
                                                 </li>

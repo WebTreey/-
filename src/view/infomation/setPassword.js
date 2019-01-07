@@ -158,11 +158,11 @@ class SetPassword extends React.Component{
                     <form className="flex-column-left info-setpass">
                         <label className="flex-between">
                         <input type={inputtype1} placeholder="请输入密码" data-pass={1}  value={this.state.pass1} onChange={this.handPassword.bind(this)} ></input>
-                        <img alt="" src={this.state.imgurl1} onClick={this.handImgClick.bind(this)} data-pass={1} onClick={this.handImgClick.bind(this)}></img>
+                        <img alt="" src={this.state.imgurl1} onClick={this.handImgClick.bind(this)} data-pass={1}></img>
                         </label>
                         <label className="flex-between">
                         <input type={inputtype2} placeholder="请确认新密码" data-pass={2}  value={this.state.pass2} onChange={this.handPassword.bind(this)}></input>
-                        <img alt="" src={this.state.imgurl2} onClick={this.handImgClick.bind(this)} data-pass={2} onClick={this.handImgClick.bind(this)}></img>
+                        <img alt="" src={this.state.imgurl2} onClick={this.handImgClick.bind(this)} data-pass={2}></img>
                         </label>
                         <label className="flex-between">
                         <input type="text" placeholder="请输入短信验证码" value={this.state.codevalue} onChange={this.handCodeChange.bind(this)}></input>

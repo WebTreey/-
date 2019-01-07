@@ -1,7 +1,7 @@
 import React from 'react';
 import './info.scss';
 import {withRouter} from 'react-router';
-import {myStorage} from '../../utils/API'
+import {myStorage,BaiDuHm} from '../../utils/API'
 import {getIsAuth,getSms,getExistCheckReport} from '../../utils/config';
 import {Encrypt} from '../../utils/AES';
 import {PromptBox} from '../../components/prompt/prompt'
@@ -16,6 +16,7 @@ class InfoIndex extends React.Component{
             showBtn:true,
             rzText:''
         }
+        BaiDuHm()
     }
     //提示框隐藏显示
     setPromptHide(text){
@@ -147,7 +148,7 @@ class InfoIndex extends React.Component{
                     </div>
                     <div className="info-grxx flex-column">
                         <img alt="闪电贷" src={require('../../images/my-photo.jpg')}></img>
-                        {this.state.showBtn ? <div><span className="flex-content"><em>{myStorage.get('phone')}</em><img src={require("../../images/right-icon.jpg")}></img></span>
+                        {this.state.showBtn ? <div><span className="flex-content"><em>{myStorage.get('phone')}</em><img alt="" src={require("../../images/right-icon.jpg")}></img></span>
                         <button className="info-grxx-btn">{this.state.rzText}</button></div> : <button onClick={this.handLoginBtn.bind(this)} className="info-grxx-btn" style={{margin:'.2rem 0 0 0'}}>登录</button>}
                         
                     </div>

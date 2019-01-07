@@ -11,9 +11,7 @@ import Myinfo from '../infomation/Myinfo';
 import SetPassword from '../infomation/setPassword';
 import Certification from '../infomation/certification';
 export default class Home extends React.Component{
-    constructor(props){
-        super(props);
-    }
+   
     handSetTab(e){
         const Tabindex = parseInt(GetQueryString('nav')) || 0 ;
         const index = parseInt(e.target.dataset.index,10);

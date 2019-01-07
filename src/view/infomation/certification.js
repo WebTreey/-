@@ -1,8 +1,8 @@
 import React from 'react';
 import './info.scss'
-import {ProvingID} from '../../utils/API'
+import {ProvingID,BaiDuHm} from '../../utils/API'
 import {PromptBox} from '../../components/prompt/prompt'
-import {getDoshenqing,getIsAuth ,getCardAuth} from '../../utils/config'
+import {getDoshenqing,getCardAuth} from '../../utils/config'
 import { withRouter } from 'react-router';
 import {Encrypt} from '../../utils/AES'
 class Certification extends React.Component{
@@ -13,6 +13,7 @@ class Certification extends React.Component{
             id:'',
             data:[]
         }
+        BaiDuHm()
     }
     //提示框隐藏显示
     setPromptHide(text){

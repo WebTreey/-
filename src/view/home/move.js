@@ -1,7 +1,7 @@
 import React from 'react';
 import './home.scss';
-import {getModuleInfo,getRecmdInfo} from '../../utils/config'
-import {MoneyFormat} from '../../utils/API'
+import {getModuleInfo,getRecmdInfo,getSaveOpenLog,getCommonClickLog} from '../../utils/config'
+import {MoneyFormat,ISFirstWeb,BaiDuHm} from '../../utils/API'
 //排序弹出
 class MoveOpen extends React.Component{
     constructor(props){
@@ -29,7 +29,7 @@ class MoveOpen extends React.Component{
                                 )
                             }
                             return(
-                                <li className={cname} key={index} data-index={index} data-id={item.id} onClick={this.props.handListClick}>{item.name}</li>
+                                <li className={cname} key={index} data-index={index} data-id={item.id} data-item={item.name} onClick={this.props.handListClick}>{item.name}</li>
                             )
                         })}
                     </ul>
@@ -47,6 +47,7 @@ const Loding = (props)=>{
         </div>
     )
 }
+let minLimit ='' , maxLimit ='' , orderBy = 0 , modulee  = 0;
 export default class Move extends React.Component{
     constructor(props){
         super(props)
@@ -73,9 +74,10 @@ export default class Move extends React.Component{
         }
         this.size = 1;
         this.text = '数据加载中...'
+        BaiDuHm()
     }
-     //提示框隐藏显示
-     setPromptHide(text){
+    //提示框隐藏显示
+    setPromptHide(text){
         this.text = text;
         this.setState({
             prompt:true
@@ -86,6 +88,41 @@ export default class Move extends React.Component{
                 prompt:false
             })
         },2000)
+    }
+    //点击日志
+    setCommonClickLog(data){
+        getCommonClickLog(data).then(res=>{
+            console.log(res.data)
+        })
+    }
+    //打开日志
+    setSaveOpenLog(){
+        getSaveOpenLog().then(res=>{
+            console.log(res.data)
+        })
+    }
+    //调用产品接口
+    setRecmdInfo(data){
+        getRecmdInfo(data).then(res=>{
+            console.log(res.data)
+            if(res.data.result){
+                // var total = res.data.result.total
+                // const proRecommendList = res.data.result.proRecommendList;
+                // for(var i=0;i<proRecommendList.length;i++){
+                //     if(proRecommendList[i].proType===1){
+                //         proRecommendList.splice(i,1);
+                //         i--
+                //     }
+                // }
+                this.setState({
+                    recmdData:this.state.recmdData.concat(res.data.result.proRecommendList),
+                    loding:false ,
+                    total:res.data.result.total
+                })
+                
+            }
+           
+        })
     }
     //调用产品ID接口
     setModuleInfo(data){
@@ -101,6 +138,7 @@ export default class Move extends React.Component{
         const scrollTop = document.documentElement.scrollTop 
         const clientHeight = document.documentElement.clientHeight;
         const page = Math.ceil(this.state.total/this.state.pageSize);
+        
         if((scrollTop+clientHeight)>=scrollHeight){
             if(this.size>=page) {
                 this.text = '已经没有更多数据了'
@@ -119,7 +157,8 @@ export default class Move extends React.Component{
                 minLimit:this.state.minLimit,
                 maxLimit:this.state.maxLimit,
                 orderBy:this.state.orderBy,
-                module:this.state.modulee
+                module:this.state.modulee,
+                filterApi:1
             }
                 clearTimeout(this.times)
                 this.times = setTimeout(()=>{
@@ -133,7 +172,7 @@ export default class Move extends React.Component{
     //选择排序方式
     handListClick(e){
         const scrollHeight = document.documentElement.scrollHeight;
-        const scrollTop = document.documentElement.scrollTop 
+        const scrollTop = document.documentElement.scrollTop; 
         const clientHeight = document.documentElement.clientHeight;
         if((scrollTop+clientHeight)>=scrollHeight){
             this.text = '数据加载中...'
@@ -149,26 +188,32 @@ export default class Move extends React.Component{
         this.size = 1;
         const that = e.target.dataset;
         const index = parseInt(that.index,10);
-        const item = that.item + '' || '' ;
-        let minLimit ='' , maxLimit ='' , orderBy ='' , modulee  = '';
-        
+        const item = (that.item + '') || '' ;
+        this.setCommonClickLog({clickType:5320,reserve1:item})
         if(this.state.activeIndex===1){
             if(item!=='不限额度'){
                 minLimit = parseInt(item.split('-')[0]);
                 maxLimit = item.indexOf('-') >-1 ? item.split('-')[1] : parseInt(item)
+                this.setState({
+                    minLimit:minLimit,
+                    maxLimit:maxLimit
+                })
+                
             }   
         }else if(this.state.activeIndex===2){
-            orderBy = that.index || '';
+            orderBy = that.index ;
+            this.setState({
+                orderBy:orderBy
+            })
         }else{
-            modulee = that.id || '';
+            modulee = that.id ;
+            this.setState({
+                module:modulee,
+            })
         }
         this.setState({
             Tabindex:index,
             MoveOpen:false,
-            minLimit:minLimit,
-            maxLimit:maxLimit,
-            orderBy:orderBy,
-            module:modulee,
             recmdData:[]
         })
         const data = {
@@ -178,9 +223,10 @@ export default class Move extends React.Component{
             minLimit:minLimit,
             maxLimit:maxLimit,
             orderBy:orderBy,
-            module:modulee
+            module:modulee,
+            filterApi:1
         }
-        this.setRecmdInfo(data)
+        this.setRecmdInfo(data);
     }
     //顶部Tab点击事件
     handTabClick(e){
@@ -192,11 +238,7 @@ export default class Move extends React.Component{
         }
         this.setState({
             activeIndex:index,
-            MoveOpen:true,
-            minLimit:'',
-            maxLimit:'',
-            orderBy:'',
-            module:'',
+            MoveOpen:true
         })
         
         if(index===1){
@@ -213,43 +255,34 @@ export default class Move extends React.Component{
             })
         }
     }
-    //调用产品接口
-    setRecmdInfo(data){
-        getRecmdInfo(data).then(res=>{
-            console.log(res.data)
-            if(res.data.result){
-                this.setState({
-                    recmdData:this.state.recmdData.concat(res.data.result.proRecommendList),
-                    loding:false ,
-                    total:res.data.result.total
-                })
-            }
-            
-        })
-    }
+    
     componentDidMount(){
         const data = {
             isPagin:1,
             pageNo:1,
             pageSize:this.state.pageSize,
-            minLimit:this.state.minLimit,
-            maxLimit:this.state.maxLimit,
-            orderBy:this.state.orderBy,
-            module:this.state.modulee
+            minLimit:this.state.minLimit || '',
+            maxLimit:this.state.maxLimit || '',
+            orderBy:this.state.orderBy || 0,
+            module:this.state.modulee || 0,
+            filterApi:1
         }
+       
         this.handBoydScroll();
         this.setModuleInfo()
         this.setRecmdInfo(data);
+        if(ISFirstWeb()){
+            this.setSaveOpenLog()
+        }
         document.onscroll = ()=>{
             this.handBoydScroll()
         }
     }
     componentWillUnmount(){
         document.onscroll = null;
-        this.times = null
+        clearTimeout(this.times)
     }
     render(){
-       
         const Tab = this.state.Tab;
         const indexs = this.state.activeIndex;
         const recmdData = this.state.recmdData;
@@ -294,7 +327,13 @@ export default class Move extends React.Component{
                                                         <p>{item.minLendRate}</p>
                                                         <p>{item.recommend}</p>
                                                     </div>
-                                                    <div className="home-item-btn"><a href={item.h5Link}>立即申请</a></div>
+                                                    <div className="home-item-btn"><a href={item.h5Link} 
+                                                        onClick={this.setCommonClickLog.bind(this,{
+                                                            clickType:5211,
+                                                            reserve1:item.backName,
+                                                            reserve2:item.apiProCode
+                                                       })}
+                                                    >立即申请</a></div>
                                             </div>
                                             </div>
                                         </li>

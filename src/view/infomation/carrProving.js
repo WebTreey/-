@@ -12,7 +12,8 @@ class CarrProving extends React.Component{
             name:'',
             id:'',
             checked:true,
-            checkedclass:'guide-checkbox'
+            checkedclass:'guide-checkbox',
+            prompt:false,
         }
        
     }
@@ -80,6 +81,10 @@ class CarrProving extends React.Component{
             })
         }
     }
+    componentWillUnmount(){
+        clearTimeout(this.times);
+        this.times = null;
+    }
     render(){
         return(
             <div className="info-me" style={{margin:'0'}}>
@@ -104,7 +109,7 @@ class CarrProving extends React.Component{
                 </div>
                 <div className="guide-protocol flex-conter" style={{padding:'.3rem .3rem 0'}}>
                     <input type="checkbox" className={this.state.checkedclass} defaultChecked={this.state.checked} onClick={this.handCheckbox.bind(this)}></input>
-                    <span>我已阅读并同意 <a>《 用户注册协议 》</a></span>
+                    <span>我已阅读并同意 <a href="http://www.baidu.com">《 用户注册协议 》</a></span>
                 </div>
                 <div className="guide-btn" onClick={this.handLoginClick.bind(this)}>确认提交</div>
                 <div className="info-yys-instruction">

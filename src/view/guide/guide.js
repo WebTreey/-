@@ -1,6 +1,6 @@
 import React from 'react';
 import './guide.scss';
-import {ProvingMobile,myStorage} from '../../utils/API';
+import {ProvingMobile,myStorage,BaiDuHm} from '../../utils/API';
 import {PromptBox} from '../../components/prompt/prompt';
 import {getSendSms,getCodelogin} from '../../utils/config';
 import {Encrypt} from '../../utils/AES';
@@ -18,6 +18,7 @@ export default class Guide extends React.Component{
             checkedclass:'guide-checkbox'
         }
         this.code = 60;
+        BaiDuHm()
     }
     //通过百度api获取地址
     getBaiDuAPI(){
@@ -132,6 +133,7 @@ export default class Guide extends React.Component{
     setCodelogin(data){
         getCodelogin(data).then(res=>{
             console.log(res.data);
+            this.props.history.push('/home')
             myStorage.set('token',res.data.token)
             myStorage.set('phone',this.state.phone);
         })
@@ -146,7 +148,7 @@ export default class Guide extends React.Component{
                 <div id="allmap" style={{display:'none'}}></div>
                 {this.state.prompt ? <PromptBox text={this.text}></PromptBox> :''}
                 <div className="guide-banner">
-                    <img src={require('../../images/guide.jpg')}></img>
+                    <img alt="" src={require('../../images/guide.jpg')}></img>
                     <div className="guide-login tran-bottom">
                         <form className="flex-column-left">
                             <label className="flex-between">
@@ -162,7 +164,7 @@ export default class Guide extends React.Component{
                 <div className="guide-btn" onClick={this.handLoginClick.bind(this)}>立即登录</div>
                 <div className="guide-protocol flex-content">
                     <input type="checkbox" className={this.state.checkedclass} defaultChecked={this.state.checked} onClick={this.handCheckbox.bind(this)}></input>
-                    <span>我已阅读并同意 <a>《 用户注册协议 》</a></span>
+                    <span>我已阅读并同意 <a href="http://www.baidu.com">《 用户注册协议 》</a></span>
                 </div>
                 <div className="guide-footer" onClick={this.handLinkHome.bind(this)}>我先逛逛</div>
                 <div className="guide-banq">Copyright@2018 xxx有限公司版权所有</div>

@@ -2,8 +2,8 @@ import Axios from 'axios';
 import { myStorage } from './API'
 import { Encrypt } from './AES'
 
-const HOST = 'http://192.168.1.127:8080';
-// const HOST = 'http://113.31.86.153:41070';
+// const HOST = 'http://192.168.1.127:8080';
+const HOST = 'http://113.31.86.153:41070';
 // const HOST = 'http://idai.iadcn.com';
 
 //随机数imei
@@ -220,5 +220,38 @@ export const getOperatorCheck = (data) => {
             "Content-Type": "application/json"
         },
         params: Object.assign({}, setCommparams, data)
+    })
+}
+//激活日志接口
+export const getSaveHardLog = (data) => {
+    return Axios({
+        method: 'post',
+        url: HOST + '/log/saveHardLog',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: Object.assign({}, setCommparams, data)
+    })
+}
+//打开日志接口
+export const getSaveOpenLog = (data) => {
+    return Axios({
+        method: 'post',
+        url: HOST + '/log/saveOpenLog',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: Object.assign({}, setCommparams, data)
+    })
+}
+//点击日志接口
+export const getCommonClickLog = (data) => {
+    return Axios({
+        method: 'post',
+        url: HOST + '/log/commonClickLog',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: Object.assign({}, setCommparams, data)
     })
 }

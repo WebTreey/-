@@ -70,7 +70,6 @@ export const MoneyFormat = (num) => {
     }
     return arrInt + arrmin ;
 }
-
 //本地储存
 export const myStorage = {
     get: function (key) {
@@ -100,4 +99,45 @@ export const myStorage = {
         localStorage.clear();
     }
 };
+//判断是否第一次访问该页面(用于点击日志)
+export const ISFirstWeb = () =>{
+    // return true;
+    if(!myStorage.get('ClickDate')){
+        const date =  Date();
+        console.log('第一次进入,上传日志')
+        myStorage.set('ClickDate',date);
+        return false;
+    }else{
+        const strdate = myStorage.get('ClickDate');
+        const oldDate = new Date(strdate);
+        const newDate = new Date();
+        if(newDate.getFullYear()>oldDate.getFullYear || newDate.getMonth() > oldDate.getMonth() || newDate.getDate()> oldDate.getDate()){
+            myStorage.set('ClickDate',newDate);
+            console.log('第二天进入，上传日志')
+            return true;
+        }else{
+            console.log('不上传日志');
+            return false;
+        }
+        
+    }
+}
+//判断是否第一次访问该页面(用于激活日志)
+export const ISFirstWebJH = () =>{
+    if(!myStorage.get('JH')){
+        myStorage.set('JH',1)
+        return false
+    }
+    return true;
+}
+export const BaiDuHm = () =>{
+    var _hmt = _hmt || [];
+    (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?d6fd9017a337e2cad391b7e772cb452a";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+    })();
+    console.log(1)
+}
 

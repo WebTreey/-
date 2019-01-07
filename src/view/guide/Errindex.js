@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 const Page404 = () =>{
     return(
         <div className="err-box-404 tran-conter">
-            <img src={require('../../images/404.jpg')}></img>
+            <img alt="" src={require('../../images/404.jpg')}></img>
             <h3>404</h3>
             <p>页面不知道去哪儿了</p>
             <div><i>5s</i> 后带您回 <span>首页</span></div>

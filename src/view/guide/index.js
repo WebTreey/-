@@ -4,7 +4,6 @@ import {ProvingMobile,myStorage} from '../../utils/API';
 import {PromptBox} from '../../components/prompt/prompt';
 import {getSendSms,getCodelogin,getXxlChannel,getDownloadApk} from '../../utils/config';
 import {Encrypt} from '../../utils/AES';
-import { get } from 'https';
 
 export default class Index extends React.Component{
     constructor(props){
