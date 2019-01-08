@@ -3,6 +3,7 @@ import './info.scss'
 import {ProvingMobile,HideConter} from '../../utils/API'
 import {PromptBox} from '../../components/prompt/prompt'
 import { withRouter } from 'react-router';
+import Log from '../../components/log/log'
 class FindPassword extends React.Component{
     constructor(props){
         super(props);
@@ -140,6 +141,7 @@ class FindPassword extends React.Component{
         const handCodeClick =  !this.state.isSetinterval ? this.handCodeClick.bind(this) : null;
         return(
             <div className="info-me">
+            <Log></Log>
              {this.state.prompt ? <PromptBox text={this.text}></PromptBox> : ''}
                 <div className="info-input">
                     <form className="flex-column-left">

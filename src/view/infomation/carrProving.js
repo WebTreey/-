@@ -1,9 +1,10 @@
 import React from 'react';
 import './info.scss'
-import {ProvingID} from '../../utils/API'
+import {ProvingID,BaiDuHm} from '../../utils/API'
 import {PromptBox} from '../../components/prompt/prompt';
-import {getGoOprCheck} from '../../utils/config';
+import {getGoOprCheck,getUrl} from '../../utils/config';
 import {Encrypt} from '../../utils/AES'
+import Log from '../../components/log/log'
 // import { withRouter } from 'react-router';
 class CarrProving extends React.Component{
     constructor(props){
@@ -15,7 +16,7 @@ class CarrProving extends React.Component{
             checkedclass:'guide-checkbox',
             prompt:false,
         }
-       
+        BaiDuHm()
     }
     setGoOprCheck(data){
         getGoOprCheck(data).then(res=>{
@@ -88,6 +89,7 @@ class CarrProving extends React.Component{
     render(){
         return(
             <div className="info-me" style={{margin:'0'}}>
+            <Log></Log>
                 {this.state.prompt ? <PromptBox text={this.text}></PromptBox> : ''}
                 <div className="info-yys-header flex-around">
                     <div className="yys-icon yys-dx"></div>
@@ -109,7 +111,7 @@ class CarrProving extends React.Component{
                 </div>
                 <div className="guide-protocol flex-conter" style={{padding:'.3rem .3rem 0'}}>
                     <input type="checkbox" className={this.state.checkedclass} defaultChecked={this.state.checked} onClick={this.handCheckbox.bind(this)}></input>
-                    <span>我已阅读并同意 <a href="http://www.baidu.com">《 用户注册协议 》</a></span>
+                    <span>我已阅读并同意 <a href={getUrl()}>《 用户注册协议 》</a></span>
                 </div>
                 <div className="guide-btn" onClick={this.handLoginClick.bind(this)}>确认提交</div>
                 <div className="info-yys-instruction">

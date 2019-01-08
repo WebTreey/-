@@ -1,8 +1,8 @@
 import React from 'react';
 import './guide.scss';
-import {ProvingMobile,myStorage,BaiDuHm} from '../../utils/API';
+import {ProvingMobile,myStorage,BaiDuHm,ISFirstWeb,ISFirstWebJH} from '../../utils/API';
 import {PromptBox} from '../../components/prompt/prompt';
-import {getSendSms,getCodelogin} from '../../utils/config';
+import {getSendSms,getCodelogin,getUrl,getSaveHardLog,getSaveOpenLog} from '../../utils/config';
 import {Encrypt} from '../../utils/AES';
 
 export default class Guide extends React.Component{
@@ -50,6 +50,18 @@ export default class Guide extends React.Component{
                 prompt:false
             })
         },2000)
+    }
+    //打开日志
+    setSaveOpenLog(){
+        getSaveOpenLog().then(res=>{
+            console.log(res.data)
+        })
+    }
+    //激活日志
+    setSaveHardLog(){
+        getSaveHardLog().then(res=>{
+            console.log(res.data)
+        })
     }
     //验证手机号码
     handPhoneChange(e){
@@ -140,6 +152,12 @@ export default class Guide extends React.Component{
     }
     componentDidMount(){
         this.getBaiDuAPI()
+        if(ISFirstWeb()){
+            this.setSaveOpenLog()
+        }
+        if(ISFirstWebJH()){
+            this.setSaveHardLog()
+        }
     }
     render(){
         const handCodeClick =  !this.state.isSetinterval ? this.handCodeClick.bind(this) : null;
@@ -164,7 +182,7 @@ export default class Guide extends React.Component{
                 <div className="guide-btn" onClick={this.handLoginClick.bind(this)}>立即登录</div>
                 <div className="guide-protocol flex-content">
                     <input type="checkbox" className={this.state.checkedclass} defaultChecked={this.state.checked} onClick={this.handCheckbox.bind(this)}></input>
-                    <span>我已阅读并同意 <a href="http://www.baidu.com">《 用户注册协议 》</a></span>
+                    <span>我已阅读并同意 <a href={getUrl()}>《 用户注册协议 》</a></span>
                 </div>
                 <div className="guide-footer" onClick={this.handLinkHome.bind(this)}>我先逛逛</div>
                 <div className="guide-banq">Copyright@2018 xxx有限公司版权所有</div>

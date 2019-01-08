@@ -5,6 +5,7 @@ import { Picker, List , DatePicker } from 'antd-mobile';
 import {myStorage ,HideConter,BaiDuHm} from '../../utils/API';
 import {getIsAuth,getSubUsrInfo,getUserInfo} from '../../utils/config';
 import {Encrypt} from '../../utils/AES'
+import Log from '../../components/log/log'
 const seasons = [
     {
         label: '男',
@@ -110,7 +111,7 @@ class Myinfo extends React.Component{
         })
         myStorage.remove('token');
         myStorage.remove('phone');
-        this.props.history.push('/home/InfoIndex')
+        this.props.history.push('/home/InfoIndex?nav=2')
     }
     handEndNo(){
         this.setState({
@@ -130,6 +131,7 @@ class Myinfo extends React.Component{
         const IshandLinkCertification = (!data.idCardNo || !data.name)  ? this.handLinkCertification.bind(this) : null;
         return(
             <div className="info-me">
+            <Log></Log>
             {this.state.PromptEnd ? <Prompt handEndYes={this.handEndYes.bind(this)} handEndNo={this.handEndNo.bind(this)}></Prompt> : ''}
                 <div className="info-main">
                     <ul className="info-me-ul">

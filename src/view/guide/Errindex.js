@@ -22,7 +22,7 @@ export default class ErrIndex extends React.Component{
         }
         return(
             <div className="err">
-            {comContent}
+                {comContent}
             </div>
         )
     }

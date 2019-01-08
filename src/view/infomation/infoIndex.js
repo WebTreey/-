@@ -1,8 +1,8 @@
 import React from 'react';
 import './info.scss';
 import {withRouter} from 'react-router';
-import {myStorage,BaiDuHm} from '../../utils/API'
-import {getIsAuth,getSms,getExistCheckReport} from '../../utils/config';
+import {myStorage,BaiDuHm,ISFirstWeb} from '../../utils/API'
+import {getIsAuth,getSms,getExistCheckReport,getSaveOpenLog} from '../../utils/config';
 import {Encrypt} from '../../utils/AES';
 import {PromptBox} from '../../components/prompt/prompt'
 class InfoIndex extends React.Component{
@@ -99,6 +99,12 @@ class InfoIndex extends React.Component{
             }
         })
     }
+    //打开日志
+    setSaveOpenLog(){
+        getSaveOpenLog().then(res=>{
+            console.log(res.data)
+        })
+    }
     handBaidu(){
         this.getBaiDuAPI();
     }
@@ -126,6 +132,9 @@ class InfoIndex extends React.Component{
         this.getBaiDuAPI();
         this.setIsAuth({phone:Encrypt(myStorage.get('phone')),token:myStorage.get('token')});
         this.setSms({token:myStorage.get('token')});
+        if(ISFirstWeb()){
+            this.setSaveOpenLog();
+        }
     }
     componentWillUnmount(){
         clearTimeout(this.times)

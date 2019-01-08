@@ -126,9 +126,9 @@ export const ISFirstWeb = () =>{
 export const ISFirstWebJH = () =>{
     if(!myStorage.get('JH')){
         myStorage.set('JH',1)
-        return false
+        return true
     }
-    return true;
+    return false;
 }
 export const BaiDuHm = () =>{
     var _hmt = _hmt || [];

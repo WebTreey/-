@@ -1,10 +1,11 @@
 import React from 'react';
 import './info.scss'
-import {ProvingMobile,HideConter,myStorage} from '../../utils/API'
+import {ProvingMobile,HideConter,myStorage,BaiDuHm} from '../../utils/API'
 import {PromptBox} from '../../components/prompt/prompt'
 import {getSetPassword,getSendSms} from '../../utils/config'
 import { withRouter } from 'react-router';
 import {Encrypt,MD5encode} from '../../utils/AES'
+import Log from '../../components/log/log'
 class SetPassword extends React.Component{
     constructor(props){
         super(props);
@@ -21,6 +22,7 @@ class SetPassword extends React.Component{
             prompt:false
         }
         this.code = 60;
+        BaiDuHm()
     }
     //提示框隐藏显示
     setPromptHide(text){
@@ -40,8 +42,9 @@ class SetPassword extends React.Component{
         getSetPassword(data).then(res=>{
             console.log(res.data)
             if(res.data.code==='ok'){
-                this.setPromptHide('修改成功');
-                this.props.history.go(-1);
+                this.props.history.push('/home/InfoIndex?nav=2')
+                myStorage.remove('phone');
+                myStorage.remove('token');
             }else{
                 this.setPromptHide('修改失败')
             }
@@ -153,6 +156,7 @@ class SetPassword extends React.Component{
         const handCodeClick =  !this.state.isSetinterval ? this.handCodeClick.bind(this) : null;
         return(
             <div className="info-me">
+            <Log></Log>
              {this.state.prompt ? <PromptBox text={this.text}></PromptBox> : ''}
                 <div className="info-input">
                     <form className="flex-column-left info-setpass">

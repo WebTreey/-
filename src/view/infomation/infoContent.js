@@ -2,7 +2,7 @@ import React from 'react';
 import './info.scss';
 import {myStorage,BaiDuHm} from '../../utils/API'
 import {getSms} from '../../utils/config';
-
+import Log from '../../components/log/log'
 export default class infoContent extends React.Component{
     constructor(props){
         super(props);
@@ -29,6 +29,7 @@ export default class infoContent extends React.Component{
         const data = this.state.infoData[index] || []
         return(
             <div className='info-content'>
+                <Log></Log>
                 <h3>{data.sms_title}</h3>
                 <span>{data.create_time}</span>
                 <p>{data.sms_detail}</p>

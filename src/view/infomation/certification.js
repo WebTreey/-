@@ -5,6 +5,7 @@ import {PromptBox} from '../../components/prompt/prompt'
 import {getDoshenqing,getCardAuth} from '../../utils/config'
 import { withRouter } from 'react-router';
 import {Encrypt} from '../../utils/AES'
+import Log from '../../components/log/log'
 class Certification extends React.Component{
     constructor(props){
         super(props);
@@ -87,6 +88,7 @@ class Certification extends React.Component{
     render(){
         return(
             <div className="info-me">
+            <Log></Log>
             {this.state.prompt ? <PromptBox text={this.text}></PromptBox> : ''}
                 <div className="info-input">
                     <form className="flex-column-left">

@@ -1,10 +1,65 @@
 import Axios from 'axios';
 import { myStorage } from './API'
 import { Encrypt } from './AES'
-
-// const HOST = 'http://192.168.1.127:8080';
-const HOST = 'http://113.31.86.153:41070';
+var MobileDetect = require('./mobile-detect')
+const HOST = 'http://192.168.1.127:8080';
+// const HOST = 'http://113.31.86.153:41070';
 // const HOST = 'http://idai.iadcn.com';
+
+
+
+
+
+
+
+//获取手机数据
+export const getMobileDetect = () =>
+{
+    const md = new MobileDetect(window.navigator.userAgent);
+    // console.log( md.mobile() );          // 'Sony'
+    // console.log( md.phone() );           // 'Sony'
+    // console.log( md.tablet() );          // null
+    // console.log( md.userAgent() );       // 'Safari'
+    // console.log( md.os() );              // 'AndroidOS'
+    // console.log( md.is('iPhone') );      // false
+    // console.log( md.is('bot') );         // false
+    // console.log( md.version('Webkit') );         // 534.3
+    // console.log( md.versionStr('Build') );       // '4.1.A.0.562'
+    // console.log( md.match('playstation|xbox') ); // false
+    let os = '';
+    if (md.os() === "iOS") {//ios系统的处理  
+        os =  md.version("iPhone");  
+       
+    } else if (os === "AndroidOS") {//Android系统的处理  
+        os = md.version("Android");  
+       
+    } 
+    return {
+        mobile:md.mobile(),
+        phone:md.phone(),
+        tablet:md.tablet(),
+        userAgent:md.userAgent(),
+        os:md.os(),
+        isIPhone:md.is('iPhone'),
+        isBot:md.tablet('bot'),
+        version:os,
+        versionStr:md.versionStr('Build'),
+        match:md.match('playstation|xbox')
+    }
+   
+}
+
+// APK下载接口
+export const getDownloadApk = (data) => {
+    return `${HOST}/front/downloadApk?dn=${data.dn}&t=1`;
+}
+//注册协议
+export const getUrl = () =>{
+    const url = `${HOST}/about/regist_agreement?app_name=${setCommparams.appName}&company_name=深圳掌众互联网金融服务有限公司`;
+    return url;
+}
+
+
 
 //随机数imei
 export const ukey = () => {
@@ -185,10 +240,6 @@ export const getXxlChannel = (data) => {
         params: Object.assign({}, setCommparams, data)
     })
 }
-// APK下载接口
-export const getDownloadApk = (data) => {
-    return `${HOST}/front/downloadApk?dn=${data.dn}&t=1`;
-}
 //运营商H5检测接口
 export const getGoOprCheck = (data) => {
     return Axios({
@@ -224,13 +275,19 @@ export const getOperatorCheck = (data) => {
 }
 //激活日志接口
 export const getSaveHardLog = (data) => {
+    const par = getMobileDetect()
+    const d = {
+        brand:par.phone,
+        model:(par.mobile==='UnknownPhone' || !par.mobile) ? '未知' : par.mobile,
+        version:par.version
+    }
     return Axios({
         method: 'post',
         url: HOST + '/log/saveHardLog',
         headers: {
             "Content-Type": "application/json"
         },
-        data: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams, data, d)
     })
 }
 //打开日志接口
@@ -255,3 +312,4 @@ export const getCommonClickLog = (data) => {
         data: Object.assign({}, setCommparams, data)
     })
 }
+

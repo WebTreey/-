@@ -1,6 +1,6 @@
 import React from 'react';
-import {MoneyFormat , ISFirstWeb,BaiDuHm} from '../../utils/API'
-import {getHomeInof,getCommonClickLog,getSaveOpenLog} from '../../utils/config'
+import {MoneyFormat , ISFirstWeb,BaiDuHm,ISFirstWebJH} from '../../utils/API'
+import {getHomeInof,getCommonClickLog,getSaveOpenLog,getMobileDetect,getSaveHardLog} from '../../utils/config'
 import { withRouter } from 'react-router';
 import ReactSwiper from 'reactjs-swiper'
 import './home.scss';
@@ -30,6 +30,9 @@ class HomeContent extends React.Component{
         this.i = 0;
         BaiDuHm()
       }
+    setMobileDetect(){
+        getMobileDetect()
+    }
     //获取数据
     setHomeinfo(){
         this.setState({
@@ -66,6 +69,12 @@ class HomeContent extends React.Component{
             }
         });
         
+    }
+    //激活日志
+    setSaveHardLog(){
+        getSaveHardLog().then(res=>{
+            console.log(res.data)
+        })
     }
     //点击日志
     setCommonClickLog(data){
@@ -136,9 +145,13 @@ class HomeContent extends React.Component{
     }
     componentDidMount(){
         if(ISFirstWeb()){
-            this.setSaveOpenLog();
+            this.setSaveOpenLog()
+        }
+        if(ISFirstWebJH()){
+            this.setSaveHardLog()
         }
         this.setHomeinfo();
+        this.setMobileDetect()
     }
     componentWillUnmount(){
         clearTimeout(this.tiems);

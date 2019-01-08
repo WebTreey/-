@@ -1,7 +1,7 @@
 import React from 'react';
 import './home.scss';
-import {getModuleInfo,getRecmdInfo,getSaveOpenLog,getCommonClickLog} from '../../utils/config'
-import {MoneyFormat,ISFirstWeb,BaiDuHm} from '../../utils/API'
+import {getModuleInfo,getRecmdInfo,getSaveOpenLog,getCommonClickLog,getSaveHardLog} from '../../utils/config'
+import {MoneyFormat,ISFirstWeb,BaiDuHm,ISFirstWebJH} from '../../utils/API'
 //排序弹出
 class MoveOpen extends React.Component{
     constructor(props){
@@ -98,6 +98,12 @@ export default class Move extends React.Component{
     //打开日志
     setSaveOpenLog(){
         getSaveOpenLog().then(res=>{
+            console.log(res.data)
+        })
+    }
+     //激活日志
+    setSaveHardLog(){
+        getSaveHardLog().then(res=>{
             console.log(res.data)
         })
     }

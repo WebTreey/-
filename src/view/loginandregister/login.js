@@ -1,10 +1,11 @@
 import React from 'react';
 import './login.scss'
-import {ProvingMobile,myStorage} from '../../utils/API'
-import {getSendSms,getCodelogin,getPwdlogin} from '../../utils/config'
+import {ProvingMobile,myStorage,BaiDuHm} from '../../utils/API'
+import {getSendSms,getCodelogin,getPwdlogin,getUrl} from '../../utils/config'
 import {PromptBox} from '../../components/prompt/prompt'
 import { withRouter } from 'react-router';
 import {Encrypt,MD5encode} from '../../utils/AES'
+import Log from '../../components/log/log'
 //验证码登录
 class LoginFun1 extends React.Component{
     constructor(props){
@@ -17,6 +18,7 @@ class LoginFun1 extends React.Component{
             prompt:false
         }
         this.code = 60;
+        BaiDuHm()
     }
     //提示框隐藏显示
     setPromptHide(text){
@@ -273,6 +275,7 @@ class Login extends React.Component{
         const Loinfun = activeIndex===0 ?  <LoginFun1 checked={this.state.checked} history={this.props.history}></LoginFun1> :  <LoginFun2 history={this.props.history} checked={this.state.checked}></LoginFun2>
         return(
             <div className="login">
+            <Log></Log>
                 <div className="login-header flex-content">
                     <div className="login-nav flex-content">
                        {tab.map((item,index)=>{
@@ -288,7 +291,7 @@ class Login extends React.Component{
                 </div>
                 <div className="login-protocol flex-content">
                     <input type="checkbox" className={this.state.checkedclass} defaultChecked={this.state.checked} onClick={this.handCheckbox.bind(this)}></input>
-                    <span>我已阅读并同意 <a href="http://www.baidu.com">《 用户注册协议 》</a></span>
+                    <span>我已阅读并同意 <a href={getUrl()}>《 用户注册协议 》</a></span>
                 </div>
             </div>
         )
