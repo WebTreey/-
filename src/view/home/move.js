@@ -266,6 +266,16 @@ export default class Move extends React.Component{
     }
     
     componentDidMount(){
+        if(ISFirstWeb('cp')){
+            this.setState({
+                MoveOpen:true
+            })
+            this.times = setTimeout(()=>{
+                this.setState({
+                    MoveOpen:false
+                })
+            },3000)
+        }
         const data = {
             isPagin:1,
             pageNo:1,
@@ -299,7 +309,7 @@ export default class Move extends React.Component{
         const indexs = this.state.activeIndex;
         const recmdData = this.state.recmdData;
         return(
-            <div className="move main">
+            <div className="move main main-tj">
                 {/* <div id="ddd" style={{position:'fixed',top:'.88rem'}}>132</div> */}
                 <Title  text="贷款" history = {this.props.history}></Title>
                 {this.state.MoveOpen?  <MoveOpen data={this.state.opendata} Tabindex={this.state.Tabindex} handListClick={this.handListClick.bind(this)}></MoveOpen> : ''}
@@ -338,7 +348,7 @@ export default class Move extends React.Component{
                                                         <p>最高可贷额度（元）</p>
                                                     </div>
                                                     <div className="home-item-conter">
-                                                        <p>{item.minLendRate}</p>
+                                                        <p>{item.minLendRate || item.maxLendRate}</p>
                                                         <p>{item.recommend}</p>
                                                     </div>
                                                     <div className="home-item-btn"><a href={item.h5Link} 

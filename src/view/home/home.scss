@@ -5,8 +5,11 @@ $alignCenter:center;
 .home{
     padding-bottom:2.3rem 
 }
+.main-tj{
+    margin: .88rem 0 0 0;
+}
 .main{
-        margin: 1.08rem 0 0 0;
+       
     .home-header{
         height: 1.75rem; background: #fff; overflow: hidden;
         ul{
@@ -130,6 +133,9 @@ $alignCenter:center;
     }
     .home-footer{
         position: fixed; bottom: 1rem; left: 0;
+        .close{
+            position: absolute; left: 0; top: 0; height: .6rem; width: .6rem
+        }
     }
 }
 // ---------------------------首页样式end-----------------------------

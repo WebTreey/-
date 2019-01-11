@@ -10,7 +10,7 @@ class InfoIndex extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            city:'重新获取定位',
+            city:myStorage.get('city') || '重新获取定位',
             data:{},
             prompt:false,
             infoData:[],
@@ -50,6 +50,7 @@ class InfoIndex extends React.Component{
                 that.setState({
                     city: addComp.city
                 })
+                myStorage.set('city',addComp.city);
         });
     })
     }
@@ -113,17 +114,25 @@ class InfoIndex extends React.Component{
         if(this.state.data.code==='yes' || this.state.data.code==='no'){
             this.setExistCheckReport({phone:Encrypt(myStorage.get('phone'))});
         }else{
-            this.props.history.push('/home/login')
+            this.props.history.push('/home/login?nav=2')
         }
     }
     handLinkCarrProving(){
-        this.props.history.push('/CarrProving')
+        if(this.state.data.code==='yes' || this.state.data.code==='no'){
+            this.props.history.push('/CarrProving')
+        }else{
+            this.props.history.push('/home/login?nav=2')
+        }
     }
     handLoginBtn(){
-        this.props.history.push('/home/login')
+        this.props.history.push('/home/login?nav=2')
     }
     handSetPassword(){
-        this.props.history.push('/home/setPassword');
+        if(this.state.data.code==='yes' || this.state.data.code==='no'){
+            this.props.history.push('/home/setPassword?nav=2');
+        }else{
+            this.props.history.push('/home/login?nav=2')
+        }
     }
     //跳转到消息列表
     handLinkInfoList(){
@@ -144,7 +153,6 @@ class InfoIndex extends React.Component{
         }
     }
     componentDidMount(){
-        this.getBaiDuAPI();
         this.setIsAuth({phone:Encrypt(myStorage.get('phone')),token:myStorage.get('token')});
         this.setSms({token:myStorage.get('token')});
         if(ISFirstWeb()){
@@ -156,10 +164,14 @@ class InfoIndex extends React.Component{
         this.times = null ;
     }
     render(){
-        const len = this.state.infoData.length
-
+        let yd = 0;
+        if(myStorage.get('iden')){
+            yd = (myStorage.get('iden')+'').split('-').length
+        }
+       
+        const len = this.state.infoData.length - yd;
         const onClick= this.state.data.code==='no' ? this.handLinkMyinfo.bind(this) : null
-        
+        console.log(myStorage.get('city'))
         return(
             <div className="info">
                 <Title  text="我的" history = {this.props.history}></Title>
@@ -172,7 +184,7 @@ class InfoIndex extends React.Component{
                     </div>
                     <div className="info-xx" onClick={this.handLinkInfoList.bind(this)}>
                         <img alt="闪电贷" src={require('../../images/xiaoxi.png')}></img>
-                        {len!==0 ? <span>{len}</span> : ''}
+                        {(this.state.data.code==='yes' || this.state.data.code==='no') && len !==0 ? <span>{len}</span> : ''}
                     </div>
                     <div className="info-grxx flex-column">
                         {this.state.showBtn ? <img alt="闪电贷" src={require('../../images/my-photo.jpg')}></img> : <img alt="闪电贷" src={require('../../images/my-photo-1.jpg')}></img>}

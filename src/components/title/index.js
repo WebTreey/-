@@ -15,7 +15,6 @@ export default class Title extends React.Component{
                 background:'#fff',
                 fontSize:'.40rem',
                 width:'100%',
-                borderBottom:'1px solid #e2e2e2',
                 position:'fixed',
                 top:'0',
                 left:'0',
@@ -24,14 +23,14 @@ export default class Title extends React.Component{
                 <img onClick={this.handImgClick.bind(this)} src={require('../../images/left-icon.jpg')} style={{
                     float:"left",
                     width:'.21rem',
-                  
                     position:'absolute',
                     top:'.23rem',
                     left:'.5rem'
                 }}></img>
                 <h3 className="titleh3" style={{
                     fontWeight:'normal',
-                    fontFamily:'宋体'
+                    fontFamily:'宋体',
+                    textAlign:'center'
                 }}>{this.props.text}</h3>
             </div>
         )

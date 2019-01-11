@@ -5,7 +5,8 @@ import {getSendSms,getCodelogin,getPwdlogin,getUrl} from '../../utils/config'
 import {PromptBox} from '../../components/prompt/prompt'
 import { withRouter } from 'react-router';
 import {Encrypt,MD5encode} from '../../utils/AES'
-import Log from '../../components/log/log'
+import Log from '../../components/log/log';
+import Title from'../../components/title/index'
 //验证码登录
 class LoginFun1 extends React.Component{
     constructor(props){
@@ -276,6 +277,7 @@ class Login extends React.Component{
         return(
             <div className="login">
             <Log></Log>
+                <Title  text="注册/登录" history = {this.props.history}></Title>
                 <div className="login-header flex-content">
                     <div className="login-nav flex-content">
                        {tab.map((item,index)=>{

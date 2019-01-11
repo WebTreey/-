@@ -1,11 +1,12 @@
 import React from 'react';
-import './info.scss'
+import './info.scss';
 import {withRouter} from 'react-router';
 import { Picker, List , DatePicker } from 'antd-mobile';
 import {myStorage ,HideConter,BaiDuHm} from '../../utils/API';
 import {getIsAuth,getSubUsrInfo,getUserInfo} from '../../utils/config';
-import {Encrypt} from '../../utils/AES'
-import Log from '../../components/log/log'
+import {Encrypt} from '../../utils/AES';
+import Log from '../../components/log/log';
+import Title from'../../components/title/index'
 const seasons = [
     {
         label: '男',
@@ -131,8 +132,9 @@ class Myinfo extends React.Component{
         const maxDate = new Date();
         const IshandLinkCertification = (!data.idCardNo || !data.name)  ? this.handLinkCertification.bind(this) : null;
         return(
-            <div className="info-me">
+            <div className=" info">
             <Log></Log>
+            <Title  text="个人信息" history = {this.props.history}></Title>
             {this.state.PromptEnd ? <Prompt handEndYes={this.handEndYes.bind(this)} handEndNo={this.handEndNo.bind(this)}></Prompt> : ''}
                 <div className="info-main">
                     <ul className="info-me-ul">

@@ -6,6 +6,7 @@ import {getDoshenqing,getCardAuth} from '../../utils/config'
 import { withRouter } from 'react-router';
 import {Encrypt} from '../../utils/AES'
 import Log from '../../components/log/log'
+import Title from'../../components/title/index'
 class Certification extends React.Component{
     constructor(props){
         super(props);
@@ -87,8 +88,9 @@ class Certification extends React.Component{
     }
     render(){
         return(
-            <div className="info-me">
+            <div className="info info-me">
             <Log></Log>
+            <Title  text="实名认证" history = {this.props.history}></Title>
             {this.state.prompt ? <PromptBox text={this.text}></PromptBox> : ''}
                 <div className="info-input">
                     <form className="flex-column-left">

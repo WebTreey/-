@@ -107,24 +107,21 @@ export const myStorage = {
         localStorage.clear();
     }
 };
-//判断是否第一次访问该页面(用于点击日志)
-export const ISFirstWeb = () =>{
+//判断是否第一次访问该页面(用于进入日志)
+export const ISFirstWeb = (key) =>{
     // return true;
-    if(!myStorage.get('ClickDate')){
+    if(!myStorage.get( key || 'ClickDate')){
         const date =  Date();
-        console.log('第一次进入,上传日志')
-        myStorage.set('ClickDate',date);
+        myStorage.set(  key || 'ClickDate',date);
         return false;
     }else{
-        const strdate = myStorage.get('ClickDate');
+        const strdate = myStorage.get( key || 'ClickDate');
         const oldDate = new Date(strdate);
         const newDate = new Date();
         if(newDate.getFullYear()>oldDate.getFullYear || newDate.getMonth() > oldDate.getMonth() || newDate.getDate()> oldDate.getDate()){
-            myStorage.set('ClickDate',newDate);
-            console.log('第二天进入，上传日志')
+            myStorage.set( key || 'ClickDate',newDate);
             return true;
         }else{
-            console.log('不上传日志');
             return false;
         }
         
@@ -163,4 +160,14 @@ export const WinodwLink = (url) =>{
     let hp = wf.substring(0,wf.indexOf('#')+1)
     console.log(hp)
     window.location.href = hp + url;
+}
+//数组去重
+export const uniq =(arr=[])=>{
+    const newarr = []
+    arr.map((item,index)=>{
+        if(newarr.indexOf(item)===-1){
+            newarr.push(item);
+        }
+    })
+    return newarr
 }

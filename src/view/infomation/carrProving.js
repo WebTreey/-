@@ -5,6 +5,7 @@ import {PromptBox} from '../../components/prompt/prompt';
 import {getGoOprCheck,getUrl} from '../../utils/config';
 import {Encrypt} from '../../utils/AES'
 import Log from '../../components/log/log'
+import Title from'../../components/title/index'
 // import { withRouter } from 'react-router';
 class CarrProving extends React.Component{
     constructor(props){
@@ -88,8 +89,9 @@ class CarrProving extends React.Component{
     }
     render(){
         return(
-            <div className="info-me" style={{margin:'0'}}>
+            <div className="info info-me" style={{margin:'0'}}>
             <Log></Log>
+            <Title  text="运营商风险检测" history = {this.props.history}></Title>
                 {this.state.prompt ? <PromptBox text={this.text}></PromptBox> : ''}
                 <div className="info-yys-header flex-around">
                     <div className="yys-icon yys-dx"></div>

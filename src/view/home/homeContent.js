@@ -25,7 +25,8 @@ class HomeContent extends React.Component{
             creditDetectionList:[],//黑名单风险检测数据
             proModuleList:[],
             isdata:false,
-            hyh:0
+            hyh:0,
+            footerIS: true
         }
         this.i = 0;
         BaiDuHm()
@@ -165,37 +166,31 @@ class HomeContent extends React.Component{
             //banner数据
             let items =  bannerList.map((item,index)=>{
                 let obj = {};
-                obj.image = item.bannerImg;
+                obj.image = item.smallBannerImg;
                 obj.title = item.bannerName;
                 // obj.link = item.linkUrl;
                 return(obj)
             })
-            //配置banner滚动方式
-            const swiperOptions = {
-                preloadImages: true,
-                autoplay: 3000,
-                disableOnInteraction: false,
-                on:{
-                    tap:function(){
-                        console.log(123)
-                    }
-                }
-            };
+            
             
             return(
                 <div className="home">
                   <div>
-                        <ReactSwiper swiperOptions={swiperOptions} showPagination items={items}
-                        className="swiper-example" />
-                        {/* <div className="swiper-container" ref="swiper" id="rold">
-                            <div className="swiper-wrapper">
-                                <div className="swiper-slide" data-id="0">Slide 1</div>
-                                <div className="swiper-slide" data-id="0">Slide 2</div>
-                                <div className="swiper-slide" data-id="0">Slide 3</div>
-                                <div className="swiper-slide" data-id="0">Slide 4</div>
-                            </div>
-                            <div className="swiper-pagination"></div>
-                        </div> */}
+                        <ReactSwiper options={
+                            {
+                                preloadImages:true,
+                                autoplay:3000,
+                                
+                                onClick:(swiper,event)=>{
+                                    console.log(swiper.activeIndex)
+                                    this.setAddBannerClickLog({
+                                        bannerName:bannerList[swiper.activeIndex].bannerName
+                                    })
+                                }
+                            }
+                        } showPagination items={items}
+                        />
+                        
                         <div className="main">
                             <div className="home-header ">
                                 <ul className="flex-between">
@@ -227,7 +222,7 @@ class HomeContent extends React.Component{
                                         </div>
                                         <div className="home-recommend-replace flex-content">
                                             <img alt="闪电贷" src={require('../../images/reload.png')}></img>
-                                            <span onClick={this.handChange.bind(this)}>换一换</span>
+                                            <span onClick={this.handChange.bind(this)}>换一个</span>
                                         </div>
                                         </div>
                                         <div className="home-recommend-content">
@@ -302,9 +297,11 @@ class HomeContent extends React.Component{
                             }
                             </div>
                             {this.state.loding ?  <Loding text={this.text} IsImg={this.state.have}></Loding>: ''}
-                            <div className="home-footer">
+                            {this.state.footerIS ? <div className="home-footer">
+                                <div className="close" onClick = {()=>this.setState({footerIS:false})}></div>
                                 <img alt="闪电贷" src={require('../../images/bottom-gg.png')}></img>
-                            </div>
+                            </div>:''}
+                            
                         </div>
                     </div>
                 </div>

@@ -319,7 +319,7 @@ export const getCommonClickLog = (data) => {
 export const getAddBannerClickLog =(data) =>{
     return Axios({
         method: 'post',
-        url: HOST + 'log/addBannerClickLog',
+        url: HOST + '/log/addBannerClickLog',
         headers: {
             "Content-Type": "application/json"
         },
