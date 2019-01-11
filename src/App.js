@@ -9,6 +9,7 @@ import InfoList from './view/infomation/infoList'
 import infoContent from './view/infomation/infoContent'
 import Index from './view/guide/index';
 import TestResult from './view/infomation/TextResult'
+
 class App extends Component {
   render() {
     return (

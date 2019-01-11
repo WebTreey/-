@@ -1,6 +1,6 @@
 import React from 'react';
 import './info.scss'
-import {ProvingID,BaiDuHm} from '../../utils/API'
+import {ProvingID,BaiDuHm,ProvingChina} from '../../utils/API'
 import {PromptBox} from '../../components/prompt/prompt'
 import {getDoshenqing,getCardAuth} from '../../utils/config'
 import { withRouter } from 'react-router';
@@ -33,10 +33,10 @@ class Certification extends React.Component{
     setDoshenqing(data){
         getDoshenqing(data).then(res=>{
             if(res.data.code==='ok'){
-                this.setPromptHide('保存成功');
-                this.props.history.go(-1);
+                this.setPromptHide('实名认证完成');
+                // this.props.history.go(-1);
             }else if(res.data.code==='nameError'){
-                this.setPromptHide('姓名格式不对');
+                this.setPromptHide('身份信息输入有误，请重新核对后输入');
             }else if(res.data.code==='hasError'){
                 this.setPromptHide('已申请');
             }else if(res.data.code==='error'){
@@ -63,7 +63,7 @@ class Certification extends React.Component{
     }
     handChangeName(e){
         this.setState({
-            name:e.target.value
+            name:ProvingChina(e.target.value,10)
         })
     }
     handProvingID(e){

@@ -1,6 +1,6 @@
 import React from 'react';
 import './guide.scss';
-import {ProvingMobile,myStorage} from '../../utils/API';
+import {ProvingMobile,myStorage,GetQueryString} from '../../utils/API';
 import {PromptBox} from '../../components/prompt/prompt';
 import {getSendSms,getCodelogin,getXxlChannel,getDownloadApk} from '../../utils/config';
 import {Encrypt} from '../../utils/AES';
@@ -35,7 +35,7 @@ export default class Index extends React.Component{
             var gc = new BMap.Geocoder();  //初始化，Geocoder类
             gc.getLocation(point, function (rs) {   //getLocation函数用来解析地址信息，分别返回省市区街等
                 var addComp = rs.addressComponents;
-                myStorage.set('city',addComp.city)
+                myStorage.set('city',addComp.city);
         });
         })
     }
@@ -143,7 +143,7 @@ export default class Index extends React.Component{
             return false;
         }).then(res=>{
             if(res){
-                getXxlChannel({channelCode:'baidu0001'}).then(res=>{
+                getXxlChannel({channelCode: GetQueryString('channel') || 'baidu0001'}).then(res=>{
                     console.log(res.data)
                     if(res.data.result===null){
                         this.setPromptHide('没有对应的信息流渠道');
@@ -163,7 +163,6 @@ export default class Index extends React.Component{
             }
         })
     }
-    
     componentDidMount(){
         this.getBaiDuAPI()
     }

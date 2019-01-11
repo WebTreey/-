@@ -1,7 +1,8 @@
 import React from 'react';
 import './home.scss';
 import {getModuleInfo,getRecmdInfo,getSaveOpenLog,getCommonClickLog,getSaveHardLog} from '../../utils/config'
-import {MoneyFormat,ISFirstWeb,BaiDuHm,ISFirstWebJH} from '../../utils/API'
+import {MoneyFormat,ISFirstWeb,BaiDuHm,ISFirstWebJH} from '../../utils/API';
+import Title from'../../components/title/index'
 //排序弹出
 class MoveOpen extends React.Component{
     constructor(props){
@@ -140,38 +141,39 @@ export default class Move extends React.Component{
     }
     //滚动加载数据
     handBoydScroll(){
-        const scrollHeight = document.documentElement.scrollHeight;
-        const scrollTop = document.documentElement.scrollTop 
+        const scrollHeight = Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);
+        const scrollTop = Math.max(document.documentElement.scrollTop ,document.body.scrollTop)
         const clientHeight = document.documentElement.clientHeight;
-        const page = Math.ceil(this.state.total/this.state.pageSize);
         
+        const page = Math.ceil(this.state.total/this.state.pageSize);
+      
         if((scrollTop+clientHeight)>=scrollHeight){
             if(this.size>=page) {
-                this.text = '已经没有更多数据了'
                 this.setState({
                     isimg:false
                 })
+                this.text = '已经没有更多数据了'
             }else{
                 this.text = '数据加载中...';
                 this.setState({
                     isimg:true
                 })
                 const data = {
-                isPagin:1,
-                pageNo: ++this.size,
-                pageSize:this.state.pageSize,
-                minLimit:this.state.minLimit,
-                maxLimit:this.state.maxLimit,
-                orderBy:this.state.orderBy,
-                module:this.state.modulee,
-                filterApi:1
+                    isPagin:1,
+                    pageNo: ++this.size,
+                    pageSize:this.state.pageSize,
+                    minLimit:this.state.minLimit,
+                    maxLimit:this.state.maxLimit,
+                    orderBy:this.state.orderBy,
+                    module:this.state.modulee,
+                    filterApi:1
+                }
+                this.setRecmdInfo(data);
+                return false
             }
-                clearTimeout(this.times)
-                this.times = setTimeout(()=>{
-                    this.setRecmdInfo(data);
-                },300)
-                
-            }
+          
+        }else{
+         
         }
        
     }
@@ -180,6 +182,7 @@ export default class Move extends React.Component{
         const scrollHeight = document.documentElement.scrollHeight;
         const scrollTop = document.documentElement.scrollTop; 
         const clientHeight = document.documentElement.clientHeight;
+       
         if((scrollTop+clientHeight)>=scrollHeight){
             this.text = '数据加载中...'
             this.setState({
@@ -273,7 +276,6 @@ export default class Move extends React.Component{
             module:this.state.modulee || 0,
             filterApi:1
         }
-       
         this.handBoydScroll();
         this.setModuleInfo()
         this.setRecmdInfo(data);
@@ -283,10 +285,14 @@ export default class Move extends React.Component{
         document.onscroll = ()=>{
             this.handBoydScroll()
         }
+        document.ontouchmove = ()=>{
+            this.handBoydScroll()
+        }
+       
     }
     componentWillUnmount(){
         document.onscroll = null;
-        clearTimeout(this.times)
+        clearTimeout(this.times);
     }
     render(){
         const Tab = this.state.Tab;
@@ -294,6 +300,8 @@ export default class Move extends React.Component{
         const recmdData = this.state.recmdData;
         return(
             <div className="move main">
+                {/* <div id="ddd" style={{position:'fixed',top:'.88rem'}}>132</div> */}
+                <Title  text="贷款" history = {this.props.history}></Title>
                 {this.state.MoveOpen?  <MoveOpen data={this.state.opendata} Tabindex={this.state.Tabindex} handListClick={this.handListClick.bind(this)}></MoveOpen> : ''}
                 <div className="move-header">
                     <ul className="flex-around">

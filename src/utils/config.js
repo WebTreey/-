@@ -1,17 +1,36 @@
 import Axios from 'axios';
-import { myStorage } from './API'
+import { myStorage ,GetQueryString} from './API'
 import { Encrypt } from './AES'
 var MobileDetect = require('./mobile-detect')
-const HOST = 'http://192.168.1.127:8080';
-// const HOST = 'http://113.31.86.153:41070';
-// const HOST = 'http://idai.iadcn.com';
+// export const HOST = 'http://192.168.1.127:8080';
+export const HOST = 'http://113.31.86.153:41070';
+//export const HOST = 'http://idai.iadcn.com';
 
 
 
 
 
-
-
+//固定参数
+export const setCommparams = ()=> {
+    return {
+        appName: ' 闪电贷款王',
+        appPkgName: 'shandianloanwap',
+        osType: 1,
+        os_type: 1,
+        apkVersion: '1.0',
+        apk_version: '1.0',
+        channel: myStorage.get('channel') || ' natureChannel',
+        isGroup: 1,
+        phone: Encrypt(myStorage.get('phone')) || '',
+        city: myStorage.get('city') || '',
+        imei: ukey()
+    }
+}
+export const getLinkUrl = () =>{
+    return `?app_name=${setCommparams().appName}&pkg_name=${setCommparams().appPkgName}&channel=${setCommparams().channel}&version_code=100&
+        icon_name=ostype1com.zhangzhong.jieqianban001&os_type=${setCommparams().os_type}&company_name=深圳掌众互联网金融服务有限公司&company_simple_name=掌众金融
+        `
+}
 //获取手机数据
 export const getMobileDetect = () =>
 {
@@ -55,12 +74,9 @@ export const getDownloadApk = (data) => {
 }
 //注册协议
 export const getUrl = () =>{
-    const url = `${HOST}/about/regist_agreement?app_name=${setCommparams.appName}&company_name=深圳掌众互联网金融服务有限公司`;
+    const url = `${HOST}/about/regist_agreement?app_name=${setCommparams().appName}&company_name=深圳掌众互联网金融服务有限公司`;
     return url;
 }
-
-
-
 //随机数imei
 export const ukey = () => {
     let k;
@@ -72,20 +88,7 @@ export const ukey = () => {
     }
     return k
 }
-//固定参数
-export const setCommparams = {
-    appName: ' 闪电借款王',
-    appPkgName: 'shandianloanwap',
-    osType: 1,
-    os_type: 1,
-    apkVersion: '1.0',
-    apk_version: '1.0',
-    channel: 'baidutongji0001',
-    isGroup: 1,
-    phone: Encrypt(myStorage.get('phone')) || '',
-    city: myStorage.get('city') || '',
-    imei: ukey()
-}
+
 //首页接口
 export const getHomeInof = (data) => {
     return Axios({
@@ -94,7 +97,7 @@ export const getHomeInof = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //获取验证码接口
@@ -105,7 +108,7 @@ export const getSendSms = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //验证码登陆
@@ -116,7 +119,7 @@ export const getCodelogin = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //密码登录
@@ -127,7 +130,7 @@ export const getPwdlogin = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //获取产品模块类型ID
@@ -138,7 +141,7 @@ export const getModuleInfo = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //产品列表
@@ -149,7 +152,7 @@ export const getRecmdInfo = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //个人资料接口
@@ -160,7 +163,7 @@ export const getIsAuth = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //拉消息列表
@@ -171,7 +174,7 @@ export const getSms = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //提交个人资料
@@ -182,7 +185,7 @@ export const getDoshenqing = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //保存用户信息或者查询用户信息
@@ -193,7 +196,7 @@ export const getSubUsrInfo = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //身份证实名认证
@@ -204,7 +207,7 @@ export const getCardAuth = (data) => {
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //修改密码
@@ -215,7 +218,7 @@ export const getSetPassword = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //获取个人信息
@@ -226,7 +229,7 @@ export const getUserInfo = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //注册并下载（信息流渠道专用）
@@ -237,7 +240,7 @@ export const getXxlChannel = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //运营商H5检测接口
@@ -248,7 +251,7 @@ export const getGoOprCheck = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //查询是否存在检测结果
@@ -259,7 +262,7 @@ export const getExistCheckReport = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //运营商检测结果的接口
@@ -270,7 +273,7 @@ export const getOperatorCheck = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //激活日志接口
@@ -287,7 +290,7 @@ export const getSaveHardLog = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams, data, d)
+        params: Object.assign({}, setCommparams(), data, d)
     })
 }
 //打开日志接口
@@ -298,7 +301,7 @@ export const getSaveOpenLog = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        data: Object.assign({}, setCommparams, data)
+        data: Object.assign({}, setCommparams(), data)
     })
 }
 //点击日志接口
@@ -309,7 +312,18 @@ export const getCommonClickLog = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        data: Object.assign({}, setCommparams, data)
+        data: Object.assign({}, setCommparams(), data)
+    })
+}
+//banner点击统计
+export const getAddBannerClickLog =(data) =>{
+    return Axios({
+        method: 'post',
+        url: HOST + 'log/addBannerClickLog',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: Object.assign({}, setCommparams(), data)
     })
 }
 

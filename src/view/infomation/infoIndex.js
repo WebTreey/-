@@ -2,9 +2,10 @@ import React from 'react';
 import './info.scss';
 import {withRouter} from 'react-router';
 import {myStorage,BaiDuHm,ISFirstWeb} from '../../utils/API'
-import {getIsAuth,getSms,getExistCheckReport,getSaveOpenLog} from '../../utils/config';
+import {getIsAuth,getSms,getExistCheckReport,getSaveOpenLog,getLinkUrl,HOST} from '../../utils/config';
 import {Encrypt} from '../../utils/AES';
 import {PromptBox} from '../../components/prompt/prompt'
+import Title from'../../components/title/index'
 class InfoIndex extends React.Component{
     constructor(props){
         super(props);
@@ -126,7 +127,21 @@ class InfoIndex extends React.Component{
     }
     //跳转到消息列表
     handLinkInfoList(){
-        this.props.history.push('/infolist')
+        if(this.state.data.code==='yes' || this.state.data.code==='no'){
+            this.props.history.push('/infolist')
+        }else{
+            this.props.history.push('/home/login')
+        }
+    }
+    handLinkHref(param){
+        const url = getLinkUrl()
+        if(param===1){
+            window.location.href = `${HOST}/about/about_us${url}`
+        }else if(param===2){
+            window.location.href = `${HOST}/f/zghcp.html${url}`
+        }else{
+            window.location.href = `${HOST}/open/userFeedback-index#/${url}`
+        }
     }
     componentDidMount(){
         this.getBaiDuAPI();
@@ -142,8 +157,12 @@ class InfoIndex extends React.Component{
     }
     render(){
         const len = this.state.infoData.length
+
+        const onClick= this.state.data.code==='no' ? this.handLinkMyinfo.bind(this) : null
+        
         return(
             <div className="info">
+                <Title  text="我的" history = {this.props.history}></Title>
                 {this.state.prompt ? <PromptBox text={this.text}></PromptBox> :''}
                 <div id="allmap" style={{display:'none'}}></div>
                 <div className="info-header">
@@ -156,9 +175,10 @@ class InfoIndex extends React.Component{
                         {len!==0 ? <span>{len}</span> : ''}
                     </div>
                     <div className="info-grxx flex-column">
-                        <img alt="闪电贷" src={require('../../images/my-photo.jpg')}></img>
+                        {this.state.showBtn ? <img alt="闪电贷" src={require('../../images/my-photo.jpg')}></img> : <img alt="闪电贷" src={require('../../images/my-photo-1.jpg')}></img>}
+                        
                         {this.state.showBtn ? <div><span className="flex-content"><em>{myStorage.get('phone')}</em><img alt="" src={require("../../images/right-icon.jpg")}></img></span>
-                        <button className="info-grxx-btn">{this.state.rzText}</button></div> : <button onClick={this.handLoginBtn.bind(this)} className="info-grxx-btn" style={{margin:'.2rem 0 0 0'}}>登录</button>}
+                        <button onClick={onClick} className="info-grxx-btn" >{this.state.rzText}</button></div> : <button onClick={this.handLoginBtn.bind(this)} className="info-grxx-btn" style={{margin:'.2rem 0 0 0'}}>登录</button>}
                         
                     </div>
                 </div>
@@ -189,17 +209,17 @@ class InfoIndex extends React.Component{
                     </div>
                     <div className="info-main-2">
                         <ul>
-                            <li className="flex-conter">
+                            <li className="flex-conter" onClick={this.handLinkHref.bind(this,1)}>
                                 <i className="icon icon-5"></i>
                                 <h3>关于我们</h3>
                                 <span className="flex-content"><em></em><img alt="闪电贷" src={require('../../images/right-icon.jpg')}></img></span>
                             </li>
-                            <li className="flex-conter">
+                            <li className="flex-conter" onClick={this.handLinkHref.bind(this,3)}>
                                 <i className="icon icon-6"></i>
                                 <h3>帮助中心</h3>
                                 <span className="flex-content"><em></em><img alt="闪电贷" src={require('../../images/right-icon.jpg')}></img></span>
                             </li>
-                            <li className="flex-conter">
+                            <li className="flex-conter" onClick={this.handLinkHref.bind(this,2)}>
                                 <i className="icon icon-7"></i>
                                 <h3>关注微信</h3>
                                 <span className="flex-content"><em></em><img alt="闪电贷" src={require('../../images/right-icon.jpg')}></img></span>

@@ -1,6 +1,6 @@
 import React from 'react';
 import './guide.scss';
-import {ProvingMobile,myStorage,BaiDuHm,ISFirstWeb,ISFirstWebJH} from '../../utils/API';
+import {ProvingMobile,myStorage,ISFirstWeb,ISFirstWebJH,getcheckPhone,GetQueryString,WinodwLink} from '../../utils/API';
 import {PromptBox} from '../../components/prompt/prompt';
 import {getSendSms,getCodelogin,getUrl,getSaveHardLog,getSaveOpenLog} from '../../utils/config';
 import {Encrypt} from '../../utils/AES';
@@ -18,7 +18,8 @@ export default class Guide extends React.Component{
             checkedclass:'guide-checkbox'
         }
         this.code = 60;
-        BaiDuHm()
+        // BaiDuHm();
+        document.body.style.background = '#f5f5f9'
     }
     //通过百度api获取地址
     getBaiDuAPI(){
@@ -72,16 +73,17 @@ export default class Guide extends React.Component{
      //验证验证码
     handCodeChange(e){
         this.setState({
-            codevalue:ProvingMobile(e.target.value,6)
+            codevalue:ProvingMobile(e.target.value,4)
         })
     }
     //登录
     handLoginClick(){
+       
         if(!this.state.checked){
             this.setPromptHide('请先勾选同意用户协议')
             return false;
         }
-        if(this.state.phone===''){
+        if(!getcheckPhone(this.state.phone)){
             this.setPromptHide('请输入正确的手机号码！')
         }else if(this.state.codevalue===''){
             this.setPromptHide('验证码错误，请重新输入')
@@ -107,37 +109,38 @@ export default class Guide extends React.Component{
     handCodeClick(){
         if(this.state.phone!==''){
             this.setSendSms({phone:Encrypt(this.state.phone)});
-            clearInterval(this.inTimes);
-            this.inTimes = setInterval(()=>{
-                if(this.code>0){
-                    this.setState({
-                        codetext: this.code--,
-                        isSetinterval:true
-                    })
-                }else{
-                    this.setState({
-                        codetext:'获取验证码',
-                        isSetinterval:false
-                    })
-                    this.code = 60;
-                    clearInterval(this.inTimes);
-                }
-            },1000)
         }else{
             this.setPromptHide('请输入您的电话号码')
         }
     }
     //页面跳转
     handLinkHome(){
-        this.props.history.push('/home');
+        WinodwLink('/home')
+        // this.props.history.push('/home');
     }
     //获取验证码接口
     setSendSms(data){
         getSendSms(data).then(res=>{
             if(res.data.code==='ok'){
                 this.setPromptHide('验证码已发送');
+                clearInterval(this.inTimes);
+                this.inTimes = setInterval(()=>{
+                    if(this.code>0){
+                        this.setState({
+                            codetext: this.code--,
+                            isSetinterval:true
+                        })
+                    }else{
+                        this.setState({
+                            codetext:'获取验证码',
+                            isSetinterval:false
+                        })
+                        this.code = 60;
+                        clearInterval(this.inTimes);
+                    }
+                },1000)
             }else{
-                this.setPromptHide('手机号码不正确');
+                this.setPromptHide('请输入正确的手机号码！');
             }
         })
     }
@@ -145,12 +148,19 @@ export default class Guide extends React.Component{
     setCodelogin(data){
         getCodelogin(data).then(res=>{
             console.log(res.data);
-            this.props.history.push('/home')
-            myStorage.set('token',res.data.token)
-            myStorage.set('phone',this.state.phone);
+            if(res.data.code==='ok'){
+                WinodwLink('/home')
+                // this.props.history.push('/home')
+                myStorage.set('token',res.data.token)
+                myStorage.set('phone',this.state.phone);
+            }else if(res.data.code==='codeError'){
+                this.setPromptHide('验证码错误，请重新输入')
+            }
+            
         })
     }
     componentDidMount(){
+        myStorage.set('channel',GetQueryString('channel'));
         this.getBaiDuAPI()
         if(ISFirstWeb()){
             this.setSaveOpenLog()
@@ -158,6 +168,10 @@ export default class Guide extends React.Component{
         if(ISFirstWebJH()){
             this.setSaveHardLog()
         }
+    }
+    componentWillUnmount(){
+        clearTimeout(this.times)
+        this.times = null;
     }
     render(){
         const handCodeClick =  !this.state.isSetinterval ? this.handCodeClick.bind(this) : null;
@@ -185,7 +199,7 @@ export default class Guide extends React.Component{
                     <span>我已阅读并同意 <a href={getUrl()}>《 用户注册协议 》</a></span>
                 </div>
                 <div className="guide-footer" onClick={this.handLinkHome.bind(this)}>我先逛逛</div>
-                <div className="guide-banq">Copyright@2018 xxx有限公司版权所有</div>
+                <div className="guide-banq">CopyRight @ 2019 掌众互联网金融 版权所有</div>
             </div>
         )
     }

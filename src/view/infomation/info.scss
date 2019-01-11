@@ -1,3 +1,6 @@
+.info{
+    padding: 1rem 0 1rem 0; 
+}
 .info-header{
     height: 3.6rem; background: #fff; position: relative;
     .info-position{
@@ -224,6 +227,13 @@
        }
        .result-tb{
            padding: .25rem;background: #fbfbfb; border:1px solid #dedede; width: 6.5rem; margin: .2rem auto; border-radius: .1rem;
+           p{
+               text-align: center; font-size: .24rem;
+               
+               span{
+                   font-size: .44rem; color: #34689b; padding: 0 .4rem;
+               }
+           }
        }
     }
 }

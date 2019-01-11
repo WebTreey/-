@@ -2,11 +2,19 @@
     Date:2018/12/07,
     USE:验证，通用
 */
+import {setCommparams} from './config'
 //纯数字输入
 export const ProvingMobile = (value = "", length) => {
     let s = value.length > length ? (value + '').substring(0, length) : value;
-    var rex = /[^\d]/;
+    var rex = /[^\d]/g;
     const str = (s + '').replace(rex, '')
+    return str;
+}
+// 纯中文输入
+export const ProvingChina = (value,length) =>{
+    let s = value.length > length ? (value + '').substring(0, length) : value;
+    var rex = /[^\u4E00-\u9FA5]/g;
+    const str = ( s + '').replace(rex, '');
     return str;
 }
 //验证身份证输入
@@ -124,12 +132,13 @@ export const ISFirstWeb = () =>{
 }
 //判断是否第一次访问该页面(用于激活日志)
 export const ISFirstWebJH = () =>{
-    if(!myStorage.get('JH')){
-        myStorage.set('JH',1)
+    if(!myStorage.get(setCommparams().channel)){
+        myStorage.set(setCommparams().channel,1)
         return true
     }
     return false;
 }
+//百度统计代码
 export const BaiDuHm = () =>{
     var _hmt = _hmt || [];
     (function() {
@@ -140,4 +149,18 @@ export const BaiDuHm = () =>{
     })();
     console.log(1)
 }
-
+//验证手机号码
+export const getcheckPhone = (phone)=> { 
+    
+    if((/^1[34578]\d{9}$/.test(phone))){ 
+        return true; 
+    } 
+    return false
+}
+//拼接链接跳转页面
+export const WinodwLink = (url) =>{
+    let wf = window.location.href
+    let hp = wf.substring(0,wf.indexOf('#')+1)
+    console.log(hp)
+    window.location.href = hp + url;
+}

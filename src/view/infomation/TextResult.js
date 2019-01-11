@@ -109,7 +109,10 @@ export default class TestResult extends React.Component{
                 <div className="result-box">
                     <h3>话费数据</h3>
                     <div className="huaf-data" id="huaf"></div>
-                    <div className="result-tb"></div>
+                    <div className="result-tb">
+                        <p><i>您的话费月均消费</i><span>{data.fee_per_month}</span></p>
+                        <p><i>话费消费能力</i><span>{data.fee_bility}</span></p>
+                    </div>
                 </div>
             </div>
         )

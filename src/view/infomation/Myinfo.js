@@ -81,7 +81,7 @@ class Myinfo extends React.Component{
         })
     }
     handLinkCertification(){
-        this.props.history.push('/home/certification')
+        this.props.history.push('/home/certification?nav=2')
     }
     handSex(value){
         this.setState({
@@ -106,12 +106,13 @@ class Myinfo extends React.Component{
         })
     }
     handEndYes(){
+        this.props.history.push('/home/InfoIndex?nav=2')
         this.setState({
             PromptEnd:false
         })
         myStorage.remove('token');
         myStorage.remove('phone');
-        this.props.history.push('/home/InfoIndex?nav=2')
+        
     }
     handEndNo(){
         this.setState({
@@ -146,7 +147,7 @@ class Myinfo extends React.Component{
                                 data={seasons}
                                 cols={1}
                                 title="性别"
-                                disabled = {Object.keys(data).length === 0 ? false : true}
+                                disabled = { (!data.idCardNo || !data.name)  ? false : true}
                                 value={this.state.sValue}
                                 onChange={this.handSex.bind(this)}
                                 onOk={this.handSex.bind(this)}
@@ -175,7 +176,7 @@ class Myinfo extends React.Component{
                                 console.log(date);
                                 return date;
                             }}
-                            disabled = {Object.keys(data).length === 0 ? false : true}
+                            disabled = {(!data.idCardNo || !data.name)  ? false : true}
                             minDate= {minDate}
                             maxDate = {maxDate}
                             title="选择出生日期"
