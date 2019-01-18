@@ -1,6 +1,6 @@
 import React from 'react';
 import './info.scss'
-import {ProvingID,BaiDuHm} from '../../utils/API'
+import {ProvingID} from '../../utils/API'
 import {PromptBox} from '../../components/prompt/prompt';
 import {getGoOprCheck,getUrl} from '../../utils/config';
 import {Encrypt} from '../../utils/AES'
@@ -17,7 +17,7 @@ class CarrProving extends React.Component{
             checkedclass:'guide-checkbox',
             prompt:false,
         }
-        BaiDuHm()
+       
     }
     setGoOprCheck(data){
         getGoOprCheck(data).then(res=>{

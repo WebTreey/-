@@ -5,6 +5,9 @@ $alignCenter:center;
 .home{
     padding-bottom:2.3rem 
 }
+.home1{
+    padding-bottom:1rem 
+}
 .main-tj{
     margin: .88rem 0 0 0;
 }
@@ -98,12 +101,12 @@ $alignCenter:center;
             .home-item-bottom{
                 margin-top: $mt2;
                 .home-item-money{
-                    border-right: 1px solid $borderColor; padding-right: .1rem;
+                    border-right: 1px solid $borderColor; padding-right: .1rem; text-align: left;
                     span{
-                        font-size: .53rem; color: $color;
+                        font-size: .53rem; color: $color; 
                     }
                     p{
-                        color: #999;
+                        color: #999;padding: .1rem 0 0 0 ;
                     }
                 }
                 .home-item-conter{

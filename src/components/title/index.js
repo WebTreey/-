@@ -13,7 +13,6 @@ export default class Title extends React.Component{
                 height:'.88rem', 
                 lineHeight:'.88rem',
                 background:'#fff',
-                fontSize:'.40rem',
                 width:'100%',
                 position:'fixed',
                 top:'0',
@@ -29,6 +28,7 @@ export default class Title extends React.Component{
                 }}></img>
                 <h3 className="titleh3" style={{
                     fontWeight:'normal',
+                    fontSize:'.40rem',
                     fontFamily:'宋体',
                     textAlign:'center'
                 }}>{this.props.text}</h3>

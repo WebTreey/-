@@ -1,6 +1,6 @@
 import React from 'react';
 import './login.scss'
-import {ProvingMobile,myStorage,BaiDuHm} from '../../utils/API'
+import {ProvingMobile,myStorage} from '../../utils/API'
 import {getSendSms,getCodelogin,getPwdlogin,getUrl} from '../../utils/config'
 import {PromptBox} from '../../components/prompt/prompt'
 import { withRouter } from 'react-router';
@@ -19,7 +19,6 @@ class LoginFun1 extends React.Component{
             prompt:false
         }
         this.code = 60;
-        BaiDuHm()
     }
     //提示框隐藏显示
     setPromptHide(text){
@@ -69,7 +68,7 @@ class LoginFun1 extends React.Component{
                     }
                 },1000)
             }else{
-                this.setPromptHide('手机号码不正确');
+                this.setPromptHide('请输入正确的手机号码！');
             }
         })
     }
@@ -86,7 +85,7 @@ class LoginFun1 extends React.Component{
             }else if(res.data.code==='no_register'){
                 this.setPromptHide('账号未注册');
             }else{
-                this.setPromptHide('密码错误');
+                this.setPromptHide('请输入正确的手机号码！');
             }
         })
     }
@@ -95,7 +94,7 @@ class LoginFun1 extends React.Component{
         if(this.state.phone!==''){
             this.setSendSms({phone:Encrypt(this.state.phone)});
         }else{
-            this.setPromptHide('请输入您的电话号码')
+            this.setPromptHide('请输入正确的手机号码！')
         }
     }
     //登录
@@ -230,6 +229,7 @@ class LoginFun2 extends React.Component{
                     </label>
                 </form>
                 <div className="guide-btn" onClick={this.handLoginClick.bind(this)}>立即登录</div>
+                <div className="guide-wjpass" onClick={()=>{this.props.history.push('/home/RetrievePass?nav=2')}}>忘记密码？</div>
             </div>
         )
     }

@@ -1,8 +1,8 @@
 import React from 'react';
 import './guide.scss';
-import {ProvingMobile,myStorage,ISFirstWeb,ISFirstWebJH,getcheckPhone,GetQueryString,WinodwLink} from '../../utils/API';
+import {ProvingMobile,myStorage,ISFirstWeb,ISFirstWebJH,getcheckPhone,GetQueryString,WinodwLink,MackKeys} from '../../utils/API';
 import {PromptBox} from '../../components/prompt/prompt';
-import {getSendSms,getCodelogin,getUrl,getSaveHardLog,getSaveOpenLog} from '../../utils/config';
+import {getSendSms,getCodelogin,getUrl,getSaveHardLog,getSaveOpenLog,getIsAuth} from '../../utils/config';
 import {Encrypt} from '../../utils/AES';
 
 export default class Guide extends React.Component{
@@ -18,26 +18,7 @@ export default class Guide extends React.Component{
             checkedclass:'guide-checkbox'
         }
         this.code = 60;
-        // BaiDuHm();
-        document.body.style.background = '#f5f5f9'
-    }
-    //通过百度api获取地址
-    getBaiDuAPI(){
-        var BMap = window.BMap;
-        var map = new BMap.Map("allmap");
-        var geolocation = new BMap.Geolocation();
-        geolocation.getCurrentPosition(function(r){
-            var mk = new BMap.Marker(r.point);
-            map.addOverlay(mk);
-            map.panTo(r.point);
-            var point = new BMap.Point(r.point.lng,r.point.lat);
-            map.centerAndZoom(point,12);
-            var gc = new BMap.Geocoder();  //初始化，Geocoder类
-            gc.getLocation(point, function (rs) {   //getLocation函数用来解析地址信息，分别返回省市区街等
-                var addComp = rs.addressComponents;
-                myStorage.set('city',addComp.city)
-        });
-        })
+        document.body.style.background = '#f5f5f9';
     }
     //提示框隐藏显示
     setPromptHide(text){
@@ -52,6 +33,30 @@ export default class Guide extends React.Component{
             })
         },2000)
     }
+    //通过百度api获取地址
+    // getBaiDuAPI(){
+    //     var BMap = window.BMap;
+    //     var map = new BMap.Map("allmap");
+    //     var geolocation = new BMap.Geolocation();
+    //     geolocation.getCurrentPosition(function(r){
+    //         if(this.getStatus() == window.BMAP_STATUS_SUCCESS){
+    //             var mk = new BMap.Marker(r.point);
+    //             map.addOverlay(mk);
+    //             map.panTo(r.point);
+    //             var point = new BMap.Point(r.point.lng,r.point.lat);
+    //             map.centerAndZoom(point,12);
+    //             var gc = new BMap.Geocoder();  //初始化，Geocoder类
+    //             gc.getLocation(point, function (rs) {   //getLocation函数用来解析地址信息，分别返回省市区街等
+    //                 if(r.accuracy!==null){
+    //                     var addComp = rs.addressComponents;
+    //                     myStorage.set('city',addComp.city)
+    //                 }
+    //             });
+    //         }
+            
+    //     },{enableHighAccuracy: true})
+    // }
+    
     //打开日志
     setSaveOpenLog(){
         getSaveOpenLog().then(res=>{
@@ -62,6 +67,14 @@ export default class Guide extends React.Component{
     setSaveHardLog(){
         getSaveHardLog().then(res=>{
             console.log(res.data)
+        })
+    }
+    setIsAuth(data){
+        getIsAuth(data).then(res=>{
+            console.log(res.data)
+            if(res.data.code==='yes' || res.data.code==='no'){
+                WinodwLink('/home');
+            }
         })
     }
     //验证手机号码
@@ -84,13 +97,14 @@ export default class Guide extends React.Component{
             return false;
         }
         if(!getcheckPhone(this.state.phone)){
-            this.setPromptHide('请输入正确的手机号码！')
+            this.setPromptHide('请输入正确的手机号码！');
         }else if(this.state.codevalue===''){
-            this.setPromptHide('验证码错误，请重新输入')
+            this.setPromptHide('验证码错误，请重新输入');
         }else{
             this.setCodelogin({phone:Encrypt(this.state.phone),veryCode:this.state.codevalue})
         }
     }
+    
     //复选框
     handCheckbox(){
         if(this.state.checked){
@@ -110,7 +124,7 @@ export default class Guide extends React.Component{
         if(this.state.phone!==''){
             this.setSendSms({phone:Encrypt(this.state.phone)});
         }else{
-            this.setPromptHide('请输入您的电话号码')
+            this.setPromptHide('请输入正确的手机号码！')
         }
     }
     //页面跳转
@@ -148,7 +162,7 @@ export default class Guide extends React.Component{
     setCodelogin(data){
         getCodelogin(data).then(res=>{
             console.log(res.data);
-            if(res.data.code==='ok'){
+            if(res.data.code==='ok' || res.data.code==='no'){
                 WinodwLink('/home')
                 // this.props.history.push('/home')
                 myStorage.set('token',res.data.token)
@@ -161,23 +175,26 @@ export default class Guide extends React.Component{
     }
     componentDidMount(){
         myStorage.set('channel',GetQueryString('channel'));
-        this.getBaiDuAPI()
+        // this.getBaiDuAPI()
+        MackKeys();
         if(ISFirstWeb()){
             this.setSaveOpenLog()
         }
         if(ISFirstWebJH()){
             this.setSaveHardLog()
         }
+        this.setIsAuth({token:myStorage.get('token')})
     }
     componentWillUnmount(){
         clearTimeout(this.times)
         this.times = null;
+        window.addEventListener('resize',null,false)
     }
     render(){
         const handCodeClick =  !this.state.isSetinterval ? this.handCodeClick.bind(this) : null;
         return(
             <div className="guide">
-                <div id="allmap" style={{display:'none'}}></div>
+                {/* <div id="allmap" style={{display:'none'}}></div> */}
                 {this.state.prompt ? <PromptBox text={this.text}></PromptBox> :''}
                 <div className="guide-banner">
                     <img alt="" src={require('../../images/guide.jpg')}></img>
@@ -199,7 +216,12 @@ export default class Guide extends React.Component{
                     <span>我已阅读并同意 <a href={getUrl()}>《 用户注册协议 》</a></span>
                 </div>
                 <div className="guide-footer" onClick={this.handLinkHome.bind(this)}>我先逛逛</div>
-                <div className="guide-banq">CopyRight @ 2019 掌众互联网金融 版权所有</div>
+                <div className="guide-banq">
+                    <p>贷款产品合作出资主体：平安普惠</p>
+                    <p>深圳掌众互联网金融服务有限公司   粤ICP备11050772号-1</p>
+                    <p>借款成功与否因人而异，具体贷款额度和到账时间</p>
+                    <p>以最终审核结果为准，本平台不收取任何费用</p>
+                </div>
             </div>
         )
     }

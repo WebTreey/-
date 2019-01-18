@@ -1,9 +1,8 @@
 import React from 'react';
 import './info.scss';
 import {withRouter} from 'react-router';
-import {myStorage,BaiDuHm,ISFirstWeb} from '../../utils/API'
+import {myStorage,BaiDuHm,ISFirstWeb,HideConter} from '../../utils/API'
 import {getIsAuth,getSms,getExistCheckReport,getSaveOpenLog,getLinkUrl,HOST} from '../../utils/config';
-import {Encrypt} from '../../utils/AES';
 import {PromptBox} from '../../components/prompt/prompt'
 import Title from'../../components/title/index'
 class InfoIndex extends React.Component{
@@ -14,7 +13,7 @@ class InfoIndex extends React.Component{
             data:{},
             prompt:false,
             infoData:[],
-            showBtn:true,
+            showBtn:false,
             rzText:''
         }
         BaiDuHm()
@@ -76,7 +75,8 @@ class InfoIndex extends React.Component{
         getSms(data).then(res=>{
             if(res.data.data){
                 this.setState({
-                    infoData:res.data.data
+                    infoData:res.data.data,
+                    showBtn:true
                 })
             }else if(res.data.code ==='login_outtime'){
                 this.setState({
@@ -88,16 +88,26 @@ class InfoIndex extends React.Component{
     }
     
     //查询是否存在检测结果
-    setExistCheckReport(data){
+    setExistCheckReport(data,index){
         getExistCheckReport(data).then(res=>{
             console.log(res.data)
             if(res.data.code==='ok'){
-                // operatorCheck
-                if(res.data.data.operatorCheck===1){
-                    this.props.history.push('/TestResult')
+                if(index===1){
+                     //跳转到运营商检测
+                    if(res.data.data.operatorCheck===1){
+                        this.props.history.push('/TestResult')
+                    }else{
+                        this.props.history.push('/CarrProving')
+                    }
                 }else{
-                    this.props.history.push('/home/myinfo?nav=2')
+                    //跳转到黑名单检测
+                    if(res.data.data.blacklistCheckNew===1){
+                        // this.props.history.push('/TestResult')
+                    }else{
+                        // this.props.history.push('/CarrProving')
+                    }
                 }
+               
             }
         })
     }
@@ -112,14 +122,17 @@ class InfoIndex extends React.Component{
     }
     handLinkMyinfo(){
         if(this.state.data.code==='yes' || this.state.data.code==='no'){
-            this.setExistCheckReport({phone:Encrypt(myStorage.get('phone'))});
+            this.props.history.push('/home/myinfo?nav=2')
         }else{
             this.props.history.push('/home/login?nav=2')
         }
     }
+    handLinkCertification(){
+        this.props.history.push('/home/certification?nav=2')
+    }
     handLinkCarrProving(){
         if(this.state.data.code==='yes' || this.state.data.code==='no'){
-            this.props.history.push('/CarrProving')
+            this.setExistCheckReport({},1)
         }else{
             this.props.history.push('/home/login?nav=2')
         }
@@ -153,7 +166,7 @@ class InfoIndex extends React.Component{
         }
     }
     componentDidMount(){
-        this.setIsAuth({phone:Encrypt(myStorage.get('phone')),token:myStorage.get('token')});
+        this.setIsAuth({token:myStorage.get('token')});
         this.setSms({token:myStorage.get('token')});
         if(ISFirstWeb()){
             this.setSaveOpenLog();
@@ -170,7 +183,7 @@ class InfoIndex extends React.Component{
         }
        
         const len = this.state.infoData.length - yd;
-        const onClick= this.state.data.code==='no' ? this.handLinkMyinfo.bind(this) : null
+        const onClick= this.state.data.code==='no' ? this.handLinkCertification.bind(this) : null
         console.log(myStorage.get('city'))
         return(
             <div className="info">
@@ -189,7 +202,7 @@ class InfoIndex extends React.Component{
                     <div className="info-grxx flex-column">
                         {this.state.showBtn ? <img alt="闪电贷" src={require('../../images/my-photo.jpg')}></img> : <img alt="闪电贷" src={require('../../images/my-photo-1.jpg')}></img>}
                         
-                        {this.state.showBtn ? <div><span className="flex-content"><em>{myStorage.get('phone')}</em><img alt="" src={require("../../images/right-icon.jpg")}></img></span>
+                        {this.state.showBtn ? <div><span className="flex-content"><em>{HideConter(myStorage.get('phone'))}</em><img alt="" src={require("../../images/right-icon.jpg")}></img></span>
                         <button onClick={onClick} className="info-grxx-btn" >{this.state.rzText}</button></div> : <button onClick={this.handLoginBtn.bind(this)} className="info-grxx-btn" style={{margin:'.2rem 0 0 0'}}>登录</button>}
                         
                     </div>

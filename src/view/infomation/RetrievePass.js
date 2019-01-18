@@ -7,7 +7,7 @@ import { withRouter } from 'react-router';
 import {Encrypt,MD5encode} from '../../utils/AES'
 import Log from '../../components/log/log'
 import Title from'../../components/title/index'
-class SetPassword extends React.Component{
+class RetrievePass extends React.Component{
     constructor(props){
         super(props);
         this.state = {
@@ -44,8 +44,8 @@ class SetPassword extends React.Component{
         getSetPassword(data).then(res=>{
             console.log(res.data)
             if(res.data.code==='ok'){
-                this.props.history.go(-1);
-                
+                this.props.history.push('/home/infoindex?nav=2')
+                myStorage.remove('phone');
                 myStorage.remove('token');
             }else{
                 this.setPromptHide('修改失败')
@@ -93,6 +93,11 @@ class SetPassword extends React.Component{
             })
         }
     }
+    handPhone(e){
+        this.setState({
+            phone:ProvingMobile(e.target.value,11)
+        })
+    }
     //验证验证码 
     handCodeChange(e){
         this.setState({
@@ -135,11 +140,11 @@ class SetPassword extends React.Component{
     //提交
     handLoginClick(){
         if(this.state.pass1===''){
-            this.setPromptHide('请输入登录密码！')
+            this.setPromptHide('登录密码错误，请重新输入！')
         }else if(this.state.pass2==='' || this.state.pass2!==this.state.pass1){
             this.setPromptHide('两次新登录密码不一致，请检查后在提交！')
         }else if(this.state.codevalue===''){
-            this.setPromptHide('请输入验证码')
+            this.setPromptHide('验证码错误，请重新输入')
         }else{
             const data = {
                 phone:Encrypt(myStorage.get('phone')),
@@ -160,10 +165,17 @@ class SetPassword extends React.Component{
         return(
             <div className="info-me info">
             <Log></Log>
-            <Title  text="设置密码" history = {this.props.history}></Title>
+            <Title  text="找回密码" history = {this.props.history}></Title>
              {this.state.prompt ? <PromptBox text={this.text}></PromptBox> : ''}
                 <div className="info-input">
                     <form className="flex-column-left info-setpass">
+                        <label className="flex-between">
+                        <input type="text" placeholder="请输入密码" value={this.state.phone} onChange={this.handPhone.bind(this)} ></input>
+                        </label>
+                        <label className="flex-between">
+                        <input type="text" placeholder="请输入短信验证码" value={this.state.codevalue} onChange={this.handCodeChange.bind(this)}></input>
+                        <span onClick={handCodeClick}>{this.state.codetext}</span>
+                        </label>
                         <label className="flex-between">
                         <input type={inputtype1} placeholder="请输入密码" data-pass={1}  value={this.state.pass1} onChange={this.handPassword.bind(this)} ></input>
                         <img alt="" src={this.state.imgurl1} onClick={this.handImgClick.bind(this)} data-pass={1}></img>
@@ -172,10 +184,7 @@ class SetPassword extends React.Component{
                         <input type={inputtype2} placeholder="请确认新密码" data-pass={2}  value={this.state.pass2} onChange={this.handPassword.bind(this)}></input>
                         <img alt="" src={this.state.imgurl2} onClick={this.handImgClick.bind(this)} data-pass={2}></img>
                         </label>
-                        <label className="flex-between">
-                        <input type="text" placeholder="请输入短信验证码" value={this.state.codevalue} onChange={this.handCodeChange.bind(this)}></input>
-                        <span onClick={handCodeClick}>{this.state.codetext}</span>
-                        </label>
+                        
                     </form>
                 </div>
                 {this.state.isyzm ? <div className="info-code-fs">验证码已发送{HideConter(myStorage.get('phone'))}</div> :''}
@@ -184,4 +193,4 @@ class SetPassword extends React.Component{
         )
     }
 }
-export default withRouter(SetPassword)
+export default withRouter(RetrievePass)

@@ -207,11 +207,14 @@
     }
 }
 .test-result{
-   
+    padding: .88rem 0 0 0; 
     .result-box{
         background: #fff;  text-align: left; margin: .2rem 0 0 0; overflow: hidden;
         h3{
             height: .8rem; line-height: .8rem; border-bottom: 1px solid #dfdfdf;padding:  0 .4rem; color: #455b6f;
+        }
+        .pay-btn{
+            width: 2.02rem; 
         }
         ul{
             padding:  .2rem .4rem;
@@ -223,18 +226,28 @@
             }
         }
        .huaf-data{
-           height: 300px;
+           height: 260px;
        }
        .result-tb{
            padding: .25rem;background: #fbfbfb; border:1px solid #dedede; width: 6.5rem; margin: .2rem auto; border-radius: .1rem;
            p{
-               text-align: center; font-size: .24rem;
-               
+               text-align: center; font-size: .24rem; line-height: .5rem; color: #646464;
+               display: flex; display: -webkit-flex; justify-content: space-between ; align-content: center; align-items: center;
+               i{
+                   text-align: center; display: block; flex: 1;
+               }
                span{
-                   font-size: .44rem; color: #34689b; padding: 0 .4rem;
+                   font-size: .3rem; color: #34689b; padding: 0 .4rem; text-align: left;flex: 1;
                }
            }
        }
+       .result-content{
+           padding: .4rem; font-size: .24rem; color: #999999
+       }
+    }
+    .result-btn{
+        border-radius: .1rem; color: #fff; background: #2299ff; text-align: center; height: .9rem; line-height: .9rem; width: 6.3rem;
+        margin: .4rem auto; font-size: .38rem;
     }
 }
 
@@ -250,4 +263,7 @@
 }
 .am-list-item .am-list-line .am-list-arrow {
     width: .14rem !important; margin:  .08rem 0 0 .2rem !important;
+}
+.am-list-item .am-list-line .am-list-extra{
+    font-size: .27rem !important; font-family: '微软雅黑'
 }

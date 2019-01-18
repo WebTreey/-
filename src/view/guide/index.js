@@ -166,6 +166,10 @@ export default class Index extends React.Component{
     componentDidMount(){
         this.getBaiDuAPI()
     }
+    componentWillUnmount(){
+        document.body.style.background= ''
+        document.body.style.backgroundSize = '';
+    }
     render(){
         const handCodeClick =  !this.state.isSetinterval ? this.handCodeClick.bind(this) : null;
         return(

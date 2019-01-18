@@ -10,6 +10,14 @@ export const ProvingMobile = (value = "", length) => {
     const str = (s + '').replace(rex, '')
     return str;
 }
+//禁止输入中文
+export const ProvingNoChina = (value = "", length) => {
+    let s = value.length > length ? (value + '').substring(0, length) : value;
+    // var rex = /[\u4E00-\u9FA5]|[\uFE30-\uFFA0]/g;
+    var rex = /[^\d|a-zA-Z]/g;
+    const str = (s + '').replace(rex, '')
+    return str;
+}
 // 纯中文输入
 export const ProvingChina = (value,length) =>{
     let s = value.length > length ? (value + '').substring(0, length) : value;
@@ -109,11 +117,12 @@ export const myStorage = {
 };
 //判断是否第一次访问该页面(用于进入日志)
 export const ISFirstWeb = (key) =>{
+   
     // return true;
     if(!myStorage.get( key || 'ClickDate')){
         const date =  Date();
         myStorage.set(  key || 'ClickDate',date);
-        return false;
+        return true;
     }else{
         const strdate = myStorage.get( key || 'ClickDate');
         const oldDate = new Date(strdate);
@@ -170,4 +179,29 @@ export const uniq =(arr=[])=>{
         }
     })
     return newarr
+}
+//判断IOS还是Andriod
+export const IOSRoAndriod = ()=>{
+    var u = window.navigator.userAgent ;
+    var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
+    var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    if (isAndroid) {
+      return true
+    }
+    if (isIOS) {
+　　　 return false
+    }
+}
+//安卓软键盘控制
+export const MackKeys =() =>{
+    if(/Android [4-6]/.test(navigator.appVersion)) {
+        window.addEventListener("resize", function() {
+           if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
+              window.setTimeout(function() {
+                 document.activeElement.scrollIntoViewIfNeeded();
+              },0);
+           }
+        })
+     }
+     
 }

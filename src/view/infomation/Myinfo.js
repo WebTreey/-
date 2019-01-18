@@ -2,11 +2,12 @@ import React from 'react';
 import './info.scss';
 import {withRouter} from 'react-router';
 import { Picker, List , DatePicker } from 'antd-mobile';
-import {myStorage ,HideConter,BaiDuHm} from '../../utils/API';
+import {myStorage ,HideConter} from '../../utils/API';
 import {getIsAuth,getSubUsrInfo,getUserInfo} from '../../utils/config';
 import {Encrypt} from '../../utils/AES';
 import Log from '../../components/log/log';
-import Title from'../../components/title/index'
+import Title from'../../components/title/index';
+import {Loading} from '../../components/loading/loading'
 const seasons = [
     {
         label: '男',
@@ -39,9 +40,10 @@ class Myinfo extends React.Component{
             sValue:[],
             date: '',
             AuthData:{},
-            PromptEnd:false
+            PromptEnd:false,
+            loading:false
         }
-        BaiDuHm()
+       
     }
     //提示框隐藏显示
     setPromptHide(text){
@@ -133,6 +135,7 @@ class Myinfo extends React.Component{
         const IshandLinkCertification = (!data.idCardNo || !data.name)  ? this.handLinkCertification.bind(this) : null;
         return(
             <div className=" info">
+            {this.state.loading ? <Loading></Loading> :''}
             <Log></Log>
             <Title  text="个人信息" history = {this.props.history}></Title>
             {this.state.PromptEnd ? <Prompt handEndYes={this.handEndYes.bind(this)} handEndNo={this.handEndNo.bind(this)}></Prompt> : ''}

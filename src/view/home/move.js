@@ -1,8 +1,9 @@
 import React from 'react';
 import './home.scss';
 import {getModuleInfo,getRecmdInfo,getSaveOpenLog,getCommonClickLog,getSaveHardLog} from '../../utils/config'
-import {MoneyFormat,ISFirstWeb,BaiDuHm,ISFirstWebJH} from '../../utils/API';
+import {MoneyFormat,ISFirstWeb} from '../../utils/API';
 import Title from'../../components/title/index'
+import {Loading} from '../../components/loading/loading'
 //排序弹出
 class MoveOpen extends React.Component{
     constructor(props){
@@ -19,7 +20,7 @@ class MoveOpen extends React.Component{
     render(){
         const data = this.props.data || [];
         return(
-            <div className="move-open">
+            <div className="move-open" onClick={this.props.handHideOpen}>
                 <div className="open-box">
                     <ul>
                         {data.map((item,index)=>{
@@ -48,7 +49,7 @@ const Loding = (props)=>{
         </div>
     )
 }
-let minLimit ='' , maxLimit ='' , orderBy = 0 , modulee  = 0;
+let minLimit ='' , maxLimit ='' , orderBy = 0 , modulee  = 0 , a = '按额度' ,b = '按排序' , c = '按推荐';
 export default class Move extends React.Component{
     constructor(props){
         super(props)
@@ -60,7 +61,7 @@ export default class Move extends React.Component{
             ],
             activeIndex:1,
             moduleData:[],
-            opendata:['不限额度','0-5000','5000-10000','10000-50000','50000以上'],
+            opendata:[],
             MoveOpen:false,
             loding:false,
             Tabindex:0,
@@ -69,13 +70,15 @@ export default class Move extends React.Component{
             orderBy:'',
             module:'',
             recmdData:[],
-            pageSize:5,
+            pageSize:10,
             total:0,
-            isimg:true
+            isimg:false,
+            wxts:false,
+            loading:false
         }
         this.size = 1;
-        this.text = '数据加载中...'
-        BaiDuHm()
+        this.text = ''
+       
     }
     //提示框隐藏显示
     setPromptHide(text){
@@ -110,17 +113,15 @@ export default class Move extends React.Component{
     }
     //调用产品接口
     setRecmdInfo(data){
+        this.setState({
+            loading:true
+        })
         getRecmdInfo(data).then(res=>{
+            this.setState({
+                loading:false
+            })
             console.log(res.data)
             if(res.data.result){
-                // var total = res.data.result.total
-                // const proRecommendList = res.data.result.proRecommendList;
-                // for(var i=0;i<proRecommendList.length;i++){
-                //     if(proRecommendList[i].proType===1){
-                //         proRecommendList.splice(i,1);
-                //         i--
-                //     }
-                // }
                 this.setState({
                     recmdData:this.state.recmdData.concat(res.data.result.proRecommendList),
                     loding:false ,
@@ -134,8 +135,9 @@ export default class Move extends React.Component{
     //调用产品ID接口
     setModuleInfo(data){
         getModuleInfo(data).then(res=>{
+            console.log(res.data)
             this.setState({
-                moduleData:res.data.result
+                moduleData:[{name: "默认",id: 0, describe: "默认"}].concat(res.data.result)
             })
         })
     }
@@ -145,16 +147,16 @@ export default class Move extends React.Component{
         const scrollTop = Math.max(document.documentElement.scrollTop ,document.body.scrollTop)
         const clientHeight = document.documentElement.clientHeight;
         
-        const page = Math.ceil(this.state.total/this.state.pageSize);
+        const page = Math.ceil(this.state.total/this.state.pageSize)||10;
       
-        if((scrollTop+clientHeight)>=scrollHeight){
+        if((scrollTop+clientHeight)+80>=scrollHeight){
             if(this.size>=page) {
+                this.text = '---我也是有底线的---'
                 this.setState({
                     isimg:false
                 })
-                this.text = '已经没有更多数据了'
             }else{
-                this.text = '数据加载中...';
+                this.text = '数据加载中'
                 this.setState({
                     isimg:true
                 })
@@ -179,27 +181,14 @@ export default class Move extends React.Component{
     }
     //选择排序方式
     handListClick(e){
-        const scrollHeight = document.documentElement.scrollHeight;
-        const scrollTop = document.documentElement.scrollTop; 
-        const clientHeight = document.documentElement.clientHeight;
-       
-        if((scrollTop+clientHeight)>=scrollHeight){
-            this.text = '数据加载中...'
-            this.setState({
-                isimg:true
-            })
-        }else{
-            this.text = ''
-            this.setState({
-                isimg:false
-            })
-        }
+        
         this.size = 1;
         const that = e.target.dataset;
         const index = parseInt(that.index,10);
-        const item = (that.item + '') || '' ;
+        const item = (that.item + '').replace(/,/g,'') || '' ;
         this.setCommonClickLog({clickType:5320,reserve1:item})
         if(this.state.activeIndex===1){
+            a = item
             if(item!=='不限额度'){
                 minLimit = parseInt(item.split('-')[0]);
                 maxLimit = item.indexOf('-') >-1 ? item.split('-')[1] : parseInt(item)
@@ -207,14 +196,22 @@ export default class Move extends React.Component{
                     minLimit:minLimit,
                     maxLimit:maxLimit
                 })
-                
+            }else{
+                minLimit = ''
+                maxLimit = ''
+                this.setState({
+                    minLimit:minLimit,
+                    maxLimit:maxLimit
+                })
             }   
         }else if(this.state.activeIndex===2){
+            b = item
             orderBy = that.index ;
             this.setState({
                 orderBy:orderBy
             })
         }else{
+            c =item
             modulee = that.id ;
             this.setState({
                 module:modulee,
@@ -223,7 +220,12 @@ export default class Move extends React.Component{
         this.setState({
             Tabindex:index,
             MoveOpen:false,
-            recmdData:[]
+            recmdData:[],
+            Tab:[
+                {id:1,value:a},
+                {id:2,value:b},
+                {id:3,value:c}
+            ]
         })
         const data = {
             isPagin:1,
@@ -236,23 +238,30 @@ export default class Move extends React.Component{
             filterApi:1
         }
         this.setRecmdInfo(data);
+        return false;
     }
     //顶部Tab点击事件
     handTabClick(e){
         const index = parseInt(e.target.dataset.index,10);
         if(index!==this.state.activeIndex){
             this.setState({
-                Tabindex:0
+                Tabindex:0,
+                activeIndex:index,
+                MoveOpen:true
+            })
+        }else{
+            this.setState({
+                MoveOpen:!this.state.MoveOpen
             })
         }
-        this.setState({
-            activeIndex:index,
-            MoveOpen:true
-        })
+        // this.setState({
+        //     activeIndex:index,
+        //     MoveOpen:true
+        // })
         
         if(index===1){
             this.setState({
-                opendata:['不限额度','0-5000','5000-10000','10000-50000','50000以上']
+                opendata:['不限额度','0-5,000','50,00-10,000','10,000-50,000','50,000以上']
             })
         }else if(index===2){
             this.setState({
@@ -265,14 +274,20 @@ export default class Move extends React.Component{
         }
     }
     
+    handHideOpen(){
+        this.setState({
+            MoveOpen:false
+        })
+    }
+
     componentDidMount(){
         if(ISFirstWeb('cp')){
             this.setState({
-                MoveOpen:true
+                wxts:true
             })
             this.times = setTimeout(()=>{
                 this.setState({
-                    MoveOpen:false
+                    wxts:false
                 })
             },3000)
         }
@@ -286,16 +301,13 @@ export default class Move extends React.Component{
             module:this.state.modulee || 0,
             filterApi:1
         }
-        this.handBoydScroll();
+       
         this.setModuleInfo()
         this.setRecmdInfo(data);
         if(ISFirstWeb()){
             this.setSaveOpenLog()
         }
         document.onscroll = ()=>{
-            this.handBoydScroll()
-        }
-        document.ontouchmove = ()=>{
             this.handBoydScroll()
         }
        
@@ -310,9 +322,11 @@ export default class Move extends React.Component{
         const recmdData = this.state.recmdData;
         return(
             <div className="move main main-tj">
-                {/* <div id="ddd" style={{position:'fixed',top:'.88rem'}}>132</div> */}
+                {this.state.loading ? <Loading></Loading> : ''}
                 <Title  text="贷款" history = {this.props.history}></Title>
-                {this.state.MoveOpen?  <MoveOpen data={this.state.opendata} Tabindex={this.state.Tabindex} handListClick={this.handListClick.bind(this)}></MoveOpen> : ''}
+                {this.state.MoveOpen?  <MoveOpen data={this.state.opendata} Tabindex={this.state.Tabindex} handListClick={this.handListClick.bind(this)}
+                    handHideOpen = {this.handHideOpen.bind(this)}
+                ></MoveOpen> : ''}
                 <div className="move-header">
                     <ul className="flex-around">
                         {Tab.map((item,index)=>{
@@ -327,10 +341,12 @@ export default class Move extends React.Component{
                         })}
                     </ul>
                 </div>
-                <div className="move-lamp flex-conter">
+                {this.state.wxts ? <div className="move-lamp flex-conter">
                     <img alt="" src={require('../../images/horn.jpg')}></img>
-                    <span>温馨提示：同时申请多个不同产品，可提高贷款通过率！</span>
-                </div>
+                    <span>温馨提示：同时申请多个不同产品，可提高贷款通过率！</span> 
+                   
+                </div>: ''}
+                
                 <div className="home-list">
                         <div>
                             <ul>

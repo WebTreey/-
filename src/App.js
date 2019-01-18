@@ -8,14 +8,27 @@ import ErrIndex from './view/guide/Errindex';
 import InfoList from './view/infomation/infoList'
 import infoContent from './view/infomation/infoContent'
 import Index from './view/guide/index';
-import TestResult from './view/infomation/TextResult'
+import TestResult from './view/infomation/TestResult'
+
+const GetBaidu = props => {
+  let children = props.children;
+  let _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?d6fd9017a337e2cad391b7e772cb452a";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+  return children;
+};
+
 
 class App extends Component {
   render() {
     return (
       <div className="App">
         <Router>
-          <div>
+          <GetBaidu>
             <Route exact path="/" component={Guide}></Route>
             <Route path="/Home" component={Home}></Route>
             <Route path="/CarrProving" component={CarrProving}></Route>
@@ -24,7 +37,7 @@ class App extends Component {
             <Route path="/infoContent/:index" component={infoContent}></Route>
             <Route path="/index" component={Index}></Route>
             <Route path="/TestResult" component={TestResult}></Route>
-          </div>
+          </GetBaidu>
         </Router>
       </div>
     );

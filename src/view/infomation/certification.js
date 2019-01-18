@@ -1,6 +1,6 @@
 import React from 'react';
 import './info.scss'
-import {ProvingID,BaiDuHm,ProvingChina} from '../../utils/API'
+import {ProvingID,ProvingChina} from '../../utils/API'
 import {PromptBox} from '../../components/prompt/prompt'
 import {getDoshenqing,getCardAuth} from '../../utils/config'
 import { withRouter } from 'react-router';
@@ -15,7 +15,7 @@ class Certification extends React.Component{
             id:'',
             data:[]
         }
-        BaiDuHm()
+        
     }
     //提示框隐藏显示
     setPromptHide(text){
@@ -34,8 +34,8 @@ class Certification extends React.Component{
     setDoshenqing(data){
         getDoshenqing(data).then(res=>{
             if(res.data.code==='ok'){
-                this.setPromptHide('实名认证完成');
-                // this.props.history.go(-1);
+                // this.setPromptHide('实名认证完成');
+                this.props.history.go(-1);
             }else if(res.data.code==='nameError'){
                 this.setPromptHide('身份信息输入有误，请重新核对后输入');
             }else if(res.data.code==='hasError'){

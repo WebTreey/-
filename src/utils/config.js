@@ -5,6 +5,7 @@ var MobileDetect = require('./mobile-detect')
 // export const HOST = 'http://192.168.1.127:8080';
 export const HOST = 'http://113.31.86.153:41070';
 //export const HOST = 'http://idai.iadcn.com';
+// export const HOST = 'http://192.168.1.191:9080';
 
 
 
@@ -21,7 +22,7 @@ export const setCommparams = ()=> {
         apk_version: '1.0',
         channel: myStorage.get('channel') || ' natureChannel',
         isGroup: 1,
-        phone: Encrypt(myStorage.get('phone')) || '',
+        phone: myStorage.get('phone') ? Encrypt(myStorage.get('phone')) : '',
         city: myStorage.get('city') || '',
         imei: ukey()
     }
@@ -30,6 +31,7 @@ export const getLinkUrl = () =>{
     return `?app_name=${setCommparams().appName}&pkg_name=${setCommparams().appPkgName}&channel=${setCommparams().channel}&version_code=100&
         icon_name=ostype1com.zhangzhong.jieqianban001&os_type=${setCommparams().os_type}&company_name=深圳掌众互联网金融服务有限公司&company_simple_name=掌众金融
         `
+       
 }
 //获取手机数据
 export const getMobileDetect = () =>
@@ -276,6 +278,18 @@ export const getOperatorCheck = (data) => {
         params: Object.assign({}, setCommparams(), data)
     })
 }
+//运营商完整报告点击
+export const getOperatorReport = (data)=>{
+    return Axios({
+        method: 'post',
+        url: HOST + '/loanPay/operatorReport',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params: Object.assign({}, setCommparams(), data)
+    })
+}
+
 //激活日志接口
 export const getSaveHardLog = (data) => {
     const par = getMobileDetect()

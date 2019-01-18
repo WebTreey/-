@@ -1,6 +1,6 @@
 import React from 'react';
 import './info.scss';
-import {myStorage,BaiDuHm} from '../../utils/API'
+import {myStorage} from '../../utils/API'
 import {getSms} from '../../utils/config';
 import Log from '../../components/log/log';
 import Title from'../../components/title/index';
@@ -10,7 +10,7 @@ export default class infoContent extends React.Component{
         this.state = {
             infoData:[]
         }
-        BaiDuHm()
+       
     }
      //拉取消息列表
     setSms(data){
