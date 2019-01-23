@@ -85,11 +85,11 @@ class SetPassword extends React.Component{
         const value = e.target.value
         if(pass===1){
             this.setState({
-                pass1:ProvingNoChina(value,9)
+                pass1:ProvingNoChina(value,25)
             })
         }else{
             this.setState({
-                pass2:ProvingNoChina(value,9)
+                pass2:ProvingNoChina(value,25)
             })
         }
     }
@@ -135,12 +135,15 @@ class SetPassword extends React.Component{
     //提交
     handLoginClick(){
         if(this.state.pass1===''){
-            this.setPromptHide('请输入登录密码！')
+            this.setPromptHide('密码不能为空，请重新输入！')
+        }else if(this.state.pass1.length<9){
+            this.setPromptHide('您的密码长度小于9，请重新输入！')
         }else if(this.state.pass2==='' || this.state.pass2!==this.state.pass1){
             this.setPromptHide('两次新登录密码不一致，请检查后在提交！')
         }else if(this.state.codevalue===''){
             this.setPromptHide('请输入验证码')
         }else{
+            
             const data = {
                 phone:Encrypt(myStorage.get('phone')),
                 password:MD5encode(this.state.pass1),

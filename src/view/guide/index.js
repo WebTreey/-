@@ -1,8 +1,8 @@
 import React from 'react';
 import './guide.scss';
-import {ProvingMobile,myStorage,GetQueryString} from '../../utils/API';
+import {ProvingMobile,myStorage,GetQueryString,IOSRoAndriod} from '../../utils/API';
 import {PromptBox} from '../../components/prompt/prompt';
-import {getSendSms,getCodelogin,getXxlChannel,getDownloadApk} from '../../utils/config';
+import {getSendSms,getCodelogin,getXxlChannel,getDownloadApk,getLinkUrl,HOST} from '../../utils/config';
 import {Encrypt} from '../../utils/AES';
 
 export default class Index extends React.Component{
@@ -21,24 +21,24 @@ export default class Index extends React.Component{
         document.body.style.backgroundSize = '100%';
         this.code = 60;
     }
-    //通过百度api获取地址
-    getBaiDuAPI(){
-        var BMap = window.BMap;
-        var map = new BMap.Map("allmap");
-        var geolocation = new BMap.Geolocation();
-        geolocation.getCurrentPosition(function(r){
-            var mk = new BMap.Marker(r.point);
-            map.addOverlay(mk);
-            map.panTo(r.point);
-            var point = new BMap.Point(r.point.lng,r.point.lat);
-            map.centerAndZoom(point,12);
-            var gc = new BMap.Geocoder();  //初始化，Geocoder类
-            gc.getLocation(point, function (rs) {   //getLocation函数用来解析地址信息，分别返回省市区街等
-                var addComp = rs.addressComponents;
-                myStorage.set('city',addComp.city);
-        });
-        })
-    }
+    // //通过百度api获取地址
+    // getBaiDuAPI(){
+    //     var BMap = window.BMap;
+    //     var map = new BMap.Map("allmap");
+    //     var geolocation = new BMap.Geolocation();
+    //     geolocation.getCurrentPosition(function(r){
+    //         var mk = new BMap.Marker(r.point);
+    //         map.addOverlay(mk);
+    //         map.panTo(r.point);
+    //         var point = new BMap.Point(r.point.lng,r.point.lat);
+    //         map.centerAndZoom(point,12);
+    //         var gc = new BMap.Geocoder();  //初始化，Geocoder类
+    //         gc.getLocation(point, function (rs) {   //getLocation函数用来解析地址信息，分别返回省市区街等
+    //             var addComp = rs.addressComponents;
+    //             myStorage.set('city',addComp.city);
+    //     });
+    //     })
+    // }
     //提示框隐藏显示
     setPromptHide(text){
         this.text = text;
@@ -135,7 +135,7 @@ export default class Index extends React.Component{
     setCodelogin(data){
         getCodelogin(data).then(res=>{
             console.log(res.data);
-            if(res.data.code==='ok'){
+            if(res.data.code==='ok' || res.data.code==='no'){
                 myStorage.set('token',res.data.token)
                 myStorage.set('phone',this.state.phone);
                 return true
@@ -143,7 +143,7 @@ export default class Index extends React.Component{
             return false;
         }).then(res=>{
             if(res){
-                getXxlChannel({channelCode: GetQueryString('channel') || 'baidu0001'}).then(res=>{
+                getXxlChannel({channelCode: GetQueryString('channel')}).then(res=>{
                     console.log(res.data)
                     if(res.data.result===null){
                         this.setPromptHide('没有对应的信息流渠道');
@@ -157,15 +157,21 @@ export default class Index extends React.Component{
                 }).then(res=>{
                     const data = {dn:res}
                     if(res){
-                        window.location.href = getDownloadApk(data)
+                        if(IOSRoAndriod()){
+                            window.location.href = getDownloadApk(data)
+                        }else{
+                            const url = getLinkUrl();
+                            window.location.href = `${HOST}/f/zghcp.html${url}`
+                        }
+                        
                     }
                 })
             }
         })
     }
-    componentDidMount(){
-        this.getBaiDuAPI()
-    }
+    // componentDidMount(){
+    //     this.getBaiDuAPI()
+    // }
     componentWillUnmount(){
         document.body.style.background= ''
         document.body.style.backgroundSize = '';
@@ -174,7 +180,7 @@ export default class Index extends React.Component{
         const handCodeClick =  !this.state.isSetinterval ? this.handCodeClick.bind(this) : null;
         return(
             <div className="guide yl-bg">
-                <div id="allmap" style={{display:'none'}}></div>
+                {/* <div id="allmap" style={{display:'none'}}></div> */}
                 {this.state.prompt ? <PromptBox text={this.text}></PromptBox> :''}
                 <div className="">
                     <div className="yl-left tran-bottom">
@@ -196,7 +202,7 @@ export default class Index extends React.Component{
                     <span>我已阅读并同意 <a>《 用户注册协议 》</a></span>
                 </div>
                 <div className="guide-footer" onClick={this.handLinkHome.bind(this)}>我先逛逛</div> */}
-                <div className="guide-banq" style={{color:'#eda8a0'}}>Copyright@2018 xxx有限公司版权所有</div>
+                <div className="guide-banqxx" style={{color:'#eda8a0'}}>Copyright@2018 xxx有限公司版权所有</div>
             </div>
         )
     }

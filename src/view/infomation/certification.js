@@ -34,8 +34,10 @@ class Certification extends React.Component{
     setDoshenqing(data){
         getDoshenqing(data).then(res=>{
             if(res.data.code==='ok'){
-                // this.setPromptHide('实名认证完成');
-                this.props.history.go(-1);
+                this.setPromptHide('实名认证完成');
+                this.times = setTimeout(()=>{
+                    this.props.history.go(-1);
+                },2000)
             }else if(res.data.code==='nameError'){
                 this.setPromptHide('身份信息输入有误，请重新核对后输入');
             }else if(res.data.code==='hasError'){

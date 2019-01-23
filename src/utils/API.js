@@ -14,7 +14,7 @@ export const ProvingMobile = (value = "", length) => {
 export const ProvingNoChina = (value = "", length) => {
     let s = value.length > length ? (value + '').substring(0, length) : value;
     // var rex = /[\u4E00-\u9FA5]|[\uFE30-\uFFA0]/g;
-    var rex = /[^\d|a-zA-Z]/g;
+    var rex = /[^\d|a-zA-Z|.~!@#$%^&,_\-+=]/g;
     const str = (s + '').replace(rex, '')
     return str;
 }
@@ -51,7 +51,7 @@ export const HideConter = (value) => {
     } else if (len === 3) {
         return str.substring(0, 1) + '*' + str.charAt(len - 1);
     } else if (len === 11) {
-        return str.substring(0, 3) + '****' + str.substring(7);
+        return str.substring(0, 3) + '****' + str.substring(8);
     }else if (len === 18) {
         return str.substring(0, 4) + '****' + str.substring(14);
     }

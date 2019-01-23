@@ -158,7 +158,7 @@ export default class Guide extends React.Component{
             }
         })
     }
-    //获取验证码登陆接口
+    //获取验证码登录接口
     setCodelogin(data){
         getCodelogin(data).then(res=>{
             console.log(res.data);

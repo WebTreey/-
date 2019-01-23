@@ -1,9 +1,10 @@
 import Axios from 'axios';
 import { myStorage ,GetQueryString} from './API'
 import { Encrypt } from './AES'
+import { RSAEncrypt ,SHASign } from './index'
 var MobileDetect = require('./mobile-detect')
-// export const HOST = 'http://192.168.1.127:8080';
-export const HOST = 'http://113.31.86.153:41070';
+export const HOST = 'http://192.168.1.127:8080';
+// export const HOST = 'http://113.31.86.153:41070';
 //export const HOST = 'http://idai.iadcn.com';
 // export const HOST = 'http://192.168.1.191:9080';
 
@@ -266,6 +267,7 @@ export const getExistCheckReport = (data) => {
         },
         params: Object.assign({}, setCommparams(), data)
     })
+    
 }
 //运营商检测结果的接口
 export const getOperatorCheck = (data) => {
@@ -286,7 +288,7 @@ export const getOperatorReport = (data)=>{
         headers: {
             "Content-Type": "application/json"
         },
-        params: Object.assign({}, setCommparams(), data)
+        params: {data:RSAEncrypt(JSON.stringify(Object.assign({}, setCommparams(), data,{appName: encodeURIComponent('闪电贷款王'),city: encodeURIComponent(myStorage.get('city'))}))),sign:SHASign(JSON.stringify(Object.assign({}, setCommparams(), data,{appName: encodeURIComponent('闪电贷款王'),city: encodeURIComponent(myStorage.get('city'))})))}
     })
 }
 
@@ -315,7 +317,7 @@ export const getSaveOpenLog = (data) => {
         headers: {
             "Content-Type": "application/json"
         },
-        data: Object.assign({}, setCommparams(), data)
+        params: Object.assign({}, setCommparams(), data)
     })
 }
 //点击日志接口
@@ -340,4 +342,36 @@ export const getAddBannerClickLog =(data) =>{
         data: Object.assign({}, setCommparams(), data)
     })
 }
-
+//支付接口
+export const getoperatorPay = (data) =>{
+    return Axios({
+        method: 'post',
+        url: HOST + '/loanPay/operatorPay',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        params: Object.assign({}, setCommparams(), data)
+    })
+}
+// 查询支付结果的接口
+export const getOperatorPayResult = (data) =>{
+    return Axios({
+        method: 'post',
+        url: HOST + '/loanPay/getOperatorPayResult',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        params: Object.assign({}, setCommparams(), data)
+    })
+}
+// 点立即检测判断是否已经付费
+export const getBlackListCheck = (data) =>{
+    return Axios({
+        method: 'post',
+        url: HOST + '/nLoanPay/blackListCheck',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        params: Object.assign({}, setCommparams(), data)
+    })
+}

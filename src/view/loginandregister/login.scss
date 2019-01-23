@@ -42,7 +42,7 @@ form{
     }
 }
 .login-protocol{
-    position: fixed; bottom: 1.5rem; width: 100%;
+    position: absolute; bottom: 1.5rem; width: 100%;
     .login-checkbox{
         background: url('../../images/checkbox.jpg') no-repeat; width: .23rem; height: .23rem; background-size: 100%;
     }

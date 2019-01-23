@@ -261,7 +261,7 @@ export default class Move extends React.Component{
         
         if(index===1){
             this.setState({
-                opendata:['不限额度','0-5,000','50,00-10,000','10,000-50,000','50,000以上']
+                opendata:['不限额度','0-5,000','5,000-10,000','10,000-50,000','50,000以上']
             })
         }else if(index===2){
             this.setState({
@@ -351,6 +351,14 @@ export default class Move extends React.Component{
                         <div>
                             <ul>
                                 {recmdData.map((item,index)=>{
+                                    let dw = ''
+                                    if(item.lendRateType===1){
+                                        dw = '分钟'
+                                    }else if(item.lendRateType===2){
+                                        dw = '小时'
+                                    }else{
+                                        dw = '天'
+                                    }
                                     return(
                                         <li key={index}>
                                             <div className="home-item">
@@ -364,7 +372,7 @@ export default class Move extends React.Component{
                                                         <p>最高可贷额度（元）</p>
                                                     </div>
                                                     <div className="home-item-conter">
-                                                        <p>{item.minLendRate || item.maxLendRate}</p>
+                                                        <p>最快{item.minLendRate || item.maxLendRate}{dw}放款</p>
                                                         <p>{item.recommend}</p>
                                                     </div>
                                                     <div className="home-item-btn"><a href={item.h5Link} 

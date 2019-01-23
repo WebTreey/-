@@ -21,6 +21,7 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 
 // Webpack uses `publicPath` to determine where the app is being served from.
@@ -107,7 +108,7 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
 module.exports = {
- 
+  devtool: 'false',
   // Don't attempt to continue if there are any errors.
  
   // We generate sourcemaps in production. This is slow but gives good results.
@@ -447,6 +448,12 @@ module.exports = {
         minifyURLs: true,
       },
     }),
+    new webpack.DefinePlugin({ // <-- 减少 React 大小的关键
+		  'process.env': {
+			'NODE_ENV': JSON.stringify('production')
+		  }
+    }),
+    new UglifyJSPlugin(),
     new webpack.optimize.ModuleConcatenationPlugin(),
     // Inlines the webpack runtime script. This script is too small to warrant
     // a network request.
@@ -500,14 +507,6 @@ module.exports = {
         new RegExp('/[^/]+\\.[^/]+$'),
       ],
     }),
-    // new webpack.DefinePlugin({ // <-- 减少 React 大小的关键
-		//   'process.env': {
-		// 	'NODE_ENV': JSON.stringify('production')
-		//   }
-		// }),
-		// new webpack.optimize.DedupePlugin(), //删除类似的重复代码
-		// new webpack.optimize.UglifyJsPlugin(), //最小化一切
-		// new webpack.optimize.AggressiveMergingPlugin()//合并块
     // TypeScript type checking
     fs.existsSync(paths.appTsConfig) &&
       new ForkTsCheckerWebpackPlugin({

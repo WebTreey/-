@@ -37,7 +37,7 @@ $alignCenter:center;
                 height: .4rem; width: .4rem;  border-radius: .1rem; margin: 0 0 0 .3rem; 
             }
             .home-recommend-title{
-                flex: 1; text-align: left;
+                flex: 1; text-align: left;  background-size: cover
                 h3{
                     font-size: .34rem; padding: 0 .15rem 0 .2rem;
                 }
@@ -55,7 +55,7 @@ $alignCenter:center;
         .home-recommend-money{
             color: $color; font-size: .66rem; text-align: $alignCenter; font-family: Arial, Helvetica, sans-serif; padding: .3rem 0 ;
             p{
-                color: #939393; font-size: .24rem;
+                color: #939393; font-size: .24rem; 
             }
         }
         .home-recommend-adv{
@@ -91,7 +91,7 @@ $alignCenter:center;
             }
         }
         .home-item{
-            padding: .3rem 0;  font-size: .24rem; border-bottom: 1px solid $borderColor;
+            padding: .3rem 0;  font-size: .24rem; border-bottom: 1px solid $borderColor; text-align: left;
             .home-item-icon{
                 color: #666666;
                 span{

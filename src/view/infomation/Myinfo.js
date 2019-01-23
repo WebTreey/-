@@ -1,5 +1,5 @@
 import React from 'react';
-import './info.scss';
+
 import {withRouter} from 'react-router';
 import { Picker, List , DatePicker } from 'antd-mobile';
 import {myStorage ,HideConter} from '../../utils/API';

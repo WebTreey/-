@@ -1,6 +1,6 @@
 import React from 'react';
 import {MoneyFormat , ISFirstWeb,ISFirstWebJH,IOSRoAndriod,myStorage} from '../../utils/API'
-import {getHomeInof,getCommonClickLog,getSaveOpenLog,getMobileDetect,getSaveHardLog,getAddBannerClickLog} from '../../utils/config'
+import {getHomeInof,getCommonClickLog,getSaveOpenLog,getMobileDetect,getSaveHardLog,getAddBannerClickLog,HOST,getLinkUrl,getIsAuth} from '../../utils/config'
 import {Loading} from '../../components/loading/loading'
 import { withRouter } from 'react-router';
 import ReactSwiper from 'reactjs-swiper'
@@ -24,6 +24,21 @@ class HomeContent extends React.Component{
     //获取基本信息
     setMobileDetect(){
         getMobileDetect()
+    }
+    //判断是否登录
+    setIsAuth(data,index){
+        getIsAuth(data).then(res=>{
+            console.log(res.data)
+            if(res.data.code==='yes' || res.data.code==='no'){
+                if(index===1){
+                    this.props.history.push('/Blacklist')
+                }else{
+                    this.props.history.push('/CarrProving')
+                }
+            }else{
+                this.props.history.push('/home/login?nav=2')
+            }
+        })
     }
     //通过百度api获取地址
     getBaiDuAPI(){
@@ -131,16 +146,17 @@ class HomeContent extends React.Component{
             }
         }
     }
-    //底部点击事件
-    handFooterClose(){
+    //底部关闭点击事件
+    handFooterClose(e){
         const date =  Date();
         myStorage.set('footer',date);
         this.setState({
             footerIS: false,
             home:'0 0 1rem '
         })
-        return false;
+        e.stopPropagation();
     }
+    //底部单击事件
     handFooter(){
         if(IOSRoAndriod()){
             this.setCommonClickLog({
@@ -152,6 +168,8 @@ class HomeContent extends React.Component{
                 clickType:5320,
                 reserve1:'关注公众号'
             })
+            const url = getLinkUrl()
+            window.location.href = `${HOST}/f/zghcp.html${url}`
         }
         
     }
@@ -188,6 +206,11 @@ class HomeContent extends React.Component{
             clickType:5320,
             reserve1:'刷新接口产品模块点击'
         })
+    }
+    //跳转检测
+    handLinkTesting(e){
+        const index = parseInt(e.target.dataset.index);
+        this.setIsAuth({token:myStorage.get('token')},index)
     }
     componentDidMount(){
         this.getBaiDuAPI()
@@ -247,14 +270,14 @@ class HomeContent extends React.Component{
                                             reserve1:creditDetectionList[0].moduleName,
                                             reserve2:creditDetectionList[0].creditModuleType
                                         })
-                                        }><a href={creditDetectionList[0].h5Link}><img alt="闪电贷" src={creditDetectionList[0].img}></img></a></li>
+                                        }><img alt="闪电贷" data-index={1} src={creditDetectionList[0].img} onClick={this.handLinkTesting.bind(this)}></img></li>
                                     <li onClick={
                                         this.handCount.bind(this,{
                                             clickType:5217,
                                             reserve1:creditDetectionList[1].moduleName,
                                             reserve2:creditDetectionList[1].creditModuleType
                                         })
-                                        }><a href={creditDetectionList[1].h5Link}><img alt="闪电贷" src={creditDetectionList[1].img}></img></a></li>
+                                        }><img alt="闪电贷" data-index={2} src={creditDetectionList[1].img} onClick={this.handLinkTesting.bind(this)}></img></li>
                                         
                                 </ul>:<p></p>}
                                 
@@ -309,7 +332,14 @@ class HomeContent extends React.Component{
                                         <div>
                                             <ul>
                                                 {proModuleList[1].proList.map((item,index)=>{
-                                                
+                                                    let dw = ''
+                                                    if(item.lendRateType===1){
+                                                        dw = '分钟'
+                                                    }else if(item.lendRateType===2){
+                                                        dw = '小时'
+                                                    }else{
+                                                        dw = '天'
+                                                    }
                                                     return(
                                                         <li key={index}>
                                                             <div className="home-item">
@@ -323,7 +353,7 @@ class HomeContent extends React.Component{
                                                                         <p>最高可贷额度（元）</p>
                                                                     </div>
                                                                     <div className="home-item-conter">
-                                                                        <p>{item.minLendRate}</p>
+                                                                        <p>最快{item.minLendRate || item.maxLendRate}{dw}放款</p>
                                                                         <p>{item.lendRate}</p>
                                                                     </div>
                                                                     <div className="home-item-btn" onClick={

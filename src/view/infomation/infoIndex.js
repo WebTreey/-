@@ -152,7 +152,7 @@ class InfoIndex extends React.Component{
         if(this.state.data.code==='yes' || this.state.data.code==='no'){
             this.props.history.push('/infolist')
         }else{
-            this.props.history.push('/home/login')
+            this.props.history.push('/home/login?nav=2')
         }
     }
     handLinkHref(param){
@@ -178,8 +178,9 @@ class InfoIndex extends React.Component{
     }
     render(){
         let yd = 0;
-        if(myStorage.get('iden')){
-            yd = (myStorage.get('iden')+'').split('-').length
+        const phone = myStorage.get('phone')
+        if(myStorage.get(phone)){
+            yd = (myStorage.get(phone)+'').split('-').length
         }
        
         const len = this.state.infoData.length - yd;

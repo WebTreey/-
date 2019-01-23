@@ -2,7 +2,6 @@ import React from 'react';
 import './info.scss';
 import {getOperatorCheck,getOperatorReport} from '../../utils/config';
 import {Encrypt} from '../../utils/AES';
-import {PromptBox} from '../../components/prompt/prompt'
 import Title from'../../components/title/index'
 // 引入 ECharts 主模块
 import echarts from 'echarts/lib/echarts';
@@ -19,6 +18,10 @@ export default class TestResult extends React.Component{
             data:{}
         }
     }
+    handLinkPay(){
+        this.props.history.push('/Payment/1')
+    }
+    //运营商检测结果
     setOperatorCheck(data){
         getOperatorCheck(data).then(res=>{
             console.log(res.data);
@@ -36,6 +39,7 @@ export default class TestResult extends React.Component{
             
         })
     }
+    //运营商检测完整结果
     setOperatorReport(data){
         getOperatorReport(data).then(res=>{
             console.log(res.data)
@@ -88,7 +92,10 @@ export default class TestResult extends React.Component{
     }
     componentDidMount(){
         this.setOperatorCheck({phone:Encrypt(13823541918),taskId:'9408ed50-4f6e-11e8-83b0-00163e0d2629'});
-        this.setOperatorReport({smses:Encrypt('123'),calls:Encrypt('123')})
+        this.setOperatorReport({smses:[1,2,3,4],calls:[4,3,2,1],phone:13823541918})
+        const a = encodeURIComponent('深圳市')
+        console.log(a)
+        console.log(decodeURIComponent(a))
     }
     render(){
         const data = this.state.data.checkRes || {} ;
@@ -130,18 +137,18 @@ export default class TestResult extends React.Component{
                     </div>
                 </div>
                 <div className="result-box">
-                    <h3 className="flex-between"><i>亲密联系人数据</i><img className="pay-btn" src={require('../../images/pay_btn.png')}></img></h3>
+                    <h3 className="flex-between"><i>亲密联系人数据</i><img alt="" onClick={this.handLinkPay.bind(this)} className="pay-btn" src={require('../../images/pay_btn.png')}></img></h3>
                     <div className="result-content">帮助您正确填写亲密人，提升贷款申请通过率</div>
                 </div>
                 <div className="result-box">
-                    <h3 className="flex-between"><i>手机号风险联系人分析</i><img className="pay-btn" src={require('../../images/pay_btn.png')}></img></h3>
+                    <h3 className="flex-between"><i>手机号风险联系人分析</i><img alt="" onClick={this.handLinkPay.bind(this)} className="pay-btn" src={require('../../images/pay_btn.png')}></img></h3>
                     <div className="result-content">通话记录中，哪些联系人影响您的贷款申请</div>
                 </div>
                 <div className="result-box">
-                    <h3 className="flex-between"><i>短信通讯风险分析</i><img className="pay-btn" src={require('../../images/pay_btn.png')}></img></h3>
+                    <h3 className="flex-between"><i>短信通讯风险分析</i><img alt="" onClick={this.handLinkPay.bind(this)} className="pay-btn" src={require('../../images/pay_btn.png')}></img></h3>
                     <div className="result-content">通话记录中，哪些短信影响您的贷款申请</div>
                 </div>
-                <div className="result-btn">查看完整报告</div>
+                <div className="result-btn" onClick={this.handLinkPay.bind(this)}>查看完整报告</div>
             </div>
         )
     }

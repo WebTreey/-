@@ -165,6 +165,9 @@
              i{
                  font-size: .28rem; color: #999999
              }
+             em{
+                 background: #f00; border-radius: .1rem; width: .1rem; height: .1rem; display: block; margin: 0 0 0 .2rem;
+             }
         }
         .info-subtitle{
             text-overflow: ellipsis; white-space: nowrap; overflow: hidden; font-size: .26rem; color: #666;
@@ -208,49 +211,118 @@
 }
 .test-result{
     padding: .88rem 0 0 0; 
-    .result-box{
-        background: #fff;  text-align: left; margin: .2rem 0 0 0; overflow: hidden;
-        h3{
-            height: .8rem; line-height: .8rem; border-bottom: 1px solid #dfdfdf;padding:  0 .4rem; color: #455b6f;
-        }
-        .pay-btn{
-            width: 2.02rem; 
-        }
-        ul{
-            padding:  .2rem .4rem;
-            li{
-                padding: .2rem 0; font-size: .28rem;
-                span{
-                    color: #a1a1a1; display: inline-block; width: 2rem;
-                }
+}
+.result-box{
+    background: #fff;  text-align: left; margin: .2rem 0 0 0; overflow: hidden;
+    h3{
+        height: .8rem; line-height: .8rem; border-bottom: 1px solid #dfdfdf;padding:  0 .4rem; color: #455b6f;
+    }
+    .pay-btn{
+        width: 2.02rem; 
+    }
+    ul{
+        padding:  .2rem .4rem;
+        li{
+            padding: .2rem 0; font-size: .28rem;
+            span{
+                color: #a1a1a1; display: inline-block; width: 2rem;
             }
         }
-       .huaf-data{
-           height: 260px;
-       }
-       .result-tb{
-           padding: .25rem;background: #fbfbfb; border:1px solid #dedede; width: 6.5rem; margin: .2rem auto; border-radius: .1rem;
-           p{
-               text-align: center; font-size: .24rem; line-height: .5rem; color: #646464;
-               display: flex; display: -webkit-flex; justify-content: space-between ; align-content: center; align-items: center;
-               i{
-                   text-align: center; display: block; flex: 1;
-               }
-               span{
-                   font-size: .3rem; color: #34689b; padding: 0 .4rem; text-align: left;flex: 1;
-               }
+    }
+   .huaf-data{
+       height: 260px;
+   }
+   .result-tb{
+       padding: .25rem;background: #fbfbfb; border:1px solid #dedede; width: 6.5rem; margin: .2rem auto; border-radius: .1rem;
+       p{
+           text-align: center; font-size: .24rem; line-height: .5rem; color: #646464;
+           display: flex; display: -webkit-flex; justify-content: space-between ; align-content: center; align-items: center;
+           i{
+               text-align: center; display: block; flex: 1;
+           }
+           span{
+               font-size: .3rem; color: #34689b; padding: 0 .4rem; text-align: left;flex: 1;
            }
        }
-       .result-content{
-           padding: .4rem; font-size: .24rem; color: #999999
+   }
+   .result-content{
+       padding: .4rem; font-size: .24rem; color: #999999
+   }
+   .payment-ul{
+       em{
+           font-size: .28rem; 
        }
-    }
-    .result-btn{
-        border-radius: .1rem; color: #fff; background: #2299ff; text-align: center; height: .9rem; line-height: .9rem; width: 6.3rem;
-        margin: .4rem auto; font-size: .38rem;
-    }
+       i{
+           font-size: .42rem;
+           .payment-bq{
+               background: #ff6203; font-size: .24rem; padding: .05rem .1rem; color: #fff; border-radius: .05rem; text-decoration:line-through;
+           }
+       }
+   }
+   .pay{
+       li:first-child{
+           border-bottom: 1px solid #dedede
+       }
+       img{
+           width: .61rem; padding: .1rem 0; 
+       }
+       span{
+           background: url('../../images/chechox.png') no-repeat; background-size: 1.24rem .62rem; height: .42rem; width: .42rem;
+       }
+       span.icon1{
+            background-position:  -.1rem -.1rem;
+       }
+       span.icon2{
+        background-position:  -.72rem -.1rem;
+       }
+   }
 }
-
+.pay-footer{
+      position: fixed; bottom: 0; left: 0; width: 100%; height: 1.1rem; line-height: 1.1rem; background: #5b5c60; 
+      .pay-footer-left{
+        color: #fff ; font-size: .3rem;
+        em{
+            padding: 0 .4rem 0 .5rem ;
+        }
+        i{
+            font-size: .4rem;
+        }
+      }
+      .pay-footer-right{
+        background: -webkit-linear-gradient(left, #2396ff , #0dc3ff); /* Safari 5.1 - 6.0 */
+        background: -o-linear-gradient(right, #2396ff , #0dc3ff); /* Opera 11.1 - 12.0 */
+        background: -moz-linear-gradient(right, #2396ff , #0dc3ff); /* Firefox 3.6 - 15 */
+        background: linear-gradient(to right, #2396ff , #0dc3ff); /* 标准的语法 */
+        width: 3rem; text-align: center; color: #fff; font-size: .32rem;
+      }
+}
+.result-btn{
+    border-radius: .1rem; color: #fff; background: #2299ff; text-align: center; height: .9rem; line-height: .9rem; width: 6.3rem;
+    margin: .4rem auto; font-size: .38rem;
+}
+.payment{
+    padding: .88rem 0 1.1rem 0;
+}
+.payment-title{
+    padding: .3rem .4rem .1rem;  font-size: .3rem; text-align: left; 
+}
+.blacklist{
+    height: 100%; background: url('../../images/h_bg.jpg') no-repeat; background-size: 120%; margin: .88rem 0 0 0;
+    background-attachment: fixed;
+    .swiper-content{
+      margin: .4rem 0 0 0;  position: relative;
+        .spimg{
+            width: 6.74rem; height: 8.01rem; margin: 0 auto
+        }
+        .bk-btn{
+            width: 4.88rem; height: 1.01rem; margin: .4rem auto 0 auto;
+        }
+        .bk-iconbottom{
+            width: .54rem; height: .47rem; margin: .4rem auto 0 auto;
+        }
+    }
+   
+}
 
 .am-list-item{
     padding-left:0 !important;

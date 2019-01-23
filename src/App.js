@@ -9,7 +9,10 @@ import InfoList from './view/infomation/infoList'
 import infoContent from './view/infomation/infoContent'
 import Index from './view/guide/index';
 import TestResult from './view/infomation/TestResult'
-
+import Payment from './view/infomation/payment';
+import Blacklist from './view/infomation/Blacklist';
+import PayTransfer from './view/infomation/paytransfer';
+import BlacklistDetails from './view/infomation/BlacklistDetails';
 const GetBaidu = props => {
   let children = props.children;
   let _hmt = _hmt || [];
@@ -37,6 +40,10 @@ class App extends Component {
             <Route path="/infoContent/:index" component={infoContent}></Route>
             <Route path="/index" component={Index}></Route>
             <Route path="/TestResult" component={TestResult}></Route>
+            <Route path="/Payment/:id" component={Payment}></Route>
+            <Route path="/Blacklist" component={Blacklist}></Route>
+            <Route path="/PayTransfer" component={PayTransfer}></Route>
+            <Route path="/BlacklistDetails" component={BlacklistDetails}></Route>
           </GetBaidu>
         </Router>
       </div>
