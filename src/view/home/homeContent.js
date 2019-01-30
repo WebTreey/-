@@ -1,6 +1,6 @@
 import React from 'react';
 import {MoneyFormat , ISFirstWeb,ISFirstWebJH,IOSRoAndriod,myStorage} from '../../utils/API'
-import {getHomeInof,getCommonClickLog,getSaveOpenLog,getMobileDetect,getSaveHardLog,getAddBannerClickLog,HOST,getLinkUrl,getIsAuth} from '../../utils/config'
+import {getHomeInof,getCommonClickLog,getSaveOpenLog,getMobileDetect,getSaveHardLog,getAddBannerClickLog,HOST,getLinkUrl,getIsAuth,getExistCheckReport} from '../../utils/config'
 import {Loading} from '../../components/loading/loading'
 import { withRouter } from 'react-router';
 import ReactSwiper from 'reactjs-swiper'
@@ -25,16 +25,36 @@ class HomeContent extends React.Component{
     setMobileDetect(){
         getMobileDetect()
     }
+    //查询是否存在检测结果
+    setExistCheckReport(data,index){
+        getExistCheckReport(data).then(res=>{
+            console.log(res.data)
+            if(res.data.code==='ok'){
+                if(index===2){
+                     //跳转到运营商检测
+                    if(res.data.data.operatorCheck===1){
+                        this.props.history.push('/TestResult')
+                    }else{
+                        this.props.history.push('/CarrProving')
+                    }
+                }else{
+                    //跳转到黑名单检测
+                    if(res.data.data.blacklistCheckNew===1){
+                        this.props.history.push('/BlacklistDetails');
+                    }else{
+                        this.props.history.push('/Blacklist');
+                    }
+                }
+               
+            }
+        })
+    }
     //判断是否登录
     setIsAuth(data,index){
         getIsAuth(data).then(res=>{
             console.log(res.data)
             if(res.data.code==='yes' || res.data.code==='no'){
-                if(index===1){
-                    this.props.history.push('/Blacklist')
-                }else{
-                    this.props.history.push('/CarrProving')
-                }
+               this.setExistCheckReport({},index)
             }else{
                 this.props.history.push('/home/login?nav=2')
             }
@@ -57,10 +77,7 @@ class HomeContent extends React.Component{
                     if(r.accuracy!==null){
                         var addComp = rs.addressComponents;
                         myStorage.set('city',addComp.city)
-                    }else{
-                       
                     }
-                    
                 });
             }
             
@@ -253,7 +270,8 @@ class HomeContent extends React.Component{
                                 onClick:(swiper,event)=>{
                                     console.log(swiper.activeIndex)
                                     this.setAddBannerClickLog({
-                                        bannerName:bannerList[swiper.activeIndex].bannerName
+                                        bannerName:bannerList[swiper.activeIndex].bannerName,
+                                        clickType:1
                                     })
                                 }
                             }
@@ -333,7 +351,9 @@ class HomeContent extends React.Component{
                                             <ul>
                                                 {proModuleList[1].proList.map((item,index)=>{
                                                     let dw = ''
-                                                    if(item.lendRateType===1){
+                                                    if(item.lendRateType===4){
+                                                        dw = '秒'
+                                                    }else if(item.lendRateType===1){
                                                         dw = '分钟'
                                                     }else if(item.lendRateType===2){
                                                         dw = '小时'

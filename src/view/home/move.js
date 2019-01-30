@@ -181,22 +181,24 @@ export default class Move extends React.Component{
     }
     //选择排序方式
     handListClick(e){
-        
         this.size = 1;
         const that = e.target.dataset;
         const index = parseInt(that.index,10);
-        const item = (that.item + '').replace(/,/g,'') || '' ;
+        let item = (that.item + '').replace(/,/g,'') || '' ;
         this.setCommonClickLog({clickType:5320,reserve1:item})
         if(this.state.activeIndex===1){
-            a = item
+           
             if(item!=='不限额度'){
+               
                 minLimit = parseInt(item.split('-')[0]);
                 maxLimit = item.indexOf('-') >-1 ? item.split('-')[1] : parseInt(item)
                 this.setState({
                     minLimit:minLimit,
                     maxLimit:maxLimit
                 })
+                a = `${MoneyFormat(minLimit)}-${MoneyFormat(maxLimit)}`
             }else{
+                a = item
                 minLimit = ''
                 maxLimit = ''
                 this.setState({

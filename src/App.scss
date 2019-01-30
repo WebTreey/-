@@ -1,7 +1,7 @@
 *{margin: 0; padding: 0;border:none;text-decoration: none; list-style-type: none; outline: none;appearance: none; box-sizing: border-box; font-style: normal}
 em,i{ font-weight: normal;}
 img{display: block; max-width: 100%;}
-body{ background: #f5f5f5; font-size: .3rem; min-height: 100%;}
+body{ background: #f5f5f5; font-size: .3rem; min-height: 100%;  height: calc( 100% - 250px);}
 .clearfig:after{ clear: both; content: ''; height: 0; width: 0;}
 h1,h2,h3,h4,h5,h6{
   font-weight: normal;

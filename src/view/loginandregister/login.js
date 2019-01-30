@@ -84,8 +84,12 @@ class LoginFun1 extends React.Component{
                 this.setPromptHide('登录失败');
             }else if(res.data.code==='no_register'){
                 this.setPromptHide('账号未注册');
-            }else{
+            }else if(res.data.code==='phoneError'){
                 this.setPromptHide('请输入正确的手机号码！');
+            }else if(res.data.code==='codeError'){
+                this.setPromptHide('验证码错误，请重新输入！');
+            }else{
+                this.setPromptHide('未知错误');
             }
         })
     }
@@ -100,9 +104,11 @@ class LoginFun1 extends React.Component{
     //登录
     handLoginClick(){
         if(this.state.phone===''){
+            this.setPromptHide('手机号码不能为空！')
+        }else if(this.state.phone.length!==11){
             this.setPromptHide('请输入正确的手机号码！')
         }else if(this.state.codevalue===''){
-            this.setPromptHide('验证码错误，请重新输入！')
+            this.setPromptHide('验证码不能为空！')
         }else{
             this.setCodelogin({phone:Encrypt(this.state.phone),veryCode:this.state.codevalue})
             
@@ -188,8 +194,8 @@ class LoginFun2 extends React.Component{
         console.log({phone:Encrypt(this.state.phone),password:MD5encode(this.state.password)})
         if(this.state.phone===''){
            this.setPromptHide('请输入正确的手机号码！')
-        }else if(this.state.codevalue===''){
-            this.setPromptHide('验证码错误，请重新输入！')
+        }else if(this.state.password===''){
+            this.setPromptHide('密码不能为空！')
         }else{
             this.setPwdlogin({phone:Encrypt(this.state.phone),password:MD5encode(this.state.password)})
         }
@@ -224,7 +230,7 @@ class LoginFun2 extends React.Component{
                     <input type="text" placeholder="请输入您的手机号" value={this.state.phone} onChange={this.handPhoneChange.bind(this)}></input>
                     </label>
                     <label className="flex-between">
-                    <input type={this.state.inputtype} placeholder="请输入您的登录密码" value={this.state.codevalue} onChange={this.handPassChange.bind(this)}></input>
+                    <input type={this.state.inputtype} placeholder="请输入您的登录密码" value={this.state.password} onChange={this.handPassChange.bind(this)}></input>
                     <img alt="" src={this.state.imgurl} onClick={this.handImgClick.bind(this)}></img>
                     </label>
                 </form>
@@ -269,13 +275,19 @@ class Login extends React.Component{
         }
         
     }
-  
+    componentDidMount(){
+        console.log(window.screen.height)
+        document.getElementById('login').style.height = window.screen.height + 'px'
+    }
+    componentWillMount(){
+        window.addEventListener('resize',null,false)
+    }
     render(){
         const tab = this.state.Tab;
         const activeIndex = this.state.activeIndex;
         const Loinfun = activeIndex===0 ?  <LoginFun1 checked={this.state.checked} history={this.props.history}></LoginFun1> :  <LoginFun2 history={this.props.history} checked={this.state.checked}></LoginFun2>
         return(
-            <div className="login">
+            <div className="login" id="login">
             <Log></Log>
                 <Title  text="注册/登录" history = {this.props.history}></Title>
                 <div className="login-header flex-content">

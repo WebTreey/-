@@ -47,8 +47,10 @@ class SetPassword extends React.Component{
                 this.props.history.go(-1);
                 
                 myStorage.remove('token');
+            }else if(res.data.code==='codeError'){
+                this.setPromptHide('验证码错误')
             }else{
-                this.setPromptHide('修改失败')
+                this.setPromptHide('未知错误，修改失败')
             }
         })
     }

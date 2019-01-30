@@ -1,6 +1,7 @@
 import React from 'react';
 import './info.scss';
-import {getOperatorCheck,getOperatorReport} from '../../utils/config';
+import {getOperatorCheck,getOperatorReport,getCommonClickLog} from '../../utils/config';
+import {GetQueryString} from '../../utils/API'
 import {Encrypt} from '../../utils/AES';
 import Title from'../../components/title/index'
 // 引入 ECharts 主模块
@@ -19,20 +20,29 @@ export default class TestResult extends React.Component{
         }
     }
     handLinkPay(){
-        this.props.history.push('/Payment/1')
+        this.props.history.push({pathname:'/Payment',query:{now:this.state.data.operator_check_now,old:this.state.data.operator_check_old}})
     }
     //运营商检测结果
     setOperatorCheck(data){
         getOperatorCheck(data).then(res=>{
             console.log(res.data);
-           
             if(res.data.code==='ok'){
+                this.handCount({
+                    clickType:85, 
+                    appName:'查询成功'
+
+                })
                 const feeDetails = res.data.data.checkRes.feeDetails || []
                 const callDetails = res.data.data.checkRes.callDetails || []
                 this.setTuBiao(feeDetails,'huaf')
                 this.setTuBiao(callDetails,'tongh')
                 this.setState({
                     data:res.data.data
+                })
+            }else{
+                this.handCount({
+                    clickType:86, 
+                    appName:'查询失败'
                 })
             }
            
@@ -45,6 +55,7 @@ export default class TestResult extends React.Component{
             console.log(res.data)
         })
     }
+    //图表时间格式化
     setTuBiao(data,el){
         let x = [];
         let y = [];
@@ -56,6 +67,7 @@ export default class TestResult extends React.Component{
         }
         this.setHFData(x,y,el);
     }
+    //图标基本框架
     setHFData(x,y,el){
          // 基于准备好的dom，初始化echarts实例
          var myChart = echarts.init(document.getElementById(el));
@@ -90,9 +102,14 @@ export default class TestResult extends React.Component{
              }]
          });
     }
+    handCount(data){
+        getCommonClickLog(data).then(res=>{
+            console.log(res.data);
+        })
+    }
     componentDidMount(){
-        this.setOperatorCheck({phone:Encrypt(13823541918),taskId:'9408ed50-4f6e-11e8-83b0-00163e0d2629'});
-        this.setOperatorReport({smses:[1,2,3,4],calls:[4,3,2,1],phone:13823541918})
+        this.setOperatorCheck({taskId:GetQueryString('taskId'),phone:Encrypt(GetQueryString('account'))});
+        this.setOperatorReport({smses:[],calls:[]})
         const a = encodeURIComponent('深圳市')
         console.log(a)
         console.log(decodeURIComponent(a))
@@ -136,7 +153,7 @@ export default class TestResult extends React.Component{
                         <p><i>通话风险</i><span>{data.call_risk || '数据为空'}</span></p>
                     </div>
                 </div>
-                <div className="result-box">
+                {/* <div className="result-box">
                     <h3 className="flex-between"><i>亲密联系人数据</i><img alt="" onClick={this.handLinkPay.bind(this)} className="pay-btn" src={require('../../images/pay_btn.png')}></img></h3>
                     <div className="result-content">帮助您正确填写亲密人，提升贷款申请通过率</div>
                 </div>
@@ -148,7 +165,7 @@ export default class TestResult extends React.Component{
                     <h3 className="flex-between"><i>短信通讯风险分析</i><img alt="" onClick={this.handLinkPay.bind(this)} className="pay-btn" src={require('../../images/pay_btn.png')}></img></h3>
                     <div className="result-content">通话记录中，哪些短信影响您的贷款申请</div>
                 </div>
-                <div className="result-btn" onClick={this.handLinkPay.bind(this)}>查看完整报告</div>
+                <div className="result-btn" onClick={this.handLinkPay.bind(this)}>查看完整报告</div> */}
             </div>
         )
     }

@@ -215,7 +215,7 @@ export default class Guide extends React.Component{
                     <input type="checkbox" className={this.state.checkedclass} defaultChecked={this.state.checked} onClick={this.handCheckbox.bind(this)}></input>
                     <span>我已阅读并同意 <a href={getUrl()}>《 用户注册协议 》</a></span>
                 </div>
-                <div className="guide-footer" onClick={this.handLinkHome.bind(this)}>我先逛逛</div>
+                <span className="guide-footer" onClick={this.handLinkHome.bind(this)}>我先逛逛</span>
                 <div className="guide-banq">
                     <p>贷款产品合作出资主体：平安普惠</p>
                     <p>深圳掌众互联网金融服务有限公司   粤ICP备11050772号-1</p>

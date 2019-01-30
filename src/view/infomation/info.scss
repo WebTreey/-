@@ -249,6 +249,9 @@
        padding: .4rem; font-size: .24rem; color: #999999
    }
    .payment-ul{
+       span{
+           flex: 1;
+       }
        em{
            font-size: .28rem; 
        }
@@ -274,6 +277,12 @@
        }
        span.icon2{
         background-position:  -.72rem -.1rem;
+       }
+   }
+   .Product1,.Product2{
+       width: .5rem;
+       img{
+           width: .5rem;
        }
    }
 }
@@ -310,7 +319,7 @@
     height: 100%; background: url('../../images/h_bg.jpg') no-repeat; background-size: 120%; margin: .88rem 0 0 0;
     background-attachment: fixed;
     .swiper-content{
-      margin: .4rem 0 0 0;  position: relative;
+      margin: .4rem 0 0 0;  position: relative; overflow: hidden;
         .spimg{
             width: 6.74rem; height: 8.01rem; margin: 0 auto
         }
@@ -322,6 +331,59 @@
         }
     }
    
+}
+.blackDetails{
+    margin: .88rem 0 0 0; overflow: hidden;
+    .blackDetails-title{
+        padding: .3rem .4rem .3rem;  font-size: .3rem; text-align: left; margin: .2rem 0 0 0; background: #f8fcff;border-bottom: 1px solid #d9eaf5;
+        position: relative;
+        .blackDetails-shengji{
+            width: 1.7rem; height: .5rem; line-height: .5rem; color: #455b6f; border: 1px solid #455b6f; border-radius: .4rem; text-align: center;
+        }
+    }
+    .blackDetails-box{
+        margin: 0;
+        .gth{
+            width: .27rem; margin: 0 .2rem 0 0;
+        }
+        li{
+            i{
+                flex: 1
+            }
+            .blackDetails-js{
+                background: #f9f9f9; padding: .2rem; margin: 0.2rem 0 ; font-size: .24rem; line-height: .4rem; color: #999; text-align: center;
+            }
+            .blackDetails-js1{
+                background: #fff6f1; padding: .2rem; margin: 0.2rem 0 ; font-size: .24rem; line-height: .4rem; color: #ff6101; text-align: center;
+            }
+        }
+        .blackDetails-js{
+            background: #f9f9f9; padding: .2rem; margin: 0.2rem .4rem ; font-size: .24rem; line-height: .4rem; color: #999
+        }
+    }
+
+    .blackDetails-icon{
+        background: url('../../images/black_resulticon.png') no-repeat left top; background-size: 1.55rem 7.75rem; position: absolute; top: .2rem; right: .2rem; display: block;
+        width: 1.35rem; height:1.35rem;
+    }
+    .icon1{
+        background-position: -.1rem -.1rem;
+    }
+    .icon2{
+        background-position: -.1rem -1.65rem;
+    }
+    .icon3{
+        background-position: -.1rem -3.20rem;
+    }
+    .icon4{
+        background-position: -.1rem -4.75rem;
+    }
+    .icon5{
+        background-position: -.1rem -6.30rem;
+    }
+    .blackDetails-btn{
+        width: 100%; height: 1.3rem; line-height: 1.3rem; text-align: center; color: #fff; background: #17aeff; font-size: .36rem;
+    }
 }
 
 .am-list-item{

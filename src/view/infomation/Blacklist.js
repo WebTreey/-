@@ -1,7 +1,7 @@
 import React from 'react';
 import './info.scss'
 import Swiper from 'swiper';
-import {getUserInfo,getBlackListCheck} from '../../utils/config'
+import {getUserInfo,getBlackListCheck,getCommonClickLog} from '../../utils/config'
 import {Encrypt} from '../../utils/AES'
 import Title from'../../components/title/index'
 
@@ -20,13 +20,18 @@ export default class Blacklist extends React.Component{
         })
     }
     setBlackListCheck(data){
-        getBlackListCheck(data).then(res=>{
+        getBlackListCheck({name:Encrypt(data.name),card:Encrypt(data.idCardNo)}).then(res=>{
             console.log(res.data)
             if(res.data.code==="noPay"){
-                this.props.history.push('/payment/0')
+                this.props.history.push({pathname:'/BlacklistPay',query:{money:res.data.data,info:data}})
             }else if(res.data.code==='hasPay'){
                 this.props.history.push('/BlacklistDetails');
             }
+        })
+    }
+    handCount(data){
+        getCommonClickLog(data).then(res=>{
+            console.log(res.data)
         })
     }
     //判断是否实名认证
@@ -36,7 +41,7 @@ export default class Blacklist extends React.Component{
             if(res.data.result){
                 //已认证
                 var data = res.data.result
-                this.setBlackListCheck({name:Encrypt(data.name),card:Encrypt(data.idCardNo)});
+                this.setBlackListCheck(data);
                 
             }else{
                 this.props.history.push('/home/certification?nav=2')
@@ -44,7 +49,11 @@ export default class Blacklist extends React.Component{
         })
     }
     handLinkBlacklistDetails(){
-        this.setUserInfo({})
+        this.setUserInfo({});
+        this.handCount({
+            clickType:22,
+            appName:"提交订单"
+        })
     }
     componentDidMount(){
         this.getSwiper()

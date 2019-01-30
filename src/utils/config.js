@@ -3,36 +3,50 @@ import { myStorage ,GetQueryString} from './API'
 import { Encrypt } from './AES'
 import { RSAEncrypt ,SHASign } from './index'
 var MobileDetect = require('./mobile-detect')
-export const HOST = 'http://192.168.1.127:8080';
-// export const HOST = 'http://113.31.86.153:41070';
+// export const HOST = 'http://192.168.1.127:8080';
+export const HOST = 'http://113.31.86.153:41070';
 //export const HOST = 'http://idai.iadcn.com';
 // export const HOST = 'http://192.168.1.191:9080';
 
 
 
-
+//随机数imei
+export const ukey = () => {
+    let k;
+    if (!myStorage.get('ukey')) {
+        k = new Date().getTime() + Math.round(Math.random() * 10000)
+        myStorage.set("ukey", k)
+    } else {
+        k = myStorage.get('ukey');
+    }
+    return k
+}
 
 //固定参数
 export const setCommparams = ()=> {
     return {
-        appName: ' 闪电贷款王',
+        appName: '闪电贷款王', 
         appPkgName: 'shandianloanwap',
         osType: 1,
         os_type: 1,
         apkVersion: '1.0',
         apk_version: '1.0',
-        channel: myStorage.get('channel') || ' natureChannel',
+        channel: myStorage.get('channel') || 'natureChannel',
         isGroup: 1,
         phone: myStorage.get('phone') ? Encrypt(myStorage.get('phone')) : '',
         city: myStorage.get('city') || '',
         imei: ukey()
     }
 }
-export const getLinkUrl = () =>{
-    return `?app_name=${setCommparams().appName}&pkg_name=${setCommparams().appPkgName}&channel=${setCommparams().channel}&version_code=100&
-        icon_name=ostype1com.zhangzhong.jieqianban001&os_type=${setCommparams().os_type}&company_name=深圳掌众互联网金融服务有限公司&company_simple_name=掌众金融
+export const getLinkUrl = (type) =>{
+    const com = setCommparams()
+    if(!type){
+        return `?app_name=${setCommparams().appName}&pkg_name=${setCommparams().appPkgName}&channel=${setCommparams().channel}&version_code=100&
+        icon_name=ostype1com.zhangzhong.jieqianban001&os_type=${setCommparams().os_type}&company_name=深圳掌众互联网金融服务有限公司&company_simple_name=掌众金融&sddH5=1
         `
-       
+    }
+    return `?apk_version=${com.apk_version}&os_type=${com.os_type}&appPkgName=${com.appPkgName}&channel=${com.channel}&sddH5=1`
+
 }
 //获取手机数据
 export const getMobileDetect = () =>
@@ -79,17 +93,6 @@ export const getDownloadApk = (data) => {
 export const getUrl = () =>{
     const url = `${HOST}/about/regist_agreement?app_name=${setCommparams().appName}&company_name=深圳掌众互联网金融服务有限公司`;
     return url;
-}
-//随机数imei
-export const ukey = () => {
-    let k;
-    if (!myStorage.get('ukey')) {
-        k = new Date().getTime() + Math.round(Math.random() * 10000)
-        myStorage.set("ukey", k)
-    } else {
-        k = myStorage.get('ukey');
-    }
-    return k
 }
 
 //首页接口
@@ -364,11 +367,66 @@ export const getOperatorPayResult = (data) =>{
         params: Object.assign({}, setCommparams(), data)
     })
 }
-// 点立即检测判断是否已经付费
+// 点击黑名单立即检测判断是否已经付费
 export const getBlackListCheck = (data) =>{
     return Axios({
         method: 'post',
         url: HOST + '/nLoanPay/blackListCheck',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        params: Object.assign({}, setCommparams(), data)
+    })
+}
+//点击黑名单理解支付付费
+export const getPay = (data) =>{
+    return Axios({
+        method: 'post',
+        url: HOST + '/nLoanPay/pay',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        params: Object.assign({}, setCommparams(), data)
+    })
+}
+//黑名单查询支付结果
+export const getPayResult = (data) =>{
+    return Axios({
+        method: 'post',
+        url: HOST + '/nLoanPay/getPayResult',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        params: Object.assign({}, setCommparams(), data)
+    })
+}
+//查询检测结果
+export const getCheckResult = (data) =>{
+    return Axios({
+        method: 'post',
+        url: HOST + '/nLoanPay/getCheckResult',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        params: Object.assign({}, setCommparams(), data)
+    })
+}
+//黑名单升级支付
+export const getPayLevel = (data) =>{
+    return Axios({
+        method: 'post',
+        url: HOST + '/nLoanPay/payLevel',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        params: Object.assign({}, setCommparams(), data)
+    })
+}
+//黑名单查询升级支付结果
+export const getPayResultNew = (data) =>{
+    return Axios({
+        method: 'post',
+        url: HOST + '/nLoanPay/getPayResultNew',
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },

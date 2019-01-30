@@ -92,7 +92,7 @@ class InfoIndex extends React.Component{
         getExistCheckReport(data).then(res=>{
             console.log(res.data)
             if(res.data.code==='ok'){
-                if(index===1){
+                if(index===2){
                      //跳转到运营商检测
                     if(res.data.data.operatorCheck===1){
                         this.props.history.push('/TestResult')
@@ -102,9 +102,9 @@ class InfoIndex extends React.Component{
                 }else{
                     //跳转到黑名单检测
                     if(res.data.data.blacklistCheckNew===1){
-                        // this.props.history.push('/TestResult')
+                        this.props.history.push('/BlacklistDetails');
                     }else{
-                        // this.props.history.push('/CarrProving')
+                        this.props.history.push('/Blacklist');
                     }
                 }
                
@@ -132,6 +132,13 @@ class InfoIndex extends React.Component{
     }
     handLinkCarrProving(){
         if(this.state.data.code==='yes' || this.state.data.code==='no'){
+            this.setExistCheckReport({},2)
+        }else{
+            this.props.history.push('/home/login?nav=2')
+        }
+    }
+    handLinkBlacklist(){
+        if(this.state.data.code==='yes' || this.state.data.code==='no'){
             this.setExistCheckReport({},1)
         }else{
             this.props.history.push('/home/login?nav=2')
@@ -157,8 +164,10 @@ class InfoIndex extends React.Component{
     }
     handLinkHref(param){
         const url = getLinkUrl()
+        
         if(param===1){
-            window.location.href = `${HOST}/about/about_us${url}`
+            const url2 = getLinkUrl(1)
+            window.location.href = `${HOST}/about/agreement_about.html${url2}`
         }else if(param===2){
             window.location.href = `${HOST}/f/zghcp.html${url}`
         }else{
@@ -216,7 +225,7 @@ class InfoIndex extends React.Component{
                                 <h3>个人信息</h3>
                                 <span className="flex-content"><img alt="闪电贷" src={require('../../images/right-icon.jpg')}></img></span>
                             </li>
-                            <li className="flex-conter">
+                            <li className="flex-conter" onClick={this.handLinkBlacklist.bind(this)}>
                                 <i className="icon icon-2"></i>
                                 <h3>黑名单检测</h3>
                                 <span className="flex-content"><em>去查询</em><img alt="闪电贷" src={require('../../images/right-icon.jpg')}></img></span>

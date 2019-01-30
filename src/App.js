@@ -10,9 +10,13 @@ import infoContent from './view/infomation/infoContent'
 import Index from './view/guide/index';
 import TestResult from './view/infomation/TestResult'
 import Payment from './view/infomation/payment';
+import BlacklistPay from './view/infomation/BlacklistPay';
+import BlacklistPaySJ from './view/infomation/BlacklistPaySJ';
 import Blacklist from './view/infomation/Blacklist';
 import PayTransfer from './view/infomation/paytransfer';
 import BlacklistDetails from './view/infomation/BlacklistDetails';
+import BlackPayTransfer from './view/infomation/BlackPayTransfer';
+import BlackPayTransferSJ from './view/infomation/BlackPayTransferSJ';
 const GetBaidu = props => {
   let children = props.children;
   let _hmt = _hmt || [];
@@ -40,10 +44,14 @@ class App extends Component {
             <Route path="/infoContent/:index" component={infoContent}></Route>
             <Route path="/index" component={Index}></Route>
             <Route path="/TestResult" component={TestResult}></Route>
-            <Route path="/Payment/:id" component={Payment}></Route>
+            <Route path="/Payment" component={Payment}></Route>
             <Route path="/Blacklist" component={Blacklist}></Route>
             <Route path="/PayTransfer" component={PayTransfer}></Route>
             <Route path="/BlacklistDetails" component={BlacklistDetails}></Route>
+            <Route path="/BlacklistPay" component={BlacklistPay}></Route>
+            <Route path="/BlacklistPaySJ" component={BlacklistPaySJ}></Route>
+            <Route path="/BlackPayTransfer" component={BlackPayTransfer}></Route>
+            <Route path="/BlackPayTransferSJ" component={BlackPayTransferSJ}></Route>
           </GetBaidu>
         </Router>
       </div>
