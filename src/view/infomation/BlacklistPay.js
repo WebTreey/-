@@ -1,6 +1,7 @@
 import React from 'react';
 import {Encrypt} from '../../utils/AES'
 import {getPay,getCommonClickLog} from '../../utils/config'
+import {PromptBox} from '../../components/prompt/prompt';
 import Title from'../../components/title/index'
 export default class BlacklistPay extends React.Component{
     constructor(props){
@@ -13,7 +14,21 @@ export default class BlacklistPay extends React.Component{
             chechoxDefault:3,
             fromstr:'',
             Product:1,
+            prompt:false
         }
+    }
+    //提示框隐藏显示
+    setPromptHide(text){
+        this.text = text;
+        this.setState({
+            prompt:true
+        })
+        clearTimeout(this.times)
+        this.times = setTimeout(()=>{
+            this.setState({
+                prompt:false
+            })
+        },2000)
     }
     //时间格式化
     setDateFormat(n){
@@ -83,6 +98,17 @@ export default class BlacklistPay extends React.Component{
         })
         
     }
+    componentDidMount(){
+        if(!this.props.location.query) {
+            this.setPromptHide('信息获取失败');
+            this.times = setTimeout(()=>{
+                this.props.history.go(-1);
+            },2000)
+        }
+    }
+    componentWillMount(){
+        clearTimeout(this.times);
+    }
     render(){
         let info = {};
         let money = {}
@@ -97,6 +123,7 @@ export default class BlacklistPay extends React.Component{
             <div className="payment">
             <div dangerouslySetInnerHTML={{__html:this.state.fromstr}}></div>
             <Title text="支付订单" history = {this.props.history}></Title>
+            {this.state.prompt ? <PromptBox text={this.text}></PromptBox> : ''}
                 <div className="result-box">
                     <ul className="payment-ul">
                         <li className="flex-between">

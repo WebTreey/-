@@ -1,6 +1,7 @@
 import React from 'react';
 import './info.scss'
 import Swiper from 'swiper';
+import 'swiper/dist/css/swiper.css';
 import {getUserInfo,getBlackListCheck,getCommonClickLog} from '../../utils/config'
 import {Encrypt} from '../../utils/AES'
 import Title from'../../components/title/index'
@@ -10,7 +11,7 @@ export default class Blacklist extends React.Component{
     constructor(props){
         super(props);
         document.body.style.overflow = 'hidden'
-        document.body.style.height = '100%'
+        document.body.style.height = window.innerHeight;
     }
     getSwiper(){
         this.mswiper = new Swiper(this.refs.lun,{
@@ -56,7 +57,8 @@ export default class Blacklist extends React.Component{
         })
     }
     componentDidMount(){
-        this.getSwiper()
+        
+        this.getSwiper();
     }
     componentWillUnmount(){
         document.body.style.overflow = ''

@@ -1,6 +1,6 @@
 import React from 'react';
 import './login.scss'
-import {ProvingMobile,myStorage} from '../../utils/API'
+import {ProvingMobile,myStorage,IOSRoAndriod} from '../../utils/API'
 import {getSendSms,getCodelogin,getPwdlogin,getUrl} from '../../utils/config'
 import {PromptBox} from '../../components/prompt/prompt'
 import { withRouter } from 'react-router';
@@ -277,7 +277,8 @@ class Login extends React.Component{
     }
     componentDidMount(){
         console.log(window.screen.height)
-        document.getElementById('login').style.height = window.screen.height + 'px'
+        document.getElementById('login').style.height = window.screen.height-150 + 'px'
+       
     }
     componentWillMount(){
         window.addEventListener('resize',null,false)

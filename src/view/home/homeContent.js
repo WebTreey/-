@@ -243,7 +243,6 @@ class HomeContent extends React.Component{
     }
     componentWillUnmount(){
         clearTimeout(this.tiems);
-        document.onscroll = null
     }
     render(){
         if(this.state.isdata){

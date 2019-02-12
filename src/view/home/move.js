@@ -78,7 +78,8 @@ export default class Move extends React.Component{
         }
         this.size = 1;
         this.text = ''
-       
+        this.n = 1;
+        this.s = 0;
     }
     //提示框隐藏显示
     setPromptHide(text){
@@ -122,12 +123,20 @@ export default class Move extends React.Component{
             })
             console.log(res.data)
             if(res.data.result){
+                if(this.s){
+                    ++this.n;
+                }
                 this.setState({
                     recmdData:this.state.recmdData.concat(res.data.result.proRecommendList),
                     loding:false ,
                     total:res.data.result.total
                 })
-                
+                if(res.data.result.proRecommendList.length<this.state.pageSize){
+                    this.text = '---我也是有底线的---'
+                    this.setState({
+                        isimg:false
+                    })
+                }
             }
            
         })
@@ -143,13 +152,14 @@ export default class Move extends React.Component{
     }
     //滚动加载数据
     handBoydScroll(){
+       
         const scrollHeight = Math.max(document.documentElement.scrollHeight,document.body.scrollHeight);
         const scrollTop = Math.max(document.documentElement.scrollTop ,document.body.scrollTop)
         const clientHeight = document.documentElement.clientHeight;
-        
         const page = Math.ceil(this.state.total/this.state.pageSize)||10;
-      
+        ++ this.s ;
         if((scrollTop+clientHeight)+80>=scrollHeight){
+            
             if(this.size>=page) {
                 this.text = '---我也是有底线的---'
                 this.setState({
@@ -160,18 +170,19 @@ export default class Move extends React.Component{
                 this.setState({
                     isimg:true
                 })
-                const data = {
-                    isPagin:1,
-                    pageNo: ++this.size,
-                    pageSize:this.state.pageSize,
-                    minLimit:this.state.minLimit,
-                    maxLimit:this.state.maxLimit,
-                    orderBy:this.state.orderBy,
-                    module:this.state.modulee,
-                    filterApi:1
+                if(this.n===this.size){
+                    const data = {
+                        isPagin:1,
+                        pageNo: ++this.size,
+                        pageSize:this.state.pageSize,
+                        minLimit:this.state.minLimit,
+                        maxLimit:this.state.maxLimit,
+                        orderBy:this.state.orderBy,
+                        module:this.state.modulee,
+                        filterApi:1
+                    }
+                    this.setRecmdInfo(data);
                 }
-                this.setRecmdInfo(data);
-                return false
             }
           
         }else{
@@ -182,8 +193,11 @@ export default class Move extends React.Component{
     //选择排序方式
     handListClick(e){
         this.size = 1;
+        this.s=0;
+        this.n=1;
         const that = e.target.dataset;
         const index = parseInt(that.index,10);
+    
         let item = (that.item + '').replace(/,/g,'') || '' ;
         this.setCommonClickLog({clickType:5320,reserve1:item})
         if(this.state.activeIndex===1){
@@ -309,13 +323,13 @@ export default class Move extends React.Component{
         if(ISFirstWeb()){
             this.setSaveOpenLog()
         }
-        document.onscroll = ()=>{
+        window.onscroll = ()=>{
             this.handBoydScroll()
         }
        
     }
     componentWillUnmount(){
-        document.onscroll = null;
+        window.onscroll = null;
         clearTimeout(this.times);
     }
     render(){
